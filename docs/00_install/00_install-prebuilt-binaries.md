@@ -25,12 +25,12 @@ brew remove arisen
 
 #### Ubuntu 18.04 Package Install
 ```sh
-wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
+wget https://github.com/arisenio/arisenioio/arisen/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 sudo apt install ./arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 ```
 #### Ubuntu 16.04 Package Install
 ```sh
-wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
+wget https://github.com/arisenio/arisenioio/arisen/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 sudo apt install ./arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 ```
 #### Ubuntu Package Uninstall
@@ -42,7 +42,7 @@ sudo apt remove arisen
 
 #### RPM Package Install
 ```sh
-wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
+wget https://github.com/arisenio/arisenioio/arisen/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
 sudo yum install ./arisen-2.0.3-1.el7.x86_64.rpm
 ```
 #### RPM Package Uninstall
