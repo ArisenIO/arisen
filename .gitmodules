@@ -22,3 +22,6 @@
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/ArisenIO/fc.git
+[submodule "rsn-vm"]
+	path = rsn-vm
+	url = https://github.com/ArisenIO/rsn-vm.git
