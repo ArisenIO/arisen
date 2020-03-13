@@ -1,3 +1,20 @@
+[submodule "contracts/musl/upstream"]
+	path = contracts/musl/upstream
+	url = https://github.com/ArisenIO/musl1.git
+	branch = master
+	update = merge
+[submodule "contracts/libc++/upstream"]
+	path = contracts/libc++/upstream
+	url = https://github.com/ArisenIO/libcxx1.git
+	branch = master
+[submodule "externals/binaryen"]
+	path = externals/binaryen
+	url = https://github.com/ArisenIO/binaryen
+	branch = arisen
+	update = merge
+[submodule "externals/magic_get"]
+	path = externals/magic_get
+	url = https://github.com/ArisenIO/magic_get
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
 	url = https://github.com/ArisenIO/chainbase.git
