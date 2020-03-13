@@ -9,4 +9,4 @@ This section explains how to use `aos`, lists its configuration options, describ
 * [Node Setups](02_node-setups/index.md) - Producing vs. non-producing nodes setup.
 * [Development Environment](03_development-environment/index.md) - Setting up a development/test environment.
 * [Aos Implementation](05_aos-implementation.md) - Blockchain state and storage, `aos` read modes.
-* [Deprecation Notices](https://github.com/ARISEN/rsn/issues/7597) - Lists `aos` deprecated functionality.
+* [Deprecation Notices](https://github.com/ARISENIO/rsn/issues/7597) - Lists `aos` deprecated functionality.

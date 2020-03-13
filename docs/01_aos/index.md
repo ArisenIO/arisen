@@ -8,7 +8,7 @@ content_title: Aos
 
 ## Installation
 
-`aos` is distributed as part of the [ARISEN software suite](https://github.com/ARISEN/rsn/blob/master/README.md). To install `aos`, visit the [ARISEN Software Installation](../00_install/index.md) section.
+`aos` is distributed as part of the [ARISEN software suite](https://github.com/ARISENIO/rsn/blob/master/README.md). To install `aos`, visit the [ARISEN Software Installation](../00_install/index.md) section.
 
 ## Explore
 

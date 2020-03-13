@@ -1002,7 +1002,7 @@ struct controller_impl {
          a.creation_date = initial_timestamp;
 
          if( name == config::system_account_name ) {
-            // The initial arisen ABI value affects consensus; see  https://github.com/ARISEN/rsn/issues/7794
+            // The initial arisen ABI value affects consensus; see  https://github.com/ARISENIO/rsn/issues/7794
             // TODO: This doesn't charge RAM; a fix requires a consensus upgrade.
             a.abi.resize(sizeof(arisen_abi_bin));
             memcpy(a.abi.data(), arisen_abi_bin, sizeof(arisen_abi_bin));

@@ -8,7 +8,7 @@ content_title: Arisecli
 
 ## Installation
 
-`arisecli` is distributed as part of the [ARISEN software suite](https://github.com/ARISEN/rsn/blob/master/README.md). To install `arisecli` just visit the [ARISEN Software Installation](../00_install/index.md) section.
+`arisecli` is distributed as part of the [ARISEN software suite](https://github.com/ARISENIO/rsn/blob/master/README.md). To install `arisecli` just visit the [ARISEN Software Installation](../00_install/index.md) section.
 
 ## Using Arisecli
 

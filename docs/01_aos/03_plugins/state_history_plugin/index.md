@@ -51,7 +51,7 @@ Config Options for arisen::state_history_plugin:
 
 ### history-tools
 
-  * [Source code](https://github.com/ARISEN/history-tools/)
+  * [Source code](https://github.com/ARISENIO/history-tools/)
   * [Documentation](https://arisen.github.io/history-tools/)
 
 ## Dependencies

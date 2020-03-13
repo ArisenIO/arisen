@@ -6,7 +6,7 @@ To download the ARISEN source code, clone the `rsn` repo and its submodules. It 
 
 ```sh
 mkdir -p ~/arisen && cd ~/arisen
-git clone --recursive https://github.com/ARISEN/rsn
+git clone --recursive https://github.com/ARISENIOIO/arisen
 ```
 
 ## Update Submodules

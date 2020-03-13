@@ -121,8 +121,8 @@ To uninstall the ARISEN built/installed binaries and dependencies, run:
 1. [StackExchange for Q&A](https://arisenio.stackexchange.com/)
 1. [Community Telegram Group](https://t.me/arisenio)
 1. [Developer Telegram Group](https://t.me/arisen_developers)
-1. [White Paper](https://github.com/ARISENIO/Documentation/blob/master/TechnicalWhitePaper.md)
-1. [Roadmap](https://github.com/ARISENIO/Documentation/blob/master/Roadmap.md)
+1. [White Paper](https://github.com/ARISENIOIO/Documentation/blob/master/TechnicalWhitePaper.md)
+1. [Roadmap](https://github.com/ARISENIOIO/Documentation/blob/master/Roadmap.md)
 
 <a name="gettingstarted"></a>
 ## Getting Started

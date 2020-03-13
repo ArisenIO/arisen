@@ -5,7 +5,7 @@
 The `txn_test_gen_plugin` is used for transaction test purposes.
 
 [[info | For More Information]]
-For more information, check the [txn_test_gen_plugin/README.md](https://github.com/ARISEN/rsn/blob/develop/plugins/txn_test_gen_plugin/README.md) on the ARISEN/rsn repository.
+For more information, check the [txn_test_gen_plugin/README.md](https://github.com/ARISENIO/rsn/blob/develop/plugins/txn_test_gen_plugin/README.md) on the ARISEN/rsn repository.
 
 ## Usage
 

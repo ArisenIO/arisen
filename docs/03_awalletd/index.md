@@ -8,7 +8,7 @@ content_title: Awalletd
 
 ## Installation
 
-`awalletd` is distributed as part of the [ARISEN software suite](https://github.com/ARISEN/rsn/blob/master/README.md). To install `awalletd` just visit the [ARISEN Software Installation](../00_install/index.md) section.
+`awalletd` is distributed as part of the [ARISEN software suite](https://github.com/ARISENIO/rsn/blob/master/README.md). To install `awalletd` just visit the [ARISEN Software Installation](../00_install/index.md) section.
 
 ## Operation
 

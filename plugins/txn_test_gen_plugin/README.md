@@ -2,7 +2,7 @@
 
 This plugin provides a way to generate a given amount of transactions per second against the currency contract. It runs internally to rsnd to reduce overhead.
 
-This general procedure was used when doing Dawn 3.0 performance testing as mentioned in https://github.com/ARISEN/rsn/issues/2078.
+This general procedure was used when doing Dawn 3.0 performance testing as mentioned in https://github.com/ARISENIO/rsn/issues/2078.
 
 ## Performance testing
 

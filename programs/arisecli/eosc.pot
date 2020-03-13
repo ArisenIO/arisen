@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ARISEN 1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/ARISEN/rsn/issues"
+"Report-Msgid-Bugs-To: https://github.com/ARISENIO/rsn/issues"
 "POT-Creation-Date: 2017-09-28 11:40-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"

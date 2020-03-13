@@ -29,7 +29,7 @@ mkdir -p $ARISEN_INSTALL_LOCATION
 # install git
 apt-get update && apt-get upgrade -y && DEBIAN_FRONTEND=noninteractive apt-get install -y git
 # clone ARISEN repository
-git clone https://github.com/ARISEN/rsn.git $ARISEN_LOCATION
+git clone https://github.com/ARISENIO/rsn.git $ARISEN_LOCATION
 cd $ARISEN_LOCATION && git submodule update --init --recursive
 ```
 

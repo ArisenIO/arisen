@@ -64,7 +64,7 @@ Also, soft links for each ARISEN program (`aos`, `arisecli`, `awalletd`, etc.) w
 
 To install previous versions of the ARISEN prebuilt binaries:
 
-1. Browse to https://github.com/ARISEN/rsn/tags and select the actual version of the ARISEN software you need to install.
+1. Browse to https://github.com/ARISENIO/rsn/tags and select the actual version of the ARISEN software you need to install.
 
 2. Scroll down past the `Release Notes` and download the package or archive that you need for your OS.
 
