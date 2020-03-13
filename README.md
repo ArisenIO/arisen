@@ -115,14 +115,14 @@ To uninstall the ARISEN built/installed binaries and dependencies, run:
 1. [Awalletd](http://arisen.github.io/rsn/latest/awalletd/)
 
 ## Resources
-1. [Website](https://rsn.io)
-1. [Blog](https://medium.com/arisen)
-1. [Developer Portal](https://developers.rsn.io)
-1. [StackExchange for Q&A](https://arisen.stackexchange.com/)
-1. [Community Telegram Group](https://t.me/RSNProject)
-1. [Developer Telegram Group](https://t.me/joinchat/EaEnSUPktgfoI-XPfMYtcQ)
-1. [White Paper](https://github.com/ARISEN/Documentation/blob/master/TechnicalWhitePaper.md)
-1. [Roadmap](https://github.com/ARISEN/Documentation/blob/master/Roadmap.md)
+1. [Website](https://arisen.network/)
+1. [Blog](https://medium.com/arisenio)
+1. [Developer Portal](https://developers.arisen.io)
+1. [StackExchange for Q&A](https://arisenio.stackexchange.com/)
+1. [Community Telegram Group](https://t.me/arisenio)
+1. [Developer Telegram Group](https://t.me/arisen_developers)
+1. [White Paper](https://github.com/ARISENIO/Documentation/blob/master/TechnicalWhitePaper.md)
+1. [Roadmap](https://github.com/ARISENIO/Documentation/blob/master/Roadmap.md)
 
 <a name="gettingstarted"></a>
 ## Getting Started
