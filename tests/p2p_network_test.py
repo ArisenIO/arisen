@@ -34,7 +34,7 @@ parser.add_argument("--defproducera_prvt_key", type=str, help="defproducera priv
 parser.add_argument("--defproducerb_prvt_key", type=str, help="defproducerb private key.",
                     default=testUtils.Cluster.defproducerbAccount.ownerPrivateKey)
 parser.add_argument("--wallet_host", type=str, help="wallet host", default="localhost")
-parser.add_argument("--wallet_port", type=int, help="wallet port", default=8899)
+parser.add_argument("--wallet_port", type=int, help="wallet port", default=12618)
 parser.add_argument("--impaired_network", help="test impaired network", action='store_true')
 parser.add_argument("--lossy_network", help="test lossy network", action='store_true')
 parser.add_argument("--stress_network", help="test load/stress network", action='store_true')

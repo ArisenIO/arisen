@@ -7,7 +7,7 @@ content_title: Arisecli Troubleshooting
 Check if your local `aos` is running by visiting the following URL in your browser:
 
 ```sh
-curl http://localhost:8888/v1/chain/get_info
+curl http://localhost:12518/v1/chain/get_info
 ```
 
 If you are trying to connect a remote `aos` API endpoint, try to visit the API endpoint with the following suffix:

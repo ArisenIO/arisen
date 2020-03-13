@@ -30,20 +30,20 @@ Open four "terminal" windows and perform the following steps:
 In the first terminal window, start `awalletd`, the wallet management application:
 
 ```sh
-awalletd --http-server-address 127.0.0.1:8899
+awalletd --http-server-address 127.0.0.1:12618
 ```
 
 If successful, `awalletd` will display some information, starting with:
 
 ```console
 2493323ms thread-0   wallet_plugin.cpp:39          plugin_initialize    ] initializing wallet plugin
-2493323ms thread-0   http_plugin.cpp:141           plugin_initialize    ] host: 127.0.0.1 port: 8899
-2493323ms thread-0   http_plugin.cpp:144           plugin_initialize    ] configured http to listen on 127.0.0.1:8899
+2493323ms thread-0   http_plugin.cpp:141           plugin_initialize    ] host: 127.0.0.1 port: 12618
+2493323ms thread-0   http_plugin.cpp:144           plugin_initialize    ] configured http to listen on 127.0.0.1:12618
 2493323ms thread-0   http_plugin.cpp:213           plugin_startup       ] start listening for http requests
 2493324ms thread-0   wallet_api_plugin.cpp:70      plugin_startup       ] starting wallet_api_plugin
 ```
 
-Look for a line saying the wallet is listening on 127.0.0.1:8899. This will indicate that `awalletd` started correctly and is listening on the correct port. If you see anything else, or you see some error report prior to "starting wallet_api_plugin", then you need to diagnose the issue and restart.
+Look for a line saying the wallet is listening on 127.0.0.1:12618. This will indicate that `awalletd` started correctly and is listening on the correct port. If you see anything else, or you see some error report prior to "starting wallet_api_plugin", then you need to diagnose the issue and restart.
 
 When `awalletd` is running correctly, leave that window open with the wallet app running and move to the next terminal window.
 
@@ -52,7 +52,7 @@ When `awalletd` is running correctly, leave that window open with the wallet app
 In the next terminal window, use `arisecli`, the command-line utility, to create the default wallet.
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899  wallet create --to-console
+arisecli --wallet-url http://127.0.0.1:12618  wallet create --to-console
 ```
 
 `arisecli` will indicate that it created the "default" wallet, and will provide a password for future wallet access. As the message says, be sure to preserve this password for future use. Here is an example of this output:
@@ -71,7 +71,7 @@ Without password imported keys will not be retrievable.
 The private blockchain launched in the steps above is created with a default initial key which must be loaded into the wallet.
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899 wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+arisecli --wallet-url http://127.0.0.1:12618 wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
 ```
 
 ```console
@@ -95,7 +95,7 @@ The following commands assume that you are running this tutorial from the `rsn\b
 To start additional nodes, you must first load the `arisen.bios` contract. This contract enables you to have direct control over the resource allocation of other accounts and to access other privileged API calls. Return to the second terminal window and run the following command to load the contract:
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899 set contract arisen build/contracts/arisen.bios
+arisecli --wallet-url http://127.0.0.1:12618 set contract arisen build/contracts/arisen.bios
 ```
 
 We will create an account to become a producer, using the account name `inita`.  To create the account, we need to generate keys to associate with the account, and import those into our wallet.
@@ -119,7 +119,7 @@ Public key: RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg
 Now import the private key portion into your wallet. If successful, the matching public key will be reported. This should match the previously generated public key:
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899 wallet import 5JgbL2ZnoEAhTudReWH1RnMuQS6DBeLZt4ucV6t8aymVEuYg7sr
+arisecli --wallet-url http://127.0.0.1:12618 wallet import 5JgbL2ZnoEAhTudReWH1RnMuQS6DBeLZt4ucV6t8aymVEuYg7sr
 ```
 
 ```console
@@ -129,7 +129,7 @@ imported private key for: RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg
 Create the `inita` account that we will use to become a producer. The `create account` command requires two public keys, one for the account's owner key and one for its active key.  In this example, the newly created public key is used twice, as both the owner key and the active key. Example output from the create command is shown:
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899 create account arisen inita RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg
+arisecli --wallet-url http://127.0.0.1:12618 create account arisen inita RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg
 ```
 
 ```console
@@ -162,7 +162,7 @@ The output from this new node will show a little activity but will stop reportin
 At this point, the second `aos` is an idle producer. To turn it into an active producer, `inita` needs to be registered as a producer with the bios node, and the bios node needs to perform an action to update the producer schedule.
 
 ```sh
-arisecli --wallet-url http://127.0.0.1:8899 push action arisen setprods "{ \"schedule\": [{\"producer_name\": \"inita\",\"block_signing_key\": \"RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg\"}]}" -p arisen@active
+arisecli --wallet-url http://127.0.0.1:12618 push action arisen setprods "{ \"schedule\": [{\"producer_name\": \"inita\",\"block_signing_key\": \"RSN6hMjoWRF2L8x9YpeqtUEcsDKAyxSuM1APicxgRU1E3oyV5sDEg\"}]}" -p arisen@active
 ```
 
 ```console

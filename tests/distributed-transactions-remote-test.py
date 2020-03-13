@@ -42,7 +42,7 @@ clusterMapJsonTemplate="""{
         "defproducerbPrivateKey": "%s"
     },
     "nodes": [
-        {"port": 8888, "host": "localhost"},
+        {"port": 12518, "host": "localhost"},
         {"port": 8889, "host": "localhost"},
         {"port": 8890, "host": "localhost"}
     ]

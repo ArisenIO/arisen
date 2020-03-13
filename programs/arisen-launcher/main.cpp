@@ -124,7 +124,7 @@ public:
       public_name("localhost"),
       listen_addr("0.0.0.0"),
       base_p2p_port(9876),
-      base_http_port(8888),
+      base_http_port(12518),
       def_file_size(8192),
       instances(),
       p2p_count(0),

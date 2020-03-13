@@ -68,12 +68,12 @@ $ ./arisecli set contract arisen ~/rsn/build.release/contracts/arisen.bios/
 
 ### Initialize the accounts txn_test_gen_plugin uses
 ```bash
-$ curl --data-binary '["arisen", "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]' http://127.0.0.1:8888/v1/txn_test_gen/create_test_accounts
+$ curl --data-binary '["arisen", "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]' http://127.0.0.1:12518/v1/txn_test_gen/create_test_accounts
 ```
 
 ### Start transaction generation, this will submit 20 transactions evey 20ms (total of 1000TPS)
 ```bash
-$ curl --data-binary '["", 20, 20]' http://127.0.0.1:8888/v1/txn_test_gen/start_generation
+$ curl --data-binary '["", 20, 20]' http://127.0.0.1:12518/v1/txn_test_gen/start_generation
 ```
 
 ### Note the producer console prints

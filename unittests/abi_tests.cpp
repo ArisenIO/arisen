@@ -610,7 +610,7 @@ BOOST_AUTO_TEST_CASE(general)
         "ref_block_num":"1",
         "ref_block_prefix":"2",
         "expiration":"2021-12-20T15:30",
-        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"778899"}],
+        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"7712618"}],
         "actions":[{"account":"accountname1", "name":"actionname1", "authorization":[{"actor":"acc1","permission":"permname1"}], "data":"445566"}],
         "max_net_usage_words":15,
         "max_cpu_usage_ms":43,
@@ -621,7 +621,7 @@ BOOST_AUTO_TEST_CASE(general)
         "ref_block_num":"1",
         "ref_block_prefix":"2",
         "expiration":"2021-12-20T15:30",
-        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"778899"}],
+        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"7712618"}],
         "actions":[{"account":"acc1", "name":"actionname1", "authorization":[{"actor":"acc1","permission":"permname1"}], "data":"445566"}],
         "max_net_usage_words":15,
         "max_cpu_usage_ms":43,
@@ -631,7 +631,7 @@ BOOST_AUTO_TEST_CASE(general)
         "ref_block_num":"2",
         "ref_block_prefix":"3",
         "expiration":"2021-12-20T15:40",
-        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"778899"}],
+        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"7712618"}],
         "actions":[{"account":"acc2", "name":"actionname2", "authorization":[{"actor":"acc2","permission":"permname2"}], "data":""}],
         "max_net_usage_words":21,
         "max_cpu_usage_ms":87,
@@ -645,7 +645,7 @@ BOOST_AUTO_TEST_CASE(general)
         "region": "1",
         "signatures" : ["SIG_K1_Jzdpi5RCzHLGsQbpGhndXBzcFs8vT5LHAtWLMxPzBdwRHSmJkcCdVu6oqPUQn1hbGUdErHvxtdSTS1YA73BThQFwV1v4G5"],
         "context_free_data" : ["abcdef","0123456789","ABCDEF0123456789abcdef"],
-        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"778899"}],
+        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"7712618"}],
         "actions":[{"account":"accountname1", "name":"actionname1", "authorization":[{"actor":"acc1","permission":"permname1"}], "data":"445566"}],
         "max_net_usage_words":15,
         "max_cpu_usage_ms":43,
@@ -659,7 +659,7 @@ BOOST_AUTO_TEST_CASE(general)
         "region": "1",
         "signatures" : ["SIG_K1_Jzdpi5RCzHLGsQbpGhndXBzcFs8vT5LHAtWLMxPzBdwRHSmJkcCdVu6oqPUQn1hbGUdErHvxtdSTS1YA73BThQFwV1v4G5"],
         "context_free_data" : ["abcdef","0123456789","ABCDEF0123456789abcdef"],
-        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"778899"}],
+        "context_free_actions":[{"account":"contextfree1", "name":"cfactionname1", "authorization":[{"actor":"cfacc1","permission":"cfpermname1"}], "data":"7712618"}],
         "actions":[{"account":"acc1", "name":"actionname1", "authorization":[{"actor":"acc1","permission":"permname1"}], "data":"445566"}],
         "max_net_usage_words":15,
         "max_cpu_usage_ms":43,
@@ -2073,7 +2073,7 @@ BOOST_AUTO_TEST_CASE(abi_large_array)
 
       abi_serializer abis( fc::json::from_string( abi_str ).as<abi_def>(), max_serialization_time );
       // indicate a very large array, but don't actually provide a large array
-      // curl http://127.0.0.1:8888/v1/chain/abi_bin_to_json -X POST -d '{"code":"arisen", "action":"hi", "binargs":"ffffffff08"}'
+      // curl http://127.0.0.1:12518/v1/chain/abi_bin_to_json -X POST -d '{"code":"arisen", "action":"hi", "binargs":"ffffffff08"}'
       bytes bin = {static_cast<char>(0xff),
                    static_cast<char>(0xff),
                    static_cast<char>(0xff),

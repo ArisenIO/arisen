@@ -17,11 +17,11 @@ This procedure creates a database containing the chain state, with full history 
 1. Enable the `producer_api_plugin` on a node with full state-history.
 
 [[caution | Caution when using `producer_api_plugin`]]
-| Either use a firewall to block access to `http-server-address`, or change it to `localhost:8888` to disable remote access.
+| Either use a firewall to block access to `http-server-address`, or change it to `localhost:12518` to disable remote access.
 
 2. Create a portable snapshot:
 ```sh
-curl http://127.0.0.1:8888/v1/producer/create_snapshot | json_pp
+curl http://127.0.0.1:12518/v1/producer/create_snapshot | json_pp
 ```
 
 3. Wait for `aos` to process several blocks after the snapshot completed. The goal is for the state-history files to contain at least 1 more block than the portable snapshot has, and for the `blocks.log` file to contain the block after it has become irreversible.

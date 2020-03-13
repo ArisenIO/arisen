@@ -35,11 +35,11 @@ Start `aos` with `--shared-memory-size-mb 1024`. A 1 GB shared memory file allow
 If defaults can be used, then `arisecli get info` will output a block that contains a field called `server_version`.  If your `aos` is not using the defaults, then you need to know the URL of the `aos`. In that case, use the following with your `aos` URL:
 
 ```sh
-arisecli --url http://localhost:8888 get info
+arisecli --url http://localhost:12518 get info
 ```
 
 To focus only on the version line within the block:
 
 ```sh
-arisecli --url http://localhost:8888 get info | grep server_version
+arisecli --url http://localhost:12518 get info | grep server_version
 ```

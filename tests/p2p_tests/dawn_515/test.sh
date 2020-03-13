@@ -45,7 +45,7 @@ plugin = arisen::producer_plugin
 plugin = arisen::chain_api_plugin
 plugin = arisen::net_plugin
 plugin = arisen::history_api_plugin
-http-server-address = 127.0.0.1:8888
+http-server-address = 127.0.0.1:12518
 blocks-dir = blocks
 p2p-listen-endpoint = 0.0.0.0:9876
 allowed-connection = any
@@ -280,7 +280,7 @@ if [ $res -ne 0 ]; then
     ret=1
 fi
 
-b5idbios=`./programs/arisecli/arisecli -u http://localhost:8888 get block 5 | grep "^ *\"id\""`
+b5idbios=`./programs/arisecli/arisecli -u http://localhost:12518 get block 5 | grep "^ *\"id\""`
 b5id00=`./programs/arisecli/arisecli -u http://localhost:8889 get block 5 | grep "^ *\"id\""`
 b5id01=`./programs/arisecli/arisecli -u http://localhost:8890 get block 5 | grep "^ *\"id\""`
 

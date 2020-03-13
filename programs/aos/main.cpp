@@ -91,7 +91,7 @@ int main(int argc, char** argv)
       app().set_default_config_dir(root / "arisen" / aos::config::node_executable_name / "config" );
       http_plugin::set_defaults({
          .default_unix_socket_path = "",
-         .default_http_port = 8888
+         .default_http_port = 12518
       });
       if(!app().initialize<chain_plugin, net_plugin, producer_plugin>(argc, argv)) {
          const auto& opts = app().get_options();

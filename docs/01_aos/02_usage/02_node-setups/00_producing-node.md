@@ -73,7 +73,7 @@ You can also use `awalletd` instead of hard-defining keys.
 signature-provider = AWALLETD:<data>   
 
 //Example
-//RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=AWALLETD:https://127.0.0.1:88888
+//RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=AWALLETD:https://127.0.0.1:125188
 ```
 
 ### 4. Define a peers list

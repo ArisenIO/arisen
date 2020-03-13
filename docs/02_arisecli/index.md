@@ -28,7 +28,7 @@ Usage: arisecli [OPTIONS] SUBCOMMAND
 
 Options:
   -h,--help                   Print this help message and exit
-  -u,--url TEXT=http://127.0.0.1:8888/
+  -u,--url TEXT=http://127.0.0.1:12518/
                               the http/https URL where aos is running
   --wallet-url TEXT=unix:///Users/username/arisen-wallet/awalletd.sock
                               the http/https URL where awalletd is running

@@ -27,7 +27,7 @@ Config Options for arisen::http_plugin:
   --unix-socket-path arg                The filename (relative to data-dir) to 
                                         create a unix socket for HTTP RPC; set 
                                         blank to disable (=awalletd.sock for awalletd)
-  --http-server-address arg (=127.0.0.1:8888 for aos)
+  --http-server-address arg (=127.0.0.1:12518 for aos)
                                         The local IP and port to listen for 
                                         incoming http connections; set blank to
                                         disable.

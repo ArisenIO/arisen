@@ -33,7 +33,7 @@ This procedure records the current chain state and future history, without previ
 If `aos` fails to receive blocks from the network, then try the above using `net_api_plugin`. Use `arisecli net disconnect` and `arisecli net connect` to reconnect nodes which timed out.
 
 [[caution | Caution when using `net_api_plugin`]]
-| Either use a firewall to block access to your `http-server-address`, or change it to `localhost:8888` to disable remote access.
+| Either use a firewall to block access to your `http-server-address`, or change it to `localhost:12518` to disable remote access.
 
 [[info]]
 | Whenever you run a filler after this point, use the `--fill-trim` option. Only use `--fpg-create` and `--fill-skip-to` the first time.
