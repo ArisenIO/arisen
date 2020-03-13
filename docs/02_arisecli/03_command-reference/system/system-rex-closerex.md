@@ -1,9 +1,9 @@
 ---
-title: "system rex closerex"
-excerpt: "Delete unused REX-related user table entries"
+title: "system bex closerex"
+excerpt: "Delete unused BEX-related user table entries"
 ---
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -22,5 +22,5 @@ excerpt: "Delete unused REX-related user table entries"
 
 
 ```sh
-cleos system rex closerex accountname1
+arisecli system bex closerex accountname1
 ```

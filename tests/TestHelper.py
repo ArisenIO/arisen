@@ -64,21 +64,21 @@ class TestHelper(object):
             parser.add_argument("--kill-sig", type=str, choices=[Utils.SigKillTag, Utils.SigTermTag], help="kill signal.",
                     default=Utils.SigKillTag)
         if "--kill-count" in includeArgs:
-            parser.add_argument("--kill-count", type=int, help="nodeos instances to kill", default=-1)
+            parser.add_argument("--kill-count", type=int, help="aos instances to kill", default=-1)
         if "--seed" in includeArgs:
             parser.add_argument("--seed", type=int, help="random seed", default=1)
 
         if "--host" in includeArgs:
-            parser.add_argument("-h", "--host", type=str, help="%s host name" % (Utils.EosServerName),
+            parser.add_argument("-h", "--host", type=str, help="%s host name" % (Utils.RsnServerName),
                                      default=TestHelper.LOCAL_HOST)
         if "--port" in includeArgs:
-            parser.add_argument("-p", "--port", type=int, help="%s host port" % Utils.EosServerName,
+            parser.add_argument("-p", "--port", type=int, help="%s host port" % Utils.RsnServerName,
                                      default=TestHelper.DEFAULT_PORT)
         if "--wallet-host" in includeArgs:
-            parser.add_argument("--wallet-host", type=str, help="%s host" % Utils.EosWalletName,
+            parser.add_argument("--wallet-host", type=str, help="%s host" % Utils.RsnWalletName,
                                      default=TestHelper.LOCAL_HOST)
         if "--wallet-port" in includeArgs:
-            parser.add_argument("--wallet-port", type=int, help="%s port" % Utils.EosWalletName,
+            parser.add_argument("--wallet-port", type=int, help="%s port" % Utils.RsnWalletName,
                                      default=TestHelper.DEFAULT_WALLET_PORT)
         if "--prod-count" in includeArgs:
             parser.add_argument("-c", "--prod-count", type=int, help="Per node producer count", default=1)
@@ -105,9 +105,9 @@ class TestHelper(object):
         if "--only-bios" in includeArgs:
             parser.add_argument("--only-bios", help="Limit testing to bios node.", action='store_true')
         if "--clean-run" in includeArgs:
-            parser.add_argument("--clean-run", help="Kill all nodeos and kleos instances", action='store_true')
+            parser.add_argument("--clean-run", help="Kill all aos and klrsn instances", action='store_true')
         if "--sanity-test" in includeArgs:
-            parser.add_argument("--sanity-test", help="Validates nodeos and kleos are in path and can be started up.", action='store_true')
+            parser.add_argument("--sanity-test", help="Validates aos and klrsn are in path and can be started up.", action='store_true')
         if "--alternate-version-labels-file" in includeArgs:
             parser.add_argument("--alternate-version-labels-file", type=str, help="Provide a file to define the labels that can be used in the test and the path to the version installation associated with that.")
 
@@ -124,20 +124,20 @@ class TestHelper(object):
             Utils.Print(str(prefix))
         clientVersion=Cluster.getClientVersion()
         Utils.Print("UTC time: %s" % str(datetime.utcnow()))
-        Utils.Print("EOS Client version: %s" % (clientVersion))
+        Utils.Print("RSN Client version: %s" % (clientVersion))
         Utils.Print("Processor: %s" % (platform.processor()))
         Utils.Print("OS name: %s" % (platform.platform()))
     
     @staticmethod
     # pylint: disable=too-many-arguments
-    def shutdown(cluster, walletMgr, testSuccessful=True, killEosInstances=True, killWallet=True, keepLogs=False, cleanRun=True, dumpErrorDetails=False):
+    def shutdown(cluster, walletMgr, testSuccessful=True, killRsnInstances=True, killWallet=True, keepLogs=False, cleanRun=True, dumpErrorDetails=False):
         """Cluster and WalletMgr shutdown and cleanup."""
         assert(cluster)
         assert(isinstance(cluster, Cluster))
         if walletMgr:
             assert(isinstance(walletMgr, WalletMgr))
         assert(isinstance(testSuccessful, bool))
-        assert(isinstance(killEosInstances, bool))
+        assert(isinstance(killRsnInstances, bool))
         assert(isinstance(killWallet, bool))
         assert(isinstance(cleanRun, bool))
         assert(isinstance(dumpErrorDetails, bool))
@@ -151,7 +151,7 @@ class TestHelper(object):
         if not testSuccessful and dumpErrorDetails:
             cluster.reportStatus()
             Utils.Print(Utils.FileDivider)
-            psOut=Cluster.pgrepEosServers(timeout=60)
+            psOut=Cluster.pgrepRsnServers(timeout=60)
             Utils.Print("pgrep output:\n%s" % (psOut))
             cluster.dumpErrorDetails()
             if walletMgr:
@@ -166,7 +166,7 @@ class TestHelper(object):
                     Utils.Print("cerr={%s}\n" % (err))
                 Utils.Print("== cmd/cout/cerr pairs done. ==")
 
-        if killEosInstances:
+        if killRsnInstances:
             Utils.Print("Shut down the cluster.")
             cluster.killall(allInstances=cleanRun)
             if testSuccessful and not keepLogs:

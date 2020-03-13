@@ -1,5 +1,5 @@
 ---
-title: "system rex fundnetloan"
+title: "system bex fundnetloan"
 excerpt: "Deposit into a Network loan fund"
 ---
 ## Positionals
@@ -22,5 +22,5 @@ excerpt: "Deposit into a Network loan fund"
 
 
 ```sh
-cleos system rex fundnetloan accountname1 abc123 "1 EOS"
+arisecli system bex fundnetloan accountname1 abc123 "1 RSN"
 ```

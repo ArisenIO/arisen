@@ -2,7 +2,7 @@
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is an account
@@ -14,7 +14,7 @@
 ## Steps
 
 ```sh
-cleos create account creator name OwnerKey [ActiveKey]
+arisecli create account creator name OwnerKey [ActiveKey]
 ```
 
 [[info | Recommend]]

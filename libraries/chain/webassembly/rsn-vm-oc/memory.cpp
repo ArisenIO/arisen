@@ -1,5 +1,5 @@
-#include <arisen/chain/webassembly/eos-vm-oc/memory.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/memory.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic.hpp>
 
 #include <fc/scoped_exit.hpp>
 
@@ -8,10 +8,10 @@
 #include <sys/mman.h>
 #include <linux/memfd.h>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 memory::memory() {
-   int fd = syscall(SYS_memfd_create, "eosvmoc_mem", MFD_CLOEXEC);
+   int fd = syscall(SYS_memfd_create, "rsnvmoc_mem", MFD_CLOEXEC);
    FC_ASSERT(fd >= 0, "Failed to create memory memfd");
    auto cleanup_fd = fc::make_scoped_exit([&fd](){close(fd);});
    int ret = ftruncate(fd, wasm_memory_size+memory_prologue_size);

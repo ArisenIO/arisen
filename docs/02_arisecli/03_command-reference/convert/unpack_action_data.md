@@ -13,7 +13,7 @@ From packed to json action data form
 
 
 ```sh
- cleos convert unpack_action_data arisen unlinkauth 000000008090b1ca000000000091b1ca000075982aea3055
+ arisecli convert unpack_action_data arisen unlinkauth 000000008090b1ca000000000091b1ca000075982aea3055
 ```
 
 ## Output

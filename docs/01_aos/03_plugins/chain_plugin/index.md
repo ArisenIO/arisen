@@ -13,12 +13,12 @@ plugin = arisen::chain_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin [operations] [options]
+aos ... --plugin arisen::chain_plugin [operations] [options]
 ```
 
 ## Operations
 
-These can only be specified from the `nodeos` command-line:
+These can only be specified from the `aos` command-line:
 
 ```console
 Command Line Options for arisen::chain_plugin:
@@ -59,7 +59,7 @@ Command Line Options for arisen::chain_plugin:
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::chain_plugin:

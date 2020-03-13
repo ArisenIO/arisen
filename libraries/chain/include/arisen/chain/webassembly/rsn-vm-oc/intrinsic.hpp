@@ -1,6 +1,6 @@
 #pragma once
 
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic_mapping.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic_mapping.hpp>
 
 #include <map>
 #include <string>
@@ -9,7 +9,7 @@ namespace IR {
    struct FunctionType;
 }
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 struct intrinsic {
    intrinsic(const char* name, const IR::FunctionType* type, void* function_ptr, size_t ordinal);

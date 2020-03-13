@@ -14,7 +14,7 @@ Material is not made available to any person or entity that is the subject of sa
 Any person using or offering Software in connection with providing software, goods or services to third parties shall advise such third parties of this important notice, including all limitations, restrictions and exclusions of liability.
 
 ## Trademarks
-Block.one, ARISEN, EOS, the heptahedron and associated logos and related marks are our trademarks.  Other trademarks referenced in Material are the property of their respective owners.
+Block.one, ARISEN, RSN, the heptahedron and associated logos and related marks are our trademarks.  Other trademarks referenced in Material are the property of their respective owners.
 
 ## Third parties
 Any reference in Material to any third party or third-party product, resource or service is not an endorsement or recommendation by Block.one.  We are not responsible for, and disclaim any and all responsibility and liability for, your use of or reliance on any of these resources. Third-party resources may be updated, changed or terminated at any time, so information in Material may be out of date or inaccurate.

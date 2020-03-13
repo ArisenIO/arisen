@@ -1,6 +1,6 @@
 ## Positionals
-- `from` _TEXT_ - Account selling REX tokens (required)
-- `rex` _TEXT_ - Amount of REX tokens to be sold (required)
+- `from` _TEXT_ - Account selling BEX tokens (required)
+- `bex` _TEXT_ - Amount of BEX tokens to be sold (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -16,5 +16,5 @@
 
 
 ```sh
-cleos system rex sellrex accountname1 "1 REX"
+arisecli system bex sellrex accountname1 "1 BEX"
 ```

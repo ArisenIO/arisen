@@ -4,7 +4,7 @@ Vote for a block producer
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Ensure the reference system contracts from `arisen.contracts` repository is deployed and used to manage system resources
 
@@ -19,7 +19,7 @@ Vote for a block producer
 Assume you are going to vote for blockproducer1 and blockproducer2 from an account called `arisentestts2`, execute the following:
 
 ```sh
-cleos system voteproducer prods arisentestts2 blockproducer1 blockproducer2
+arisecli system voteproducer prods arisentestts2 blockproducer1 blockproducer2
 ```
 
 This should produce similar output as below:

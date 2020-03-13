@@ -24,12 +24,12 @@ Retrieves the contents of a database table
 Get the data from the accounts table for the arisen.token contract, for user arisen,
 
 ```sh
-cleos get table arisen.token arisen accounts
+arisecli get table arisen.token arisen accounts
 ```
 ```json
 {
   "rows": [{
-      "balance": "999999920.0000 SYS"
+      "balance": "999999920.0000 RSN"
     }
   ],
   "more": false

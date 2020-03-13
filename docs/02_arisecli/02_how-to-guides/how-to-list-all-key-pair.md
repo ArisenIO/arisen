@@ -4,7 +4,7 @@ List all key pairs
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is a public and private key pair
@@ -14,19 +14,19 @@ List all key pairs
 Unlock your wallet
 
 ```sh
-cleos wallet unlock
+arisecli wallet unlock
 ```
 
 List all public keys:
 
 ```sh
-cleos wallet keys
+arisecli wallet keys
 ```
 
 List all private keys:
 
 ```sh
-cleos wallet private_keys
+arisecli wallet private_keys
 
 ```
 

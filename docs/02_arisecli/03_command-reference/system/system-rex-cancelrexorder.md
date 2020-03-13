@@ -1,6 +1,6 @@
 ---
-title: "system rex cancelrexorder"
-excerpt: "Cancel queued REX sell order if one exists"
+title: "system bex cancelrexorder"
+excerpt: "Cancel queued BEX sell order if one exists"
 ---
 ## Positionals
 - `owner` _TEXT_ - Owner account of sell order (required)
@@ -22,5 +22,5 @@ excerpt: "Cancel queued REX sell order if one exists"
 
 
 ```sh
-cleos system rex cancelrexorder accountname1
+arisecli system bex cancelrexorder accountname1
 ```

@@ -1,8 +1,8 @@
 ## Positionals
-- `from` _TEXT_ - Account buying REX tokens (required)
+- `from` _TEXT_ - Account buying BEX tokens (required)
 - `receiver` _TEXT_ - Account that tokens have been staked to (required)
-- `from_cpu` _TEXT_ - Amount to be unstaked from CPU resources and used in REX purchase (required)
-- `from_net` _TEXT_ - Amount to be unstaked from Net resources and used in REX purchase (required)
+- `from_cpu` _TEXT_ - Amount to be unstaked from CPU resources and used in BEX purchase (required)
+- `from_net` _TEXT_ - Amount to be unstaked from Net resources and used in BEX purchase (required)
 ## Options
 - `-h,--help` Print this help message and exit
 - `-x,--expiration` _TEXT_ - set the time in seconds before a transaction expires, defaults to 30s
@@ -20,5 +20,5 @@
 
 
 ```sh
-cleos system rex unstaketorex accountname1 accountname2 "1 EOS" 0
+arisecli system bex unstaketorex accountname1 accountname2 "1 RSN" 0
 ```

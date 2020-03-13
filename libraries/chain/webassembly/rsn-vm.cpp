@@ -1,11 +1,11 @@
-#include <arisen/chain/webassembly/eos-vm.hpp>
+#include <arisen/chain/webassembly/rsn-vm.hpp>
 #include <arisen/chain/apply_context.hpp>
 #include <arisen/chain/transaction_context.hpp>
 #include <arisen/chain/wasm_arisen_constraints.hpp>
-//eos-vm includes
+//rsn-vm includes
 #include <arisen/vm/backend.hpp>
 
-namespace arisen { namespace chain { namespace webassembly { namespace eos_vm_runtime {
+namespace arisen { namespace chain { namespace webassembly { namespace rsn_vm_runtime {
 
 using namespace arisen::vm;
 
@@ -44,11 +44,11 @@ namespace {
 }
 
 template<typename Impl>
-class eos_vm_instantiated_module : public wasm_instantiated_module_interface {
+class rsn_vm_instantiated_module : public wasm_instantiated_module_interface {
       using backend_t = backend<apply_context, Impl>;
    public:
       
-      eos_vm_instantiated_module(eos_vm_runtime<Impl>* runtime, std::unique_ptr<backend_t> mod) :
+      rsn_vm_instantiated_module(rsn_vm_runtime<Impl>* runtime, std::unique_ptr<backend_t> mod) :
          _runtime(runtime),
          _instantiated_module(std::move(mod)) {}
 
@@ -77,38 +77,38 @@ class eos_vm_instantiated_module : public wasm_instantiated_module_interface {
       }
 
    private:
-      eos_vm_runtime<Impl>*            _runtime;
+      rsn_vm_runtime<Impl>*            _runtime;
       std::unique_ptr<backend_t> _instantiated_module;
 };
 
 template<typename Impl>
-eos_vm_runtime<Impl>::eos_vm_runtime() {}
+rsn_vm_runtime<Impl>::rsn_vm_runtime() {}
 
 template<typename Impl>
-void eos_vm_runtime<Impl>::immediately_exit_currently_running_module() {
+void rsn_vm_runtime<Impl>::immediately_exit_currently_running_module() {
    throw wasm_exit{};
 }
 
 template<typename Impl>
-bool eos_vm_runtime<Impl>::inject_module(IR::Module& module) {
+bool rsn_vm_runtime<Impl>::inject_module(IR::Module& module) {
    return false;
 }
 
 template<typename Impl>
-std::unique_ptr<wasm_instantiated_module_interface> eos_vm_runtime<Impl>::instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t>,
+std::unique_ptr<wasm_instantiated_module_interface> rsn_vm_runtime<Impl>::instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t>,
                                                                                              const digest_type&, const uint8_t&, const uint8_t&) {
    using backend_t = backend<apply_context, Impl>;
    try {
       wasm_code_ptr code((uint8_t*)code_bytes, code_size);
       std::unique_ptr<backend_t> bkend = std::make_unique<backend_t>(code, code_size);
       registered_host_functions<apply_context>::resolve(bkend->get_module());
-      return std::make_unique<eos_vm_instantiated_module<Impl>>(this, std::move(bkend));
+      return std::make_unique<rsn_vm_instantiated_module<Impl>>(this, std::move(bkend));
    } catch(arisen::vm::exception& e) {
-      FC_THROW_EXCEPTION(wasm_execution_error, "Error building eos-vm interp: ${e}", ("e", e.what()));
+      FC_THROW_EXCEPTION(wasm_execution_error, "Error building rsn-vm interp: ${e}", ("e", e.what()));
    }
 }
 
-template class eos_vm_runtime<arisen::vm::interpreter>;
-template class eos_vm_runtime<arisen::vm::jit>;
+template class rsn_vm_runtime<arisen::vm::interpreter>;
+template class rsn_vm_runtime<arisen::vm::jit>;
 
 }}}}

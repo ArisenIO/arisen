@@ -8,7 +8,7 @@ There are various ways to install and use the ARISEN software:
 * [Build ARISEN from Source](01_build-from-source/index.md)
 
 [[info]]
-| If you are new to ARISEN, it is recommended that you install the [ARISEN Prebuilt Binaries](00_install-prebuilt-binaries.md), then proceed to the [Getting Started](https://developers.eos.io/arisen-home/docs/) section of the [ARISEN Developer Portal](https://developers.eos.io/). If you are an advanced developer, a block producer, or no binaries are available for your platform, you may need to [Build ARISEN from source](01_build-from-source/index.md) instead.
+| If you are new to ARISEN, it is recommended that you install the [ARISEN Prebuilt Binaries](00_install-prebuilt-binaries.md), then proceed to the [Getting Started](https://developers.rsn.io/arisen-home/docs/) section of the [ARISEN Developer Portal](https://developers.rsn.io/). If you are an advanced developer, a block producer, or no binaries are available for your platform, you may need to [Build ARISEN from source](01_build-from-source/index.md) instead.
 
 ## Supported Operating Systems
 

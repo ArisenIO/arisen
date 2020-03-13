@@ -215,8 +215,8 @@ public:
       return push_transaction( trx );
    }
 
-   action_result buyram( const account_name& payer, account_name receiver, const asset& eosin ) {
-      return push_action( payer, N(buyram), mvo()( "payer",payer)("receiver",receiver)("quant",eosin) );
+   action_result buyram( const account_name& payer, account_name receiver, const asset& rsnin ) {
+      return push_action( payer, N(buyram), mvo()( "payer",payer)("receiver",receiver)("quant",rsnin) );
    }
    action_result buyrambytes( const account_name& payer, account_name receiver, uint32_t numbytes ) {
       return push_action( payer, N(buyrambytes), mvo()( "payer",payer)("receiver",receiver)("bytes",numbytes) );
@@ -434,7 +434,7 @@ public:
    }
 
    vector<name> active_and_vote_producers() {
-      //stake more than 15% of total EOS supply to activate chain
+      //stake more than 15% of total RSN supply to activate chain
       transfer( name("arisen"), name("alice1111111"), core_from_string("650000000.0000"), name("arisen") );
       BOOST_REQUIRE_EQUAL( success(), stake( name("alice1111111"), name("alice1111111"), core_from_string("300000000.0000"), core_from_string("300000000.0000") ) );
 
@@ -556,8 +556,8 @@ inline fc::mutable_variant_object proxy( account_name acct ) {
    return voter( acct )( "is_proxy", 1 );
 }
 
-inline uint64_t M( const string& eos_str ) {
-   return core_from_string( eos_str ).get_amount();
+inline uint64_t M( const string& rsn_str ) {
+   return core_from_string( rsn_str ).get_amount();
 }
 
 }

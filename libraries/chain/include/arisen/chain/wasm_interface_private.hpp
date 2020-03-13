@@ -3,12 +3,12 @@
 #include <arisen/chain/wasm_interface.hpp>
 #include <arisen/chain/webassembly/wavm.hpp>
 #include <arisen/chain/webassembly/wabt.hpp>
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-#include <arisen/chain/webassembly/eos-vm-oc.hpp>
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+#include <arisen/chain/webassembly/rsn-vm-oc.hpp>
 #else
-#define _REGISTER_EOSVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
+#define _REGISTER_RSNVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
 #endif
-#include <arisen/chain/webassembly/eos-vm.hpp>
+#include <arisen/chain/webassembly/rsn-vm.hpp>
 #include <arisen/chain/webassembly/runtime_interface.hpp>
 #include <arisen/chain/wasm_arisen_injection.hpp>
 #include <arisen/chain/transaction_context.hpp>
@@ -22,7 +22,7 @@
 #include "WAST/WAST.h"
 #include "IR/Validate.h"
 
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
 #include <arisen/vm/allocator.hpp>
 #endif
 
@@ -35,7 +35,7 @@ using boost::multi_index_container;
 
 namespace arisen { namespace chain {
 
-   namespace eosvmoc { struct config; }
+   namespace rsnvmoc { struct config; }
 
    struct wasm_interface_impl {
       struct wasm_cache_entry {
@@ -50,37 +50,37 @@ namespace arisen { namespace chain {
       struct by_first_block_num;
       struct by_last_block_num;
 
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-      struct eosvmoc_tier {
-         eosvmoc_tier(const boost::filesystem::path& d, const eosvmoc::config& c, const chainbase::database& db) : cc(d, c, db), exec(cc) {}
-         eosvmoc::code_cache_async cc;
-         eosvmoc::executor exec;
-         eosvmoc::memory mem;
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+      struct rsnvmoc_tier {
+         rsnvmoc_tier(const boost::filesystem::path& d, const rsnvmoc::config& c, const chainbase::database& db) : cc(d, c, db), exec(cc) {}
+         rsnvmoc::code_cache_async cc;
+         rsnvmoc::executor exec;
+         rsnvmoc::memory mem;
       };
 #endif
 
-      wasm_interface_impl(wasm_interface::vm_type vm, bool eosvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const eosvmoc::config& eosvmoc_config) : db(d), wasm_runtime_time(vm) {
+      wasm_interface_impl(wasm_interface::vm_type vm, bool rsnvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const rsnvmoc::config& rsnvmoc_config) : db(d), wasm_runtime_time(vm) {
          if(vm == wasm_interface::vm_type::wabt)
             runtime_interface = std::make_unique<webassembly::wabt_runtime::wabt_runtime>();
-#ifdef ARISEN_EOS_VM_RUNTIME_ENABLED
-         if(vm == wasm_interface::vm_type::eos_vm)
-            runtime_interface = std::make_unique<webassembly::eos_vm_runtime::eos_vm_runtime<arisen::vm::interpreter>>();
+#ifdef ARISEN_RSN_VM_RUNTIME_ENABLED
+         if(vm == wasm_interface::vm_type::rsn_vm)
+            runtime_interface = std::make_unique<webassembly::rsn_vm_runtime::rsn_vm_runtime<arisen::vm::interpreter>>();
 #endif
-#ifdef ARISEN_EOS_VM_JIT_RUNTIME_ENABLED
-         if(vm == wasm_interface::vm_type::eos_vm_jit)
-            runtime_interface = std::make_unique<webassembly::eos_vm_runtime::eos_vm_runtime<arisen::vm::jit>>();
+#ifdef ARISEN_RSN_VM_JIT_RUNTIME_ENABLED
+         if(vm == wasm_interface::vm_type::rsn_vm_jit)
+            runtime_interface = std::make_unique<webassembly::rsn_vm_runtime::rsn_vm_runtime<arisen::vm::jit>>();
 #endif
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-         if(vm == wasm_interface::vm_type::eos_vm_oc)
-            runtime_interface = std::make_unique<webassembly::eosvmoc::eosvmoc_runtime>(data_dir, eosvmoc_config, d);
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+         if(vm == wasm_interface::vm_type::rsn_vm_oc)
+            runtime_interface = std::make_unique<webassembly::rsnvmoc::rsnvmoc_runtime>(data_dir, rsnvmoc_config, d);
 #endif
          if(!runtime_interface)
-            EOS_THROW(wasm_exception, "${r} wasm runtime not supported on this platform and/or configuration", ("r", vm));
+            RSN_THROW(wasm_exception, "${r} wasm runtime not supported on this platform and/or configuration", ("r", vm));
 
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-         if(eosvmoc_tierup) {
-            EOS_ASSERT(vm != wasm_interface::vm_type::eos_vm_oc, wasm_exception, "You can't use EOS VM OC as the base runtime when tier up is activated");
-            eosvmoc.emplace(data_dir, eosvmoc_config, d);
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+         if(rsnvmoc_tierup) {
+            RSN_ASSERT(vm != wasm_interface::vm_type::rsn_vm_oc, wasm_exception, "You can't use RSN VM OC as the base runtime when tier up is activated");
+            rsnvmoc.emplace(data_dir, rsnvmoc_config, d);
          }
 #endif
       }
@@ -97,8 +97,8 @@ namespace arisen { namespace chain {
          std::vector<uint8_t> mem_image;
 
          for(const DataSegment& data_segment : module.dataSegments) {
-            EOS_ASSERT(data_segment.baseOffset.type == InitializerExpression::Type::i32_const, wasm_exception, "");
-            EOS_ASSERT(module.memories.defs.size(), wasm_exception, "");
+            RSN_ASSERT(data_segment.baseOffset.type == InitializerExpression::Type::i32_const, wasm_exception, "");
+            RSN_ASSERT(module.memories.defs.size(), wasm_exception, "");
             const U32 base_offset = data_segment.baseOffset.i32;
             const Uptr memory_size = (module.memories.defs[0].type.size.min << IR::numBytesPerPageLog2);
             if(base_offset >= memory_size || base_offset + data_segment.data.size() > memory_size)
@@ -123,9 +123,9 @@ namespace arisen { namespace chain {
          //anything last used before or on the LIB can be evicted
          const auto first_it = wasm_instantiation_cache.get<by_last_block_num>().begin();
          const auto last_it  = wasm_instantiation_cache.get<by_last_block_num>().upper_bound(lib);
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-         if(eosvmoc) for(auto it = first_it; it != last_it; it++)
-            eosvmoc->cc.free_code(it->code_hash, it->vm_version);
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+         if(rsnvmoc) for(auto it = first_it; it != last_it; it++)
+            rsnvmoc->cc.free_code(it->code_hash, it->vm_version);
 #endif
          wasm_instantiation_cache.get<by_last_block_num>().erase(first_it, last_it);
       }
@@ -167,9 +167,9 @@ namespace arisen { namespace chain {
                WASM::serialize(stream, module);
                module.userSections.clear();
             } catch (const Serialization::FatalSerializationException& e) {
-               EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+               RSN_ASSERT(false, wasm_serialization_error, e.message.c_str());
             } catch (const IR::ValidationException& e) {
-               EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+               RSN_ASSERT(false, wasm_serialization_error, e.message.c_str());
             }
             if (runtime_interface->inject_module(module)) {
                try {
@@ -177,10 +177,10 @@ namespace arisen { namespace chain {
                   WASM::serialize(outstream, module);
                   bytes = outstream.getBytes();
                } catch (const Serialization::FatalSerializationException& e) {
-                  EOS_ASSERT(false, wasm_serialization_error,
+                  RSN_ASSERT(false, wasm_serialization_error,
                              e.message.c_str());
                } catch (const IR::ValidationException& e) {
-                  EOS_ASSERT(false, wasm_serialization_error,
+                  RSN_ASSERT(false, wasm_serialization_error,
                              e.message.c_str());
                }
             }
@@ -214,8 +214,8 @@ namespace arisen { namespace chain {
       const chainbase::database& db;
       const wasm_interface::vm_type wasm_runtime_time;
 
-#ifdef ARISEN_EOS_VM_OC_RUNTIME_ENABLED
-      fc::optional<eosvmoc_tier> eosvmoc;
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+      fc::optional<rsnvmoc_tier> rsnvmoc;
 #endif
    };
 
@@ -228,8 +228,8 @@ namespace arisen { namespace chain {
 #define _REGISTER_INTRINSIC_EXPLICIT(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)\
    _REGISTER_WAVM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)         \
    _REGISTER_WABT_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)         \
-   _REGISTER_EOS_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)       \
-   _REGISTER_EOSVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
+   _REGISTER_RSN_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)       \
+   _REGISTER_RSNVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
 
 #define _REGISTER_INTRINSIC4(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)\
    _REGISTER_INTRINSIC_EXPLICIT(CLS, MOD, METHOD, WASM_SIG, NAME, SIG )

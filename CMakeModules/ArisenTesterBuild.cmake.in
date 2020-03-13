@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.5 )
-message(STATUS "Setting up Arisen Tester @VERSION_FULL@ at @EOS_ROOT_DIR@")
+message(STATUS "Setting up Arisen Tester @VERSION_FULL@ at @RSN_ROOT_DIR@")
 
 set(CMAKE_CXX_COMPILER @CMAKE_CXX_COMPILER@)
 set(CMAKE_C_COMPILER   @CMAKE_C_COMPILER@)
@@ -78,7 +78,7 @@ find_library(GMP_LIBRARIES NAMES libgmp.a gmp.lib gmp libgmp-10 mpir
 )
 
 set(ARISEN_WASM_RUNTIMES @ARISEN_WASM_RUNTIMES@)
-if("eos-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
+if("rsn-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
    set(WRAP_MAIN "-Wl,-wrap=main")
 endif()
 

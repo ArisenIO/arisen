@@ -1,14 +1,14 @@
 ---
-content_title: Nodeos Troubleshooting
+content_title: Aos Troubleshooting
 ---
 
 ### "Database dirty flag set (likely due to unclean shutdown): replay required"
 
-`nodeos` needs to be shut down cleanly. To ensure this is done, send a `SIGTERM`, `SIGQUIT` or `SIGINT` and wait for the process to shutdown. Failing to do this will result in this error. If you get this error, your only recourse is to replay by starting `nodeos` with `--replay-blockchain` 
+`aos` needs to be shut down cleanly. To ensure this is done, send a `SIGTERM`, `SIGQUIT` or `SIGINT` and wait for the process to shutdown. Failing to do this will result in this error. If you get this error, your only recourse is to replay by starting `aos` with `--replay-blockchain` 
 
 ### "Memory does not match data" Error at Restart
 
-If you get an error such as `St9exception: content of memory does not match data expected by executable` when trying to start `nodeos`, try restarting `nodeos` with one of the following options (you can use `nodeos --help` to get a full listing of these).
+If you get an error such as `St9exception: content of memory does not match data expected by executable` when trying to start `aos`, try restarting `aos` with one of the following options (you can use `aos --help` to get a full listing of these).
 
 ```
 Command Line Options for arisen::chain_plugin:
@@ -28,18 +28,18 @@ Command Line Options for arisen::chain_plugin:
 
 ### "Could not grow database file to requested size." Error
 
-Start `nodeos` with `--shared-memory-size-mb 1024`. A 1 GB shared memory file allows approximately half a million transactions.
+Start `aos` with `--shared-memory-size-mb 1024`. A 1 GB shared memory file allows approximately half a million transactions.
 
 ### What version of ARISEN am I running/connecting to?
 
-If defaults can be used, then `cleos get info` will output a block that contains a field called `server_version`.  If your `nodeos` is not using the defaults, then you need to know the URL of the `nodeos`. In that case, use the following with your `nodeos` URL:
+If defaults can be used, then `arisecli get info` will output a block that contains a field called `server_version`.  If your `aos` is not using the defaults, then you need to know the URL of the `aos`. In that case, use the following with your `aos` URL:
 
 ```sh
-cleos --url http://localhost:8888 get info
+arisecli --url http://localhost:8888 get info
 ```
 
 To focus only on the version line within the block:
 
 ```sh
-cleos --url http://localhost:8888 get info | grep server_version
+arisecli --url http://localhost:8888 get info | grep server_version
 ```

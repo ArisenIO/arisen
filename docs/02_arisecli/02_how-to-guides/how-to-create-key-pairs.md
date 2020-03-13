@@ -2,7 +2,7 @@
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is a public and private key pair
@@ -12,11 +12,11 @@
 To output the key pair to the console
 
 ```sh
-cleos create key --to-console
+arisecli create key --to-console
 ```
 
 To save the key pair to file
 
 ```sh
-cleos create key --file FILE_TO_SAVEKEY
+arisecli create key --file FILE_TO_SAVEKEY
 ```

@@ -1,10 +1,10 @@
 ## Goal
 
-Create a `keosd` wallet
+Create a `awalletd` wallet
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is an account
@@ -15,7 +15,7 @@ Create a `keosd` wallet
 Create a wallet and save the password to a file:
 
 ```sh
-cleos wallet create --file password.pwd
+arisecli wallet create --file password.pwd
 ```
 
 This should produce similar output as below. Note the wallet is named `default` if no name is provided.
@@ -30,7 +30,7 @@ saving password to password.pwd
 Alternatively, you can name a wallet with `-n` option:
 
 ```sh
-cleos wallet create -n named_wallet -f passwd
+arisecli wallet create -n named_wallet -f passwd
 ```
 
 You should see something like the output below:

@@ -7,10 +7,10 @@ from TestHelper import TestHelper
 import subprocess
 
 ###############################################################
-# nodeos_run_remote_test
+# aos_run_remote_test
 #
-#  Tests remote capability of the nodeos_run_test. Test will setup cluster and pass nodes info to nodeos_run_test. E.g.
-#  nodeos_run_remote_test.py -v --clean-run --dump-error-detail
+#  Tests remote capability of the aos_run_test. Test will setup cluster and pass nodes info to aos_run_test. E.g.
+#  aos_run_remote_test.py -v --clean-run --dump-error-detail
 #
 ###############################################################
 
@@ -26,13 +26,13 @@ killAll=args.clean_run
 
 Utils.Debug=debug
 
-killEosInstances=not dontKill
+killRsnInstances=not dontKill
 topo="mesh"
 delay=1
 prodCount=1 # producers per producer node
 pnodes=1
 total_nodes=pnodes
-actualTest="tests/nodeos_run_test.py"
+actualTest="tests/aos_run_test.py"
 testSuccessful=False
 
 cluster=Cluster(walletd=True)
@@ -46,7 +46,7 @@ try:
     Print("Stand up cluster")
 
     if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, prodCount=prodCount, topo=topo, delay=delay, onlyBios=onlyBios) is False:
-        errorExit("Failed to stand up eos cluster.")
+        errorExit("Failed to stand up rsn cluster.")
 
     Print ("Wait for Cluster stabilization")
     # wait for cluster to start producing blocks
@@ -58,13 +58,13 @@ try:
     defproducerbPrvtKey=producerKeys["defproducerb"]["private"]
 
     cmd="%s --dont-launch --defproducera_prvt_key %s --defproducerb_prvt_key %s %s %s %s" % (actualTest, defproduceraPrvtKey, defproducerbPrvtKey, "-v" if debug else "", "--leave-running" if dontKill else "", "--only-bios" if onlyBios else "")
-    Print("Starting up %s test: %s" % ("nodeos", actualTest))
+    Print("Starting up %s test: %s" % ("aos", actualTest))
     Print("cmd: %s\n" % (cmd))
     if 0 != subprocess.call(cmd, shell=True):
         errorExit("failed to run cmd.")
 
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, None, testSuccessful, killEosInstances, False, False, killAll, dumpErrorDetails)
+    TestHelper.shutdown(cluster, None, testSuccessful, killRsnInstances, False, False, killAll, dumpErrorDetails)
 
 exit(0)

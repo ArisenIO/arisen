@@ -5,14 +5,14 @@ Retrieve version information
 ## Command
 
 ```sh
-cleos version
+arisecli version
 ```
 
 ## Subcommands
 [client](client) - Retrieve version information of the client
 
 ```sh
-cleos version client
+arisecli version client
 ```
 
 ## Output

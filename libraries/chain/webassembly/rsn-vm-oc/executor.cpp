@@ -1,9 +1,9 @@
-#include <arisen/chain/webassembly/eos-vm-oc/executor.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/code_cache.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/memory.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic_mapping.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/eos-vm-oc.h>
+#include <arisen/chain/webassembly/rsn-vm-oc/executor.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/code_cache.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/memory.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic_mapping.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/rsn-vm-oc.h>
 #include <arisen/chain/wasm_arisen_constraints.hpp>
 #include <arisen/chain/apply_context.hpp>
 #include <arisen/chain/transaction_context.hpp>
@@ -20,13 +20,13 @@
 
 #if defined(__has_feature)
 #if __has_feature(shadow_call_stack)
-#error EOS VM OC is not compatible with Clang ShadowCallStack
+#error RSN VM OC is not compatible with Clang ShadowCallStack
 #endif
 #endif
 
 extern "C" int arch_prctl(int code, unsigned long* addr);
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 static constexpr auto signal_sentinel = 0x4D56534F45534559ul;
 
@@ -53,12 +53,12 @@ static void segv_handler(int sig, siginfo_t* info, void* ctx)  {
    //was the segfault within code?
    if((uintptr_t)info->si_addr >= cb_in_main_segment->execution_thread_code_start &&
       (uintptr_t)info->si_addr < cb_in_main_segment->execution_thread_code_start+cb_in_main_segment->execution_thread_code_length)
-         siglongjmp(*cb_in_main_segment->jmp, EOSVMOC_EXIT_CHECKTIME_FAIL);
+         siglongjmp(*cb_in_main_segment->jmp, RSNVMOC_EXIT_CHECKTIME_FAIL);
 
    //was the segfault within data?
    if((uintptr_t)info->si_addr >= cb_in_main_segment->execution_thread_memory_start &&
       (uintptr_t)info->si_addr < cb_in_main_segment->execution_thread_memory_start+cb_in_main_segment->execution_thread_memory_length)
-         siglongjmp(*cb_in_main_segment->jmp, EOSVMOC_EXIT_SEGV);
+         siglongjmp(*cb_in_main_segment->jmp, RSNVMOC_EXIT_SEGV);
 
 notus:
    if(chained_handler) {
@@ -70,14 +70,14 @@ notus:
    __builtin_unreachable();
 }
 
-static intrinsic grow_memory_intrinsic EOSVMOC_INTRINSIC_INIT_PRIORITY("eosvmoc_internal.grow_memory", IR::FunctionType::get(IR::ResultType::i32,{IR::ValueType::i32,IR::ValueType::i32}),
-  (void*)&eos_vm_oc_grow_memory,
-  boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("eosvmoc_internal.grow_memory"))).value()
+static intrinsic grow_memory_intrinsic RSNVMOC_INTRINSIC_INIT_PRIORITY("rsnvmoc_internal.grow_memory", IR::FunctionType::get(IR::ResultType::i32,{IR::ValueType::i32,IR::ValueType::i32}),
+  (void*)&rsn_vm_oc_grow_memory,
+  boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("rsnvmoc_internal.grow_memory"))).value()
 );
 
 //This is effectively overriding the arisen_exit intrinsic in wasm_interface
 static void arisen_exit(int32_t code) {
-   siglongjmp(*eos_vm_oc_get_jmp_buf(), EOSVMOC_EXIT_CLEAN_EXIT);
+   siglongjmp(*rsn_vm_oc_get_jmp_buf(), RSNVMOC_EXIT_CLEAN_EXIT);
    __builtin_unreachable();
 }
 static intrinsic arisen_exit_intrinsic("env.arisen_exit", IR::FunctionType::get(IR::ResultType::none,{IR::ValueType::i32}), (void*)&arisen_exit,
@@ -85,35 +85,35 @@ static intrinsic arisen_exit_intrinsic("env.arisen_exit", IR::FunctionType::get(
 );
 
 static void throw_internal_exception(const char* const s) {
-   *reinterpret_cast<std::exception_ptr*>(eos_vm_oc_get_exception_ptr()) = std::make_exception_ptr(wasm_execution_error(FC_LOG_MESSAGE(error, s)));
-   siglongjmp(*eos_vm_oc_get_jmp_buf(), EOSVMOC_EXIT_EXCEPTION);
+   *reinterpret_cast<std::exception_ptr*>(rsn_vm_oc_get_exception_ptr()) = std::make_exception_ptr(wasm_execution_error(FC_LOG_MESSAGE(error, s)));
+   siglongjmp(*rsn_vm_oc_get_jmp_buf(), RSNVMOC_EXIT_EXCEPTION);
    __builtin_unreachable();
 }
 
-#define DEFINE_EOSVMOC_TRAP_INTRINSIC(module,name) \
+#define DEFINE_RSNVMOC_TRAP_INTRINSIC(module,name) \
 	void name(); \
-	static intrinsic name##Function EOSVMOC_INTRINSIC_INIT_PRIORITY(#module "." #name,IR::FunctionType::get(),(void*)&name, \
+	static intrinsic name##Function RSNVMOC_INTRINSIC_INIT_PRIORITY(#module "." #name,IR::FunctionType::get(),(void*)&name, \
      boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING(#module "." #name))).value() \
    ); \
 	void name()
 
-DEFINE_EOSVMOC_TRAP_INTRINSIC(eosvmoc_internal,depth_assert) {
+DEFINE_RSNVMOC_TRAP_INTRINSIC(rsnvmoc_internal,depth_assert) {
    throw_internal_exception("Exceeded call depth maximum");
 }
 
-DEFINE_EOSVMOC_TRAP_INTRINSIC(eosvmoc_internal,div0_or_overflow) {
+DEFINE_RSNVMOC_TRAP_INTRINSIC(rsnvmoc_internal,div0_or_overflow) {
    throw_internal_exception("Division by 0 or integer overflow trapped");
 }
 
-DEFINE_EOSVMOC_TRAP_INTRINSIC(eosvmoc_internal,indirect_call_mismatch) {
+DEFINE_RSNVMOC_TRAP_INTRINSIC(rsnvmoc_internal,indirect_call_mismatch) {
    throw_internal_exception("Indirect call function type mismatch");
 }
 
-DEFINE_EOSVMOC_TRAP_INTRINSIC(eosvmoc_internal,indirect_call_oob) {
+DEFINE_RSNVMOC_TRAP_INTRINSIC(rsnvmoc_internal,indirect_call_oob) {
    throw_internal_exception("Indirect call index out of bounds");
 }
 
-DEFINE_EOSVMOC_TRAP_INTRINSIC(eosvmoc_internal,unreachable) {
+DEFINE_RSNVMOC_TRAP_INTRINSIC(rsnvmoc_internal,unreachable) {
    throw_internal_exception("Unreachable reached");
 }
 
@@ -137,7 +137,7 @@ executor::executor(const code_cache_base& cc) {
 
    uint64_t current_gs;
    if(arch_prctl(ARCH_GET_GS, &current_gs) || current_gs)
-      wlog("x86_64 GS register is not set as expected. EOS VM OC may not run correctly on this platform");
+      wlog("x86_64 GS register is not set as expected. RSN VM OC may not run correctly on this platform");
 
    struct stat s;
    FC_ASSERT(fstat(cc.fd(), &s) == 0, "executor failed to get code cache size");
@@ -211,13 +211,13 @@ void executor::execute(const code_descriptor& code, const memory& mem, apply_con
          apply_func(context.get_receiver().to_uint64_t(), context.get_action().account.to_uint64_t(), context.get_action().name.to_uint64_t());
          break;
       //case 1: clean arisen_exit
-      case EOSVMOC_EXIT_CHECKTIME_FAIL:
+      case RSNVMOC_EXIT_CHECKTIME_FAIL:
          context.trx_context.checktime();
          break;
-      case EOSVMOC_EXIT_SEGV:
-         EOS_ASSERT(false, wasm_execution_error, "access violation");
+      case RSNVMOC_EXIT_SEGV:
+         RSN_ASSERT(false, wasm_execution_error, "access violation");
          break;
-      case EOSVMOC_EXIT_EXCEPTION: //exception
+      case RSNVMOC_EXIT_EXCEPTION: //exception
          std::rethrow_exception(*cb->eptr);
          break;
    }

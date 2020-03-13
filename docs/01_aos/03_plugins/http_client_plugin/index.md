@@ -2,7 +2,7 @@
 
 ## Description
 
-The `http_client_plugin`  is an internal utility plugin, providing the `producer_plugin` the ability to use securely an external `keosd` instance as its block signer. It can only be used when the `producer_plugin` is configured to produce blocks.
+The `http_client_plugin`  is an internal utility plugin, providing the `producer_plugin` the ability to use securely an external `awalletd` instance as its block signer. It can only be used when the `producer_plugin` is configured to produce blocks.
 
 ## Usage
 
@@ -14,14 +14,14 @@ https-client-validate-peers = 1
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::http_client_plugin  \
+aos ... --plugin arisen::http_client_plugin  \
            --https-client-root-cert "path/to/my/certificate.pem"  \
            --https-client-validate-peers 1
 ```
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::http_client_plugin:

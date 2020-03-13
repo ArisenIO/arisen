@@ -3,7 +3,7 @@
 #include <arisen/chain/types.hpp>
 #include <arisen/chain/whitelisted_intrinsics.hpp>
 #include <arisen/chain/exceptions.hpp>
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
 #include <arisen/vm/allocator.hpp>
 #endif
 #include "Runtime/Linker.h"
@@ -14,7 +14,7 @@ namespace arisen { namespace chain {
    class apply_context;
    class wasm_runtime_interface;
    class controller;
-   namespace eosvmoc { struct config; }
+   namespace rsnvmoc { struct config; }
 
    struct wasm_exit {
       int32_t code = 0;
@@ -46,7 +46,7 @@ namespace arisen { namespace chain {
             if( whitelisted_intrinsics != nullptr ) {
                // Protect access to "private" injected functions; so for now just simply allow "env" since injected
                // functions are in a different module.
-               EOS_ASSERT( mod_name == "env", wasm_exception,
+               RSN_ASSERT( mod_name == "env", wasm_exception,
                            "importing from module that is not 'env': ${module}.${export}",
                            ("module",mod_name)("export",export_name) );
 
@@ -59,7 +59,7 @@ namespace arisen { namespace chain {
                return true;
             }
 
-            EOS_THROW( wasm_exception, "${module}.${export} unresolveable",
+            RSN_THROW( wasm_exception, "${module}.${export} unresolveable",
                       ("module",mod_name)("export",export_name) );
             return false;
          } FC_CAPTURE_AND_RETHROW( (mod_name)(export_name) ) }
@@ -77,12 +77,12 @@ namespace arisen { namespace chain {
       public:
          enum class vm_type {
             wabt,
-            eos_vm,
-            eos_vm_jit,
-            eos_vm_oc
+            rsn_vm,
+            rsn_vm_jit,
+            rsn_vm_oc
          };
 
-         wasm_interface(vm_type vm, bool eosvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const eosvmoc::config& eosvmoc_config);
+         wasm_interface(vm_type vm, bool rsnvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const rsnvmoc::config& rsnvmoc_config);
          ~wasm_interface();
 
          //call before dtor to skip what can be minutes of dtor overhead with some runtimes; can cause leaks
@@ -114,4 +114,4 @@ namespace arisen{ namespace chain {
    std::istream& operator>>(std::istream& in, wasm_interface::vm_type& runtime);
 }}
 
-FC_REFLECT_ENUM( arisen::chain::wasm_interface::vm_type, (wabt)(eos_vm)(eos_vm_jit)(eos_vm_oc) )
+FC_REFLECT_ENUM( arisen::chain::wasm_interface::vm_type, (wabt)(rsn_vm)(rsn_vm_jit)(rsn_vm_oc) )

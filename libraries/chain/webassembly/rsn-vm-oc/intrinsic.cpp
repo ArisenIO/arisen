@@ -1,6 +1,6 @@
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic.hpp>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 static intrinsic_map_t& the_intrinsic_map() {
    static intrinsic_map_t intrinsic_map;

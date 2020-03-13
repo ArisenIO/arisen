@@ -11,8 +11,8 @@ The `producer_api_plugin` exposes a number of endpoints for the [`producer_plugi
 plugin = arisen::producer_api_plugin
 ```
 ```sh
-# nodeos startup params
-nodeos ... --plugin arisen::producer_api_plugin
+# aos startup params
+aos ... --plugin arisen::producer_api_plugin
 ```
 
 ## Options
@@ -38,7 +38,7 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::producer_plugin [options]  \
+aos ... --plugin arisen::producer_plugin [options]  \
            --plugin arisen::chain_plugin [operations] [options]  \
            --plugin arisen::http_plugin [options]
 ```

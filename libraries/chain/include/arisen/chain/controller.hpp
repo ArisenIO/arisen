@@ -9,7 +9,7 @@
 #include <arisen/chain/account_object.hpp>
 #include <arisen/chain/snapshot.hpp>
 #include <arisen/chain/protocol_feature_manager.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/config.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/config.hpp>
 
 namespace chainbase {
    class database;
@@ -84,8 +84,8 @@ namespace arisen { namespace chain {
             bool                     disable_all_subjective_mitigations = false; //< for testing purposes only
 
             wasm_interface::vm_type  wasm_runtime = chain::config::default_wasm_runtime;
-            eosvmoc::config          eosvmoc_config;
-            bool                     eosvmoc_tierup         = false;
+            rsnvmoc::config          rsnvmoc_config;
+            bool                     rsnvmoc_tierup         = false;
 
             db_read_mode             read_mode              = db_read_mode::SPECULATIVE;
             validation_mode          block_validation_mode  = validation_mode::FULL;
@@ -292,7 +292,7 @@ namespace arisen { namespace chain {
          void add_to_ram_correction( account_name account, uint64_t ram_bytes );
          bool all_subjective_mitigations_disabled()const;
 
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
          vm::wasm_allocator&  get_wasm_allocator();
 #endif
 

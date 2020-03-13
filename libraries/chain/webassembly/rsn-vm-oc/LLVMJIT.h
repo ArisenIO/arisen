@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 struct instantiated_code {
    std::vector<uint8_t> code;

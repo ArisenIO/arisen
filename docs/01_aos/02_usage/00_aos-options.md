@@ -1,12 +1,12 @@
 ---
-content_title: Nodeos Options
+content_title: Aos Options
 ---
 
-`Nodeos` is a command line interface (CLI) application. As such, it can be started manually from the command line or through an automated script. The behavior of `nodeos` is determined mainly by which plugins are loaded and which plugin options are used. The `nodeos` application features two main option categories: *nodeos-specific* options and *plugin-specific* options.
+`Aos` is a command line interface (CLI) application. As such, it can be started manually from the command line or through an automated script. The behavior of `aos` is determined mainly by which plugins are loaded and which plugin options are used. The `aos` application features two main option categories: *aos-specific* options and *plugin-specific* options.
 
-## Nodeos-specific Options
+## Aos-specific Options
 
-Nodeos-specific options are used mainly for housekeeping purposes, such as setting the directory where the blockchain data resides, specifying the name of the `nodeos` configuraton file, setting the name and path of the logging configuration file, etc. A sample output from running  `nodeos --help` is displayed below, showing the nodeos-specific options (Note: the plugin-specific options have been excluded for clarity):
+Aos-specific options are used mainly for housekeeping purposes, such as setting the directory where the blockchain data resides, specifying the name of the `aos` configuraton file, setting the name and path of the logging configuration file, etc. A sample output from running  `aos --help` is displayed below, showing the aos-specific options (Note: the plugin-specific options have been excluded for clarity):
 
 ```console
 Application Config Options:
@@ -30,7 +30,7 @@ Application Command Line Options:
 
 ## Plugin-specific Options
 
-Plugin-specific options control the behavior of the nodeos plugins. Every plugin-specific option has a unique name, so it can be specified in any order within the command line or `config.ini` file. When specifying one or more plugin-specific option(s), the applicable plugin(s) must also be enabled using the `--plugin` option or else the corresponding option(s) will be ignored. A sample output from running `nodeos --help` is displayed below, showing an excerpt from the plugin-specific options:
+Plugin-specific options control the behavior of the aos plugins. Every plugin-specific option has a unique name, so it can be specified in any order within the command line or `config.ini` file. When specifying one or more plugin-specific option(s), the applicable plugin(s) must also be enabled using the `--plugin` option or else the corresponding option(s) will be ignored. A sample output from running `aos --help` is displayed below, showing an excerpt from the plugin-specific options:
 
 ```console
 Config Options for arisen::chain_plugin:
@@ -269,13 +269,13 @@ Config Options for arisen::net_plugin:
                                         indicates to node that only 
                                         transactions 'trx' or blocks 'blk' 
                                         should be sent.  Examples:
-                                            p2p.eos.io:9876
-                                            p2p.trx.eos.io:9876:trx
-                                            p2p.blk.eos.io:9876:blk
+                                            p2p.rsn.io:9876
+                                            p2p.trx.rsn.io:9876:trx
+                                            p2p.blk.rsn.io:9876:blk
                                         
   --p2p-max-nodes-per-host arg (=1)     Maximum number of client nodes from any
                                         single IP address
-  --agent-name arg (="EOS Test Agent")  The name supplied to identify this node
+  --agent-name arg (="RSN Test Agent")  The name supplied to identify this node
                                         amongst the peers.
   --allowed-connection arg (=any)       Can be 'any' or 'producers' or 
                                         'specified' or 'none'. If 'specified', 
@@ -348,7 +348,7 @@ Config Options for arisen::producer_plugin:
                                         instead) Tuple of [public key, WIF 
                                         private key] (may specify multiple 
                                         times)
-  --signature-provider arg (=EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3)
+  --signature-provider arg (=RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3)
                                         Key=Value pairs in the form 
                                         <public-key>=<provider-spec>
                                         Where:
@@ -360,7 +360,7 @@ Config Options for arisen::producer_plugin:
                                                            form <provider-type>
                                                            :<data>
                                         
-                                           <provider-type> is KEY, or KEOSD
+                                           <provider-type> is KEY, or AWALLETD
                                         
                                            KEY:<data>      is a string form of 
                                                            a valid ARISEN 
@@ -368,14 +368,14 @@ Config Options for arisen::producer_plugin:
                                                            maps to the provided
                                                            public key
                                         
-                                           KEOSD:<data>    is the URL where 
-                                                           keosd is available 
+                                           AWALLETD:<data>    is the URL where 
+                                                           awalletd is available 
                                                            and the approptiate 
                                                            wallet(s) are 
                                                            unlocked
-  --keosd-provider-timeout arg (=5)     Limits the maximum time (in 
+  --awalletd-provider-timeout arg (=5)     Limits the maximum time (in 
                                         milliseconds) that is allowed for 
-                                        sending blocks to a keosd provider for 
+                                        sending blocks to a awalletd provider for 
                                         signing
   --greylist-account arg                account that can not access to extended
                                         CPU/NET virtual resources

@@ -14,7 +14,7 @@ The `wallet_plugin` adds access to wallet functionality from a node.
 plugin = arisen::wallet_plugin
 
 # command-line
-nodeos ... --plugin arisen::wallet_plugin
+aos ... --plugin arisen::wallet_plugin
 ```
 
 ## Options
@@ -36,6 +36,6 @@ plugin = arisen::http_plugin
 [options]
 
 # command-line
-nodeos ... --plugin arisen::wallet_plugin [options]  \
+aos ... --plugin arisen::wallet_plugin [options]  \
            --plugin arisen::http_plugin [options]
 ```

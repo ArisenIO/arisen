@@ -10,14 +10,14 @@ Setup an account that require multiple signatures for signning a transaction
 
 * You have sufficient token allocated to your account
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Unlock your wallet
 
 ## Steps
 
-Buys RAM in value of 0.1 SYS tokens for account `alice`:
+Buys RAM in value of 0.1 RSN tokens for account `alice`:
 
 ```sh
-cleos system buyram alice alice "0.1 SYS" -p alice@active
+arisecli system buyram alice alice "0.1 RSN" -p alice@active
 ```

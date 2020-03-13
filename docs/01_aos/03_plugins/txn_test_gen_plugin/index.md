@@ -5,7 +5,7 @@
 The `txn_test_gen_plugin` is used for transaction test purposes.
 
 [[info | For More Information]]
-For more information, check the [txn_test_gen_plugin/README.md](https://github.com/ARISEN/eos/blob/develop/plugins/txn_test_gen_plugin/README.md) on the ARISEN/eos repository.
+For more information, check the [txn_test_gen_plugin/README.md](https://github.com/ARISEN/rsn/blob/develop/plugins/txn_test_gen_plugin/README.md) on the ARISEN/rsn repository.
 
 ## Usage
 
@@ -16,12 +16,12 @@ plugin = arisen::txn_test_gen_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::txn_test_gen_plugin [options]
+aos ... --plugin arisen::txn_test_gen_plugin [options]
 ```
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::txn_test_gen_plugin:

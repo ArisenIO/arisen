@@ -10,7 +10,7 @@ None.
 
 
 ```sh
-cleos wallet keys
+arisecli wallet keys
 ```
 
 ## Outputs
@@ -18,7 +18,7 @@ cleos wallet keys
 
 ```console
 [[
-    "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+    "RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
     "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
   ]
 ]

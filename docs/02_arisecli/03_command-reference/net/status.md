@@ -4,12 +4,12 @@ status of existing connection
 **Command**
 
 ```sh
-cleos net status
+arisecli net status
 ```
 **Output**
 
 ```console
-Usage: cleos net status host
+Usage: arisecli net status host
 
 Positionals:
   host TEXT                   The hostname:port to query status of connection

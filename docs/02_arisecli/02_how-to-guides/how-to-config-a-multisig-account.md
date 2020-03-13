@@ -8,7 +8,7 @@ Setup an account that require multiple signatures for signning a transaction
 
 * You have enough resoruces allocated to execute the transaction
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is an account
@@ -18,5 +18,5 @@ Setup an account that require multiple signatures for signning a transaction
 ## Steps
 
 ```sh
-cleos set account permission multisig active '{\"threshold\" : 1, \"accounts\" :[{\"permission\":{\"actor\":\"arisen\",\"permission\":\"active\"},\"weight\":1},{\"permission\":{\"actor\":\"customera\",\"permission\":\"active\"},\"weight\":1}]}' owner -p multisig@owner"
+arisecli set account permission multisig active '{\"threshold\" : 1, \"accounts\" :[{\"permission\":{\"actor\":\"arisen\",\"permission\":\"active\"},\"weight\":1},{\"permission\":{\"actor\":\"customera\",\"permission\":\"active\"},\"weight\":1}]}' owner -p multisig@owner"
 ```

@@ -9,7 +9,7 @@ This procedure restores an existing snapshot with full history, so the node can 
 ## Before you begin
 
 * Make sure [ARISEN is installed](../../../00_install/index.md).
-* Learn about [Using Nodeos](../../02_usage/index.md).
+* Learn about [Using Aos](../../02_usage/index.md).
 * Get familiar with [state_history_plugin](../../03_plugins/state_history_plugin/index.md).
 
 ## Steps
@@ -21,13 +21,13 @@ This procedure restores an existing snapshot with full history, so the node can 
 
 2. Make sure `data/state` does not exist
 
-3. Start `nodeos` with the `--snapshot` option, and the options listed in the [`state_history_plugin`](#index.md).
+3. Start `aos` with the `--snapshot` option, and the options listed in the [`state_history_plugin`](#index.md).
 
-4. Do not stop `nodeos` until it has received at least 1 block from the network, or it won't be able to restart.
+4. Do not stop `aos` until it has received at least 1 block from the network, or it won't be able to restart.
 
 ## Remarks
 
-If `nodeos` fails to receive blocks from the network, then try the above using `net_api_plugin`. Use `cleos net disconnect` and `cleos net connect` to reconnect nodes which timed out.
+If `aos` fails to receive blocks from the network, then try the above using `net_api_plugin`. Use `arisecli net disconnect` and `arisecli net connect` to reconnect nodes which timed out.
 
 [[caution | Caution when using `net_api_plugin`]]
 | Either use a firewall to block access to `http-server-address`, or change it to `localhost:8888` to disable remote access.

@@ -1,5 +1,5 @@
 ## Positionals
-- `from` _TEXT_ - Account buying REX tokens (required)
+- `from` _TEXT_ - Account buying BEX tokens (required)
 - `receiver` _TEXT_ - Account to whom rented NET bandwidth is staked (required)
 - `loan_payment` _TEXT_ - Loan fee to be paid, used to calculate amount of rented bandwidth (required)
 - `loan_fund` _TEXT_ - Loan fund to be used in automatic renewal, can be 0 tokens (required)
@@ -20,5 +20,5 @@
 
 
 ```sh
-cleos system rex rentnet accountname1 accountname2 "1 EOS" 0
+arisecli system bex rentnet accountname1 accountname2 "1 RSN" 0
 ```

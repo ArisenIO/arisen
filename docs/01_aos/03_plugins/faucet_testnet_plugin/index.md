@@ -12,7 +12,7 @@ plugin = arisen::faucet_testnet_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::faucet_testnet_plugin
+aos ... --plugin arisen::faucet_testnet_plugin
 ```
 
 ## Options

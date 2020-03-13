@@ -4,20 +4,20 @@
 #include <boost/hana/tuple.hpp>
 #include <boost/hana/string.hpp>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 using namespace boost::hana::literals;
 
 //NEVER reorder or remove indexes; the PIC uses the indexes in this table as an offset in to a jump
 // table. Adding on the bottom is fine and requires no other updates elsewhere
 constexpr auto intrinsic_table = boost::hana::make_tuple(
-   "eosvmoc_internal.unreachable"_s,
-   "eosvmoc_internal.grow_memory"_s,
-   "eosvmoc_internal.div0_or_overflow"_s,
-   "eosvmoc_internal.indirect_call_mismatch"_s,
-   "eosvmoc_internal.indirect_call_oob"_s,
-   "eosvmoc_internal.depth_assert"_s,
-   "arisen_injection.call_depth_assert"_s,  //these two are never used by EOS VM OC but all intrinsics
+   "rsnvmoc_internal.unreachable"_s,
+   "rsnvmoc_internal.grow_memory"_s,
+   "rsnvmoc_internal.div0_or_overflow"_s,
+   "rsnvmoc_internal.indirect_call_mismatch"_s,
+   "rsnvmoc_internal.indirect_call_oob"_s,
+   "rsnvmoc_internal.depth_assert"_s,
+   "arisen_injection.call_depth_assert"_s,  //these two are never used by RSN VM OC but all intrinsics
    "arisen_injection.checktime"_s,          //must be mapped
    "env.__ashlti3"_s,
    "env.__ashrti3"_s,

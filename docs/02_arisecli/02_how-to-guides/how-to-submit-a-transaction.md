@@ -4,7 +4,7 @@ Push a transaction
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is a transaction
@@ -42,7 +42,7 @@ Push a transaction
 * You can also create a JSON snippet that uses clear text JSON for `data` field.
 
 [[info]]
-| Be aware that if a clear text `data` field is used, cleos need to fetch copies of required ABIs using `nodeos` API. That operation has a performance overhead on `nodeos`
+| Be aware that if a clear text `data` field is used, arisecli need to fetch copies of required ABIs using `aos` API. That operation has a performance overhead on `aos`
 
 ```JSON
 {
@@ -64,7 +64,7 @@ Push a transaction
       "data": {
         "from": "han",
         "to": "arisen",
-        "quantity": "0.0001 SYS",
+        "quantity": "0.0001 RSN",
         "memo": "m"
       }
     }
@@ -77,13 +77,13 @@ Push a transaction
 * Execute the following command:
 
 ```sh
-cleos push transaction TRX_FILE.json
+arisecli push transaction TRX_FILE.json
 ```
 
 * Submit a transaction from a JSON:
 
 ```sh
-cleos push transaction JSON
+arisecli push transaction JSON
 ```
 
 <!---

@@ -1,44 +1,44 @@
 ---
-content_title: Keosd Usage
+content_title: Awalletd Usage
 ---
 
 [[info | Recommended Usage]]
-| For most users, the easiest way to use `keosd` is to have `cleos` launch it automatically. Wallet files will be created in the default directory (`~/arisen-wallet`).
+| For most users, the easiest way to use `awalletd` is to have `arisecli` launch it automatically. Wallet files will be created in the default directory (`~/arisen-wallet`).
 
-## Launching keosd manually
+## Launching awalletd manually
 
-`keosd` can be launched manually from the terminal by running:
+`awalletd` can be launched manually from the terminal by running:
 
 ```sh
-keosd
+awalletd
 ```
 
-By default, `keosd` creates the folder `~/arisen-wallet` and populates it with a basic `config.ini` file.  The location of the config file can be specified on the command line using the `--config-dir` argument.  The configuration file contains the HTTP server endpoint for incoming HTTP connections and other parameters for cross-origin resource sharing.
+By default, `awalletd` creates the folder `~/arisen-wallet` and populates it with a basic `config.ini` file.  The location of the config file can be specified on the command line using the `--config-dir` argument.  The configuration file contains the HTTP server endpoint for incoming HTTP connections and other parameters for cross-origin resource sharing.
 
 [[info | Wallet Location]]
 | The location of the wallet data folder can be specified on the command line with the `--data-dir` option.
 
 ## Auto-locking
 
-By default, `keosd` is set to lock your wallet after 15 minutes of inactivity. This is configurable in the `config.ini` by setting the timeout seconds in `unlock-timeout`. Setting it to 0 will cause `keosd` to always lock your wallet.
+By default, `awalletd` is set to lock your wallet after 15 minutes of inactivity. This is configurable in the `config.ini` by setting the timeout seconds in `unlock-timeout`. Setting it to 0 will cause `awalletd` to always lock your wallet.
 
-## Stopping keosd
+## Stopping awalletd
 
-The most effective way to stop `keosd` is to find the keosd process and send a SIGTERM signal to it.
+The most effective way to stop `awalletd` is to find the awalletd process and send a SIGTERM signal to it.
 
 ## Other options
 
-For a list of all commands known to `keosd`, simply run it with no arguments:
+For a list of all commands known to `awalletd`, simply run it with no arguments:
 
 ```sh
-keosd --help
+awalletd --help
 ```
 
 ```console
 Application Options:
 
 Config Options for arisen::http_plugin:
-  --unix-socket-path arg (=keosd.sock)  The filename (relative to data-dir) to
+  --unix-socket-path arg (=awalletd.sock)  The filename (relative to data-dir) to
                                         create a unix socket for HTTP RPC; set
                                         blank to disable.
   --http-server-address arg             The local IP and port to listen for

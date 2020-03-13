@@ -1,10 +1,10 @@
-# Localization template for eosc
+# Localization template for rsnc
 # see LICENSE.txt
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ARISEN 1.0\n"
-"Report-Msgid-Bugs-To: https://github.com/ARISEN/eos/issues"
+"Report-Msgid-Bugs-To: https://github.com/ARISEN/rsn/issues"
 "POT-Creation-Date: 2017-09-28 11:40-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -85,7 +85,7 @@ msgid ""
 "The ABI for the code on account \"${1}\" does not specify table \"${2}\".\n"
 "\n"
 "Please check the account and table name, and verify that the account has the expected code using:\n"
-"  eosc get code ${1}"
+"  rsnc get code ${1}"
 msgstr ""
 
 msgid "Error locating help text: ${code} ${what}"
@@ -130,16 +130,16 @@ msgstr ""
 msgid "[delete] NULL, [set/update] The permission name require for executing the given action"
 msgstr ""
 
-msgid "the host where eosd is running"
+msgid "the host where rsnd is running"
 msgstr ""
 
-msgid "the port where eosd is running"
+msgid "the port where rsnd is running"
 msgstr ""
 
-msgid "the host where eos-walletd is running"
+msgid "the host where rsn-walletd is running"
 msgstr ""
 
-msgid "the port where eos-walletd is running"
+msgid "the port where rsn-walletd is running"
 msgstr ""
 
 msgid "output verbose messages on error"
@@ -496,10 +496,10 @@ msgstr ""
 msgid "The JSON array of the transactions to push"
 msgstr ""
 
-msgid "Failed to connect to eosd at ${ip}:${port}; is eosd running?"
+msgid "Failed to connect to rsnd at ${ip}:${port}; is rsnd running?"
 msgstr ""
 
-msgid "Failed to connect to eos-walletd at ${ip}:${port}; is eos-walletd running?"
+msgid "Failed to connect to rsn-walletd at ${ip}:${port}; is rsn-walletd running?"
 msgstr ""
 
 msgid "Failed to connect"

@@ -20,5 +20,5 @@ Create or update the abi on an account
 ## Usage
 
 ```sh
-cleos set abi someaccount1 ./path/to/abi.abi
+arisecli set abi someaccount1 ./path/to/abi.abi
 ```

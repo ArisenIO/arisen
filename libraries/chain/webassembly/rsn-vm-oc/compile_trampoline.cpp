@@ -1,7 +1,7 @@
-#include <arisen/chain/webassembly/eos-vm-oc/ipc_helpers.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/ipc_protocol.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/memory.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/ipc_helpers.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/ipc_protocol.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/memory.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic.hpp>
 #include <arisen/chain/wasm_arisen_injection.hpp>
 
 #include <sys/prctl.h>
@@ -15,7 +15,7 @@
 
 using namespace IR;
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 void run_compile(wrapped_fd&& response_sock, wrapped_fd&& wasm_code) noexcept {  //noexcept; we'll just blow up if anything tries to cross this boundry
    std::vector<uint8_t> wasm = vector_for_memfd(wasm_code);
@@ -155,7 +155,7 @@ void run_compile_trampoline(int fd) {
          break;
 
       if(!message.contains<compile_wasm_message>() || fds.size() != 2) {
-         std::cerr << "EOS VM OC compile trampoline got unexpected message; ignoring" << std::endl;
+         std::cerr << "RSN VM OC compile trampoline got unexpected message; ignoring" << std::endl;
          continue;
       }
 
@@ -177,7 +177,7 @@ void run_compile_trampoline(int fd) {
          _exit(0);
       }
       else if(pid == -1)
-         std::cerr << "EOS VM OC compile trampoline failed to spawn compile task" << std::endl;
+         std::cerr << "RSN VM OC compile trampoline failed to spawn compile task" << std::endl;
    }
 
    _exit(0);

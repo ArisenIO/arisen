@@ -1,4 +1,4 @@
-#include <arisen/chain/webassembly/eos-vm-oc.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc.hpp>
 #include <arisen/chain/wasm_arisen_constraints.hpp>
 #include <arisen/chain/wasm_arisen_injection.hpp>
 #include <arisen/chain/apply_context.hpp>
@@ -7,48 +7,48 @@
 #include <vector>
 #include <iterator>
 
-namespace arisen { namespace chain { namespace webassembly { namespace eosvmoc {
+namespace arisen { namespace chain { namespace webassembly { namespace rsnvmoc {
 
-class eosvmoc_instantiated_module : public wasm_instantiated_module_interface {
+class rsnvmoc_instantiated_module : public wasm_instantiated_module_interface {
    public:
-      eosvmoc_instantiated_module(const digest_type& code_hash, const uint8_t& vm_version, eosvmoc_runtime& wr) :
+      rsnvmoc_instantiated_module(const digest_type& code_hash, const uint8_t& vm_version, rsnvmoc_runtime& wr) :
          _code_hash(code_hash),
          _vm_version(vm_version),
-         _eosvmoc_runtime(wr)
+         _rsnvmoc_runtime(wr)
       {
 
       }
 
-      ~eosvmoc_instantiated_module() {
-         _eosvmoc_runtime.cc.free_code(_code_hash, _vm_version);
+      ~rsnvmoc_instantiated_module() {
+         _rsnvmoc_runtime.cc.free_code(_code_hash, _vm_version);
       }
 
       void apply(apply_context& context) override {
-         const code_descriptor* const cd = _eosvmoc_runtime.cc.get_descriptor_for_code_sync(_code_hash, _vm_version);
-         EOS_ASSERT(cd, wasm_execution_error, "EOS VM OC instantiation failed");
+         const code_descriptor* const cd = _rsnvmoc_runtime.cc.get_descriptor_for_code_sync(_code_hash, _vm_version);
+         RSN_ASSERT(cd, wasm_execution_error, "RSN VM OC instantiation failed");
 
-         _eosvmoc_runtime.exec.execute(*cd, _eosvmoc_runtime.mem, context);
+         _rsnvmoc_runtime.exec.execute(*cd, _rsnvmoc_runtime.mem, context);
       }
 
       const digest_type              _code_hash;
       const uint8_t                  _vm_version;
-      eosvmoc_runtime&               _eosvmoc_runtime;
+      rsnvmoc_runtime&               _rsnvmoc_runtime;
 };
 
-eosvmoc_runtime::eosvmoc_runtime(const boost::filesystem::path data_dir, const eosvmoc::config& eosvmoc_config, const chainbase::database& db)
-   : cc(data_dir, eosvmoc_config, db), exec(cc) {
+rsnvmoc_runtime::rsnvmoc_runtime(const boost::filesystem::path data_dir, const rsnvmoc::config& rsnvmoc_config, const chainbase::database& db)
+   : cc(data_dir, rsnvmoc_config, db), exec(cc) {
 }
 
-eosvmoc_runtime::~eosvmoc_runtime() {
+rsnvmoc_runtime::~rsnvmoc_runtime() {
 }
 
-std::unique_ptr<wasm_instantiated_module_interface> eosvmoc_runtime::instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t> initial_memory,
+std::unique_ptr<wasm_instantiated_module_interface> rsnvmoc_runtime::instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t> initial_memory,
                                                                                      const digest_type& code_hash, const uint8_t& vm_type, const uint8_t& vm_version) {
 
-   return std::make_unique<eosvmoc_instantiated_module>(code_hash, vm_type, *this);
+   return std::make_unique<rsnvmoc_instantiated_module>(code_hash, vm_type, *this);
 }
 
-//never called. EOS VM OC overrides arisen_exit to its own implementation
-void eosvmoc_runtime::immediately_exit_currently_running_module() {}
+//never called. RSN VM OC overrides arisen_exit to its own implementation
+void rsnvmoc_runtime::immediately_exit_currently_running_module() {}
 
 }}}}

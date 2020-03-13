@@ -25,12 +25,12 @@ brew remove arisen
 
 #### Ubuntu 18.04 Package Install
 ```sh
-wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
+wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 sudo apt install ./arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 ```
 #### Ubuntu 16.04 Package Install
 ```sh
-wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
+wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 sudo apt install ./arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 ```
 #### Ubuntu Package Uninstall
@@ -42,7 +42,7 @@ sudo apt remove arisen
 
 #### RPM Package Install
 ```sh
-wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
+wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
 sudo yum install ./arisen-2.0.3-1.el7.x86_64.rpm
 ```
 #### RPM Package Uninstall
@@ -58,13 +58,13 @@ After installing the prebuilt packages, the actual ARISEN binaries will be locat
 
 where `version-string` is the ARISEN version that was installed.
 
-Also, soft links for each ARISEN program (`nodeos`, `cleos`, `keosd`, etc.) will be created under `usr/bin` or `usr/local/bin` to allow them to be executed from any directory.
+Also, soft links for each ARISEN program (`aos`, `arisecli`, `awalletd`, etc.) will be created under `usr/bin` or `usr/local/bin` to allow them to be executed from any directory.
 
 ## Previous Versions
 
 To install previous versions of the ARISEN prebuilt binaries:
 
-1. Browse to https://github.com/ARISEN/eos/tags and select the actual version of the ARISEN software you need to install.
+1. Browse to https://github.com/ARISEN/rsn/tags and select the actual version of the ARISEN software you need to install.
 
 2. Scroll down past the `Release Notes` and download the package or archive that you need for your OS.
 

@@ -1,5 +1,5 @@
 ---
-title: "system rex fundcpuloan"
+title: "system bex fundcpuloan"
 excerpt: "Deposit into a CPU loan fund"
 ---
 ## Positionals
@@ -23,5 +23,5 @@ excerpt: "Deposit into a CPU loan fund"
 ## Examples
 
 ```sh
-cleos system rex fundcpuloan accountname1 abc123 "1 EOS"
+arisecli system bex fundcpuloan accountname1 abc123 "1 RSN"
 ```

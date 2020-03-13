@@ -2,7 +2,7 @@
 
 ## Description
 
-The `test_control_api_plugin` allows to send a control message to the [test_control_plugin](../test_control_plugin/index.md) telling the plugin to shut down the `nodeos` instance when reaching a particular block. It is intended for testing.
+The `test_control_api_plugin` allows to send a control message to the [test_control_plugin](../test_control_plugin/index.md) telling the plugin to shut down the `aos` instance when reaching a particular block. It is intended for testing.
 
 ## Usage
 
@@ -12,7 +12,7 @@ plugin = arisen::test_control_api_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::test_control_api_plugin
+aos ... --plugin arisen::test_control_api_plugin
 ```
 
 ## Options
@@ -42,6 +42,6 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin [operations] [options]  \
+aos ... --plugin arisen::chain_plugin [operations] [options]  \
            --plugin arisen::http_plugin [options]
 ```

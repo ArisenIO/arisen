@@ -2,12 +2,12 @@
 content_title: How to generate a snapshot
 ---
 
-You can force a running `nodeos` instance to create a snapshot by using the `create_snapshot` RPC API call supported by the `producer_api_plugin`. This will create a snapshot file in the `data/snapshots` directory. Snapshot files are written to disk with the name pattern `*snapshot-\<head_block_id_in_hex\>.bin*`.
+You can force a running `aos` instance to create a snapshot by using the `create_snapshot` RPC API call supported by the `producer_api_plugin`. This will create a snapshot file in the `data/snapshots` directory. Snapshot files are written to disk with the name pattern `*snapshot-\<head_block_id_in_hex\>.bin*`.
 
 [[info | Snapshots Location]]
-| By default, snapshots are written to the `data/snapshots` directory relative to your `nodeos` data directory. See the `-d [ --data-dir ]` option.
+| By default, snapshots are written to the `data/snapshots` directory relative to your `aos` data directory. See the `-d [ --data-dir ]` option.
 
-If your `nodeos` instance is running locally, the below command will request `nodeos` to create a snapshot:
+If your `aos` instance is running locally, the below command will request `aos` to create a snapshot:
 
 ```sh
 curl --request POST \

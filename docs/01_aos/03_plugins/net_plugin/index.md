@@ -13,12 +13,12 @@ plugin = arisen::net_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::net_plugin [options]
+aos ... --plugin arisen::net_plugin [options]
 ```
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::net_plugin:
@@ -35,7 +35,7 @@ Config Options for arisen::net_plugin:
                                         compose a network.
   --p2p-max-nodes-per-host arg (=1)     Maximum number of client nodes from any
                                         single IP address
-  --agent-name arg (="EOS Test Agent")  The name supplied to identify this node
+  --agent-name arg (="RSN Test Agent")  The name supplied to identify this node
                                         amongst the peers.
   --allowed-connection arg (=any)       Can be 'any' or 'producers' or 
                                         'specified' or 'none'. If 'specified', 

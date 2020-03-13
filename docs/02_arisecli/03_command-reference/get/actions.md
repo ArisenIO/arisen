@@ -17,7 +17,7 @@ Retrieve all actions with specific account name referenced in authorization or r
 Retrieve and save abi for arisen.token contract
 
 ```sh
-cleos get actions arisen.token
+arisecli get actions arisen.token
 ```
 ```console
 #  seq  when                              contract::action => receiver      trx id...   args

@@ -11,7 +11,7 @@ Retrieves the ABI for an account
 Retrieve and save abi for arisen.token contract
 
 ```sh
-cleos get abi arisen.token -f arisen.token.abi
+arisecli get abi arisen.token -f arisen.token.abi
 ```
 ```console
 saving abi to arisen.token.abi

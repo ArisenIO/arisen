@@ -14,5 +14,5 @@ None
 
 
 ```javascript
-cleos wallet private_keys
+arisecli wallet private_keys
 ```

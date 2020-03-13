@@ -13,13 +13,13 @@ Retrieves an account from the blockchain
 ### Get formatted data for user **arisen**
 
 ```sh
-cleos get account arisen
+arisecli get account arisen
 ```
 ```console
 privileged: true
 permissions: 
-     owner     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-        active     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+     owner     1:    1 RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+        active     1:    1 RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 memory: 
      quota:        -1 bytes  used:      1.22 Mb   
 
@@ -38,7 +38,7 @@ producers:     <not voted>
 ### Get JSON data for user **arisen**
 
 ```sh
-cleos get account arisen --json
+arisecli get account arisen --json
 ```
 ```json
 {
@@ -66,7 +66,7 @@ cleos get account arisen --json
       "required_auth": {
         "threshold": 1,
         "keys": [{
-            "key": "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+            "key": "RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
             "weight": 1
           }
         ],
@@ -79,7 +79,7 @@ cleos get account arisen --json
       "required_auth": {
         "threshold": 1,
         "keys": [{
-            "key": "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+            "key": "RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
             "weight": 1
           }
         ],
@@ -100,7 +100,7 @@ cleos get account arisen --json
     "is_proxy": 0,
     "deferred_trx_id": 0,
     "last_unstake_time": "1970-01-01T00:00:00",
-    "unstaking": "0.0000 SYS"
+    "unstaking": "0.0000 RSN"
   }
 }
 ```

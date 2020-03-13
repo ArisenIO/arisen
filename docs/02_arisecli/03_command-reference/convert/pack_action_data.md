@@ -12,7 +12,7 @@ From json action data to packed form
 
 ## Usage
 ```sh
- cleos convert pack_action_data arisen unlinkauth '{"account":"test1", "code":"test2", "type":"arisenarisen"}'
+ arisecli convert pack_action_data arisen unlinkauth '{"account":"test1", "code":"test2", "type":"arisenarisen"}'
 ```
 
 ## Output

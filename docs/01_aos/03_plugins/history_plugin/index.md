@@ -16,12 +16,12 @@ plugin = arisen::history_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::history_plugin [options]
+aos ... --plugin arisen::history_plugin [options]
 ```
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::history_plugin:

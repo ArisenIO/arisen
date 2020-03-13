@@ -8,13 +8,13 @@ This section describes how to set up a single-node blockchain configuration runn
 
 ![Single host single node testnet](single-host-single-node-testnet.png)
 
-`cleos` is used to manage the wallets, manage the accounts, and invoke actions on the blockchain.  `keosd` performs wallet management, including digital signing.  If not started explicitly, `keosd` is started by `cleos` by default.
+`arisecli` is used to manage the wallets, manage the accounts, and invoke actions on the blockchain.  `awalletd` performs wallet management, including digital signing.  If not started explicitly, `awalletd` is started by `arisecli` by default.
 
 ## Before you begin
 
 * [Install the ARISEN software](../../../00_install/index.md) before starting this section.
-* It is assumed that `nodeos`, `cleos`, and `keosd` are accessible through the path. If you built ARISEN using shell scripts, make sure to run the [Install Script](../../../00_install/01_build-from-source/01_shell-scripts/03_install-arisen-binaries.md).
-* Know how to pass [Nodeos options](../../02_usage/00_nodeos-options.md) to enable or disable functionality.
+* It is assumed that `aos`, `arisecli`, and `awalletd` are accessible through the path. If you built ARISEN using shell scripts, make sure to run the [Install Script](../../../00_install/01_build-from-source/01_shell-scripts/03_install-arisen-binaries.md).
+* Know how to pass [Aos options](../../02_usage/00_aos-options.md) to enable or disable functionality.
 
 ## Steps
 
@@ -28,13 +28,13 @@ Open one "terminal" window and perform the following steps:
 Start your own single-node blockchain with this single command:
 
 ```sh
-nodeos -e -p arisen --plugin arisen::chain_api_plugin --plugin arisen::history_api_plugin
+aos -e -p arisen --plugin arisen::chain_api_plugin --plugin arisen::history_api_plugin
 ```
 
-[[info | Nodeos Minimal Options]]
-| A minimal `nodeos` instance setup for block production requires both `chain_api_plugin` and `history_api_plugin` with the `-e` option (enable stale production) and `-p arisen` option (producer name `arisen`). Alternatively, you can also setup and specify your own account as the producer name.
+[[info | Aos Minimal Options]]
+| A minimal `aos` instance setup for block production requires both `chain_api_plugin` and `history_api_plugin` with the `-e` option (enable stale production) and `-p arisen` option (producer name `arisen`). Alternatively, you can also setup and specify your own account as the producer name.
 
-After running `nodeos`, you should get log messages similar as below. It means the blocks are successfully produced.
+After running `aos`, you should get log messages similar as below. It means the blocks are successfully produced.
 
 ```console
 1575001ms thread-0   chain_controller.cpp:235      _push_block          ] initm #1 @2017-09-04T04:26:15  | 0 trx, 0 pending, exectime_ms=0
@@ -46,14 +46,14 @@ arisen generated block 046b9984... #101527 @ 2018-04-01T14:24:58.000 with 0 trxs
 arisen generated block 5e527ee2... #101528 @ 2018-04-01T14:24:58.500 with 0 trxs
 ...
 ```
-At this point, `nodeos` is running with a single producer, `arisen`.
+At this point, `aos` is running with a single producer, `arisen`.
 
 ### 2. Get Node Info
 
 Get info about the producing node:
 
 ```sh
-cleos get info
+arisecli get info
 ```
 
 This should produce output that looks similar to this:
@@ -81,14 +81,14 @@ This should produce output that looks similar to this:
 
 ## Advanced Steps
 
-The more advanced user will likely have need to modify the configuration.  `nodeos` uses a custom configuration folder.  The location of this folder is determined by your system.
+The more advanced user will likely have need to modify the configuration.  `aos` uses a custom configuration folder.  The location of this folder is determined by your system.
 
-* Mac OS: `~/Library/Application\ Support/arisen/nodeos/config`
-* Linux: `~/.local/share/arisen/nodeos/config`
+* Mac OS: `~/Library/Application\ Support/arisen/aos/config`
+* Linux: `~/.local/share/arisen/aos/config`
 
-The build seeds this folder with a default `genesis.json` file.  A configuration folder can be specified using the `--config-dir` command line argument to `nodeos`.  If you use this option, you will need to manually copy a `genesis.json` file to your config folder.
+The build seeds this folder with a default `genesis.json` file.  A configuration folder can be specified using the `--config-dir` command line argument to `aos`.  If you use this option, you will need to manually copy a `genesis.json` file to your config folder.
  
-`nodeos` will need a properly configured `config.ini` file in order to do meaningful work.  On startup, `nodeos` looks in the config folder for `config.ini`.  If one is not found, a default `config.ini` file is created.  If you do not already have a `config.ini` file ready to use, run `nodeos` and then close it immediately with <kbd>Ctrl-C</kbd>.  A default configuration (`config.ini`) will have been created in the config folder.  Edit the `config.ini` file, adding/updating the following settings to the defaults already in place:
+`aos` will need a properly configured `config.ini` file in order to do meaningful work.  On startup, `aos` looks in the config folder for `config.ini`.  If one is not found, a default `config.ini` file is created.  If you do not already have a `config.ini` file ready to use, run `aos` and then close it immediately with <kbd>Ctrl-C</kbd>.  A default configuration (`config.ini`) will have been created in the config folder.  Edit the `config.ini` file, adding/updating the following settings to the defaults already in place:
 
 ```console
 # config.ini:
@@ -105,18 +105,18 @@ The build seeds this folder with a default `genesis.json` file.  A configuration
     plugin = arisen::history_api_plugin
 ```
 
-Now it should be possible to run `nodeos` and see it begin producing blocks.
+Now it should be possible to run `aos` and see it begin producing blocks.
 
 ```sh
-nodeos
+aos
 ```
 
-`nodeos` stores runtime data (e.g., shared memory and log content) in a custom data folder.  The location of this folder is determined by your system.
+`aos` stores runtime data (e.g., shared memory and log content) in a custom data folder.  The location of this folder is determined by your system.
 
-* Mac OS: `~/Library/Application\ Support/arisen/nodeos/data`
-* Linux: `~/.local/share/arisen/nodeos/data`
+* Mac OS: `~/Library/Application\ Support/arisen/aos/data`
+* Linux: `~/.local/share/arisen/aos/data`
  
-A data folder can be specified using the `--data-dir` command line argument to `nodeos`.
+A data folder can be specified using the `--data-dir` command line argument to `aos`.
 
 [[info | What's next?]]
 | We will explore how to setup and run a [single-host, multi-node testnet](01_local-multi-node-testnet.md).

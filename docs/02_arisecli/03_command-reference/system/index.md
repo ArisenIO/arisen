@@ -20,4 +20,4 @@ Send arisen.system contract action to the blockchain.
 - [system regproxy](system-regproxy.md) - Register an account as a proxy (for voting)
 - [system unregproxy](system-unregproxy.md) - Unregister an account as a proxy (for voting)
 - [system canceldelay](system-canceldelay.md) - Cancel a delayed transaction
- - [system rex](system-rex.md) - Actions related to REX (the resource exchange)
+ - [system bex](system-bex.md) - Actions related to BEX (the resource exchange)

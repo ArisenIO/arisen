@@ -12,5 +12,5 @@ Returns data about a particular name and it's bidding status
 ## Usage
 
 ```sh
-cleos system bidnameinfo bob
+arisecli system bidnameinfo bob
 ```

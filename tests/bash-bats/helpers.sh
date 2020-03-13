@@ -36,7 +36,7 @@ TEST_LABEL="[helpers]"
   [[ ! -z $(echo "${output}" | grep "home") ]] || exit
   NONINTERACTIVE=false
   PROCEED=false
-  INSTALL_LOCATION="/etc/eos"
+  INSTALL_LOCATION="/etc/rsn"
   run install-directory-prompt
   # Function received given input.
   [[ ! -z $(echo "${output}") ]] || exit

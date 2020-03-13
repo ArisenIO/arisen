@@ -5,7 +5,7 @@
 The `producer_plugin` loads functionality required for a node to produce blocks.
 
 [[info]]
-| Additional configuration is required to produce blocks. Please read [Configuring Block Producing Node](https://developers.eos.io/arisen-nodeos/docs/environment-producing-node).
+| Additional configuration is required to produce blocks. Please read [Configuring Block Producing Node](https://developers.rsn.io/arisen-aos/docs/environment-producing-node).
 
 ## Usage
 
@@ -14,13 +14,13 @@ The `producer_plugin` loads functionality required for a node to produce blocks.
 plugin = arisen::producer_plugin [options]
 ```
 ```sh
-# nodeos startup params
-nodeos ... -- plugin arisen::producer_plugin [options]
+# aos startup params
+aos ... -- plugin arisen::producer_plugin [options]
 ```
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::producer_plugin:
@@ -45,7 +45,7 @@ Config Options for arisen::producer_plugin:
                                         instead) Tuple of [public key, WIF 
                                         private key] (may specify multiple 
                                         times)
-  --signature-provider arg (=EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3)
+  --signature-provider arg (=RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV=KEY:5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3)
                                         Key=Value pairs in the form 
                                         <public-key>=<provider-spec>
                                         Where:
@@ -57,7 +57,7 @@ Config Options for arisen::producer_plugin:
                                                            form <provider-type>
                                                            :<data>
                                         
-                                           <provider-type> is KEY, or KEOSD
+                                           <provider-type> is KEY, or AWALLETD
                                         
                                            KEY:<data>      is a string form of 
                                                            a valid ARISEN 
@@ -65,14 +65,14 @@ Config Options for arisen::producer_plugin:
                                                            maps to the provided
                                                            public key
                                         
-                                           KEOSD:<data>    is the URL where 
-                                                           keosd is available 
+                                           AWALLETD:<data>    is the URL where 
+                                                           awalletd is available 
                                                            and the approptiate 
                                                            wallet(s) are 
                                                            unlocked
-  --keosd-provider-timeout arg (=5)     Limits the maximum time (in 
+  --awalletd-provider-timeout arg (=5)     Limits the maximum time (in 
                                         milliseconds) that is allowed for 
-                                        sending blocks to a keosd provider for 
+                                        sending blocks to a awalletd provider for 
                                         signing
   --greylist-account arg                account that can not access to extended
                                         CPU/NET virtual resources
@@ -114,5 +114,5 @@ plugin = arisen::chain_plugin [operations] [options]
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin [operations] [options]
+aos ... --plugin arisen::chain_plugin [operations] [options]
 ```

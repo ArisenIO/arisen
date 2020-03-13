@@ -111,7 +111,7 @@ struct local_identity {
 
 } local_id;
 
-class eosd_def;
+class rsnd_def;
 
 class host_def {
 public:
@@ -142,7 +142,7 @@ public:
   uint16_t         base_p2p_port;
   uint16_t         base_http_port;
   uint16_t         def_file_size;
-  vector<eosd_def> instances;
+  vector<rsnd_def> instances;
 
   uint16_t p2p_port() {
     return base_p2p_port + p2p_count++;
@@ -192,9 +192,9 @@ protected:
 
 class tn_node_def;
 
-class eosd_def {
+class rsnd_def {
 public:
-  eosd_def()
+  rsnd_def()
     : config_dir_name (),
       data_dir_name (),
       p2p_port(),
@@ -241,13 +241,13 @@ public:
   vector<private_key_type> keys;
   vector<string>  peers;
   vector<string>  producers;
-  eosd_def*       instance;
+  rsnd_def*       instance;
   string          gelf_endpoint;
   bool            dont_start = false;
 };
 
 void
-eosd_def::mk_dot_label () {
+rsnd_def::mk_dot_label () {
   dot_label_str = name + "\\nprod=";
   if (node == 0 || node->producers.empty()) {
     dot_label_str += "<none>";
@@ -265,7 +265,7 @@ eosd_def::mk_dot_label () {
 }
 
 void
-eosd_def::set_host( host_def* h, bool is_bios ) {
+rsnd_def::set_host( host_def* h, bool is_bios ) {
   host = h->host_name;
   p2p_port = is_bios ? h->p2p_bios_port() : h->p2p_port();
   http_port = is_bios ? h->http_bios_port() : h->http_port();
@@ -405,9 +405,9 @@ struct launcher_def {
    bfs::path config_dir_base;
    bfs::path data_dir_base;
    bool skip_transaction_signatures = false;
-   string eosd_extra_args;
-   std::map<uint,string> specific_nodeos_args;
-   std::map<uint,string> specific_nodeos_installation_paths;
+   string rsnd_extra_args;
+   std::map<uint,string> specific_aos_args;
+   std::map<uint,string> specific_aos_installation_paths;
    testnet_def network;
    string gelf_endpoint;
    vector <string> aliases;
@@ -429,7 +429,7 @@ struct launcher_def {
    fc::optional<uint32_t> max_transaction_cpu_usage;
    arisen::chain::genesis_state genesis_from_file;
 
-   void assign_name (eosd_def &node, bool is_bios);
+   void assign_name (rsnd_def &node, bool is_bios);
 
    void set_options (bpo::options_description &cli);
    void initialize (const variables_map &vmap);
@@ -462,12 +462,12 @@ struct launcher_def {
    void format_ssh (const string &cmd, const string &host_name, string &ssh_cmd_line);
    void do_command(const host_def& host, const string& name, vector<pair<string, string>> env_pairs, const string& cmd);
    bool do_ssh (const string &cmd, const string &host_name);
-   void prep_remote_config_dir (eosd_def &node, host_def *host);
-   void launch (eosd_def &node, string &gts);
+   void prep_remote_config_dir (rsnd_def &node, host_def *host);
+   void launch (rsnd_def &node, string &gts);
    void kill (launch_modes mode, string sig_opt);
    static string get_node_num(uint16_t node_num);
-   pair<host_def, eosd_def> find_node(uint16_t node_num);
-   vector<pair<host_def, eosd_def>> get_nodes(const string& node_number_list);
+   pair<host_def, rsnd_def> find_node(uint16_t node_num);
+   vector<pair<host_def, rsnd_def>> get_nodes(const string& node_number_list);
    void bounce (const string& node_numbers);
    void down (const string& node_numbers);
    void roll (const string& host_names);
@@ -488,7 +488,7 @@ launcher_def::set_options (bpo::options_description &cfg) {
     ("shape,s",bpo::value<string>(&shape)->default_value("star"),"network topology, use \"star\" \"mesh\" or give a filename for custom")
     ("genesis,g",bpo::value<string>()->default_value("./genesis.json"),"set the path to genesis.json")
     ("skip-signature", bpo::bool_switch(&skip_transaction_signatures)->default_value(false), (string(node_executable_name) + " does not require transaction signatures.").c_str())
-    (node_executable_name, bpo::value<string>(&eosd_extra_args), ("forward " + string(node_executable_name) + " command line argument(s) to each instance of " + string(node_executable_name) + ", enclose arg(s) in quotes").c_str())
+    (node_executable_name, bpo::value<string>(&rsnd_extra_args), ("forward " + string(node_executable_name) + " command line argument(s) to each instance of " + string(node_executable_name) + ", enclose arg(s) in quotes").c_str())
     ("specific-num", bpo::value<vector<uint>>()->composing(), ("forward " + string(node_executable_name) + " command line argument(s) (using \"--specific-" + string(node_executable_name) + "\" flag) to this specific instance of " + string(node_executable_name) + ". This parameter can be entered multiple times and requires a paired \"--specific-" + string(node_executable_name) +"\" flag each time it is used").c_str())
     (("specific-" + string(node_executable_name)).c_str(), bpo::value<vector<string>>()->composing(), ("forward " + string(node_executable_name) + " command line argument(s) to its paired specific instance of " + string(node_executable_name) + "(using \"--specific-num\"), enclose arg(s) in quotes").c_str())
     ("spcfc-inst-num", bpo::value<vector<uint>>()->composing(), ("Specify a specific version installation path (using \"--spcfc-inst-"+ string(node_executable_name) + "\" flag) for launching this specific instance of " + string(node_executable_name) + ". This parameter can be entered multiple times and requires a paired \"--spcfc-inst-" + string(node_executable_name) + "\" flag each time it is used").c_str())
@@ -575,8 +575,8 @@ launcher_def::initialize (const variables_map &vmap) {
      server_ident_file = vmap["servers"].as<string>();
   }
 
-  retrieve_paired_array_parameters(vmap, "specific-num", "specific-" + string(node_executable_name), specific_nodeos_args);
-  retrieve_paired_array_parameters(vmap, "spcfc-inst-num", "spcfc-inst-" + string(node_executable_name), specific_nodeos_installation_paths);
+  retrieve_paired_array_parameters(vmap, "specific-num", "specific-" + string(node_executable_name), specific_aos_args);
+  retrieve_paired_array_parameters(vmap, "spcfc-inst-num", "spcfc-inst-" + string(node_executable_name), specific_aos_installation_paths);
 
   using namespace std::chrono;
   system_clock::time_point now = system_clock::now();
@@ -598,11 +598,11 @@ launcher_def::initialize (const variables_map &vmap) {
     try {
       fc::json::from_file(host_map_file).as<vector<host_def>>(bindings);
       for (auto &binding : bindings) {
-        for (auto &eosd : binding.instances) {
-          eosd.host = binding.host_name;
-          eosd.p2p_endpoint = binding.public_name + ":" + boost::lexical_cast<string,uint16_t>(eosd.p2p_port);
+        for (auto &rsnd : binding.instances) {
+          rsnd.host = binding.host_name;
+          rsnd.p2p_endpoint = binding.public_name + ":" + boost::lexical_cast<string,uint16_t>(rsnd.p2p_port);
 
-          aliases.push_back (eosd.name);
+          aliases.push_back (rsnd.name);
         }
       }
     } catch (...) { // this is an optional feature, so an exception is OK
@@ -642,7 +642,7 @@ launcher_def::initialize (const variables_map &vmap) {
         cerr << "\"--specific-num\" provided value= " << num << " is higher than \"--nodes\" provided value=" << total_nodes << endl;
         exit (-1);
       }
-      specific_nodeos_args[num] = specific_args[i];
+      specific_aos_args[num] = specific_args[i];
     }
   }
 
@@ -697,7 +697,7 @@ launcher_def::load_servers () {
 
 
 void
-launcher_def::assign_name (eosd_def &node, bool is_bios) {
+launcher_def::assign_name (rsnd_def &node, bool is_bios) {
    string node_cfg_name;
 
    if (is_bios) {
@@ -791,11 +791,11 @@ launcher_def::define_network () {
     local_host.arisen_home = erd;
     local_host.genesis = genesis.string();
     for (size_t i = 0; i < (total_nodes); i++) {
-      eosd_def eosd;
-      assign_name(eosd, i == 0);
-      aliases.push_back(eosd.name);
-      eosd.set_host (&local_host, i == 0);
-      local_host.instances.emplace_back(move(eosd));
+      rsnd_def rsnd;
+      assign_name(rsnd, i == 0);
+      aliases.push_back(rsnd.name);
+      rsnd.set_host (&local_host, i == 0);
+      local_host.instances.emplace_back(move(rsnd));
     }
     bindings.emplace_back(move(local_host));
   }
@@ -840,22 +840,22 @@ launcher_def::define_network () {
         host_ndx++;
       } // ph_count == 0
 
-      eosd_def eosd;
-      assign_name(eosd, do_bios);
-      eosd.has_db = false;
+      rsnd_def rsnd;
+      assign_name(rsnd, do_bios);
+      rsnd.has_db = false;
 
       if (servers.db.size()) {
         for (auto &dbn : servers.db) {
           if (lhost->host_name == dbn) {
-            eosd.has_db = true;
+            rsnd.has_db = true;
             break;
          }
         }
       }
-      aliases.push_back(eosd.name);
-      eosd.set_host (lhost, do_bios);
+      aliases.push_back(rsnd.name);
+      rsnd.set_host (lhost, do_bios);
       do_bios = false;
-      lhost->instances.emplace_back(move(eosd));
+      lhost->instances.emplace_back(move(rsnd));
       --ph_count;
     } // for i
     bindings.emplace_back( move(*lhost) );
@@ -958,7 +958,7 @@ launcher_def::find_host_by_name_or_address (const string &host_id)
 host_def *
 launcher_def::deploy_config_files (tn_node_def &node) {
   boost::system::error_code ec;
-  eosd_def &instance = *node.instance;
+  rsnd_def &instance = *node.instance;
   host_def *host = find_host (instance.host);
 
   bfs::path source = stage / instance.config_dir_name / "config.ini";
@@ -1071,7 +1071,7 @@ void
 launcher_def::write_config_file (tn_node_def &node) {
    bool is_bios = (node.name == "bios");
    bfs::path filename;
-   eosd_def &instance = *node.instance;
+   rsnd_def &instance = *node.instance;
    host_def *host = find_host (instance.host);
 
    bfs::path dd = stage / instance.config_dir_name;
@@ -1150,7 +1150,7 @@ launcher_def::write_config_file (tn_node_def &node) {
 void
 launcher_def::write_logging_config_file(tn_node_def &node) {
   bfs::path filename;
-  eosd_def &instance = *node.instance;
+  rsnd_def &instance = *node.instance;
 
   bfs::path dd = stage / instance.config_dir_name;
   if (!bfs::exists(dd)) {
@@ -1220,7 +1220,7 @@ launcher_def::init_genesis () {
 void
 launcher_def::write_genesis_file(tn_node_def &node) {
   bfs::path filename;
-  eosd_def &instance = *node.instance;
+  rsnd_def &instance = *node.instance;
 
   bfs::path dd = stage / instance.config_dir_name;
   if (!bfs::exists(dd)) {
@@ -1466,7 +1466,7 @@ launcher_def::do_ssh (const string &cmd, const string &host_name) {
 }
 
 void
-launcher_def::prep_remote_config_dir (eosd_def &node, host_def *host) {
+launcher_def::prep_remote_config_dir (rsnd_def &node, host_def *host) {
   bfs::path abs_config_dir = bfs::path(host->arisen_home) / node.config_dir_name;
   bfs::path abs_data_dir = bfs::path(host->arisen_home) / node.data_dir_name;
 
@@ -1516,7 +1516,7 @@ launcher_def::prep_remote_config_dir (eosd_def &node, host_def *host) {
 }
 
 void
-launcher_def::launch (eosd_def &instance, string &gts) {
+launcher_def::launch (rsnd_def &instance, string &gts) {
   bfs::path dd = instance.data_dir_name;
   bfs::path reout = dd / "stdout.txt";
   bfs::path reerr_sl = dd / "stderr.txt";
@@ -1535,46 +1535,46 @@ launcher_def::launch (eosd_def &instance, string &gts) {
   info.remote = !host->is_local();
 
   string install_path;
-  if (instance.name != "bios" && !specific_nodeos_installation_paths.empty()) {
+  if (instance.name != "bios" && !specific_aos_installation_paths.empty()) {
      const auto node_num = boost::lexical_cast<uint16_t,string>(instance.get_node_num());
-     if (specific_nodeos_installation_paths.count(node_num)) {
-        install_path = specific_nodeos_installation_paths[node_num] + "/";
+     if (specific_aos_installation_paths.count(node_num)) {
+        install_path = specific_aos_installation_paths[node_num] + "/";
      }
   }
-  string eosdcmd = install_path + "programs/nodeos/" + string(node_executable_name) + " ";
+  string rsndcmd = install_path + "programs/aos/" + string(node_executable_name) + " ";
   if (skip_transaction_signatures) {
-    eosdcmd += "--skip-transaction-signatures ";
+    rsndcmd += "--skip-transaction-signatures ";
   }
-  if (!eosd_extra_args.empty()) {
+  if (!rsnd_extra_args.empty()) {
     if (instance.name == "bios") {
        // Strip the mongo-related options out of the bios node so
        // the plugins don't conflict between 00 and bios.
        regex r("--plugin +arisen::mongo_db_plugin");
-       string args = std::regex_replace (eosd_extra_args,r,"");
+       string args = std::regex_replace (rsnd_extra_args,r,"");
        regex r2("--mongodb-uri +[^ ]+");
        args = std::regex_replace (args,r2,"");
-       eosdcmd += args + " ";
+       rsndcmd += args + " ";
     }
     else {
-       eosdcmd += eosd_extra_args + " ";
+       rsndcmd += rsnd_extra_args + " ";
     }
   }
-  if (instance.name != "bios" && !specific_nodeos_args.empty()) {
+  if (instance.name != "bios" && !specific_aos_args.empty()) {
      const auto node_num = boost::lexical_cast<uint16_t,string>(instance.get_node_num());
-     if (specific_nodeos_args.count(node_num)) {
-        eosdcmd += specific_nodeos_args[node_num] + " ";
+     if (specific_aos_args.count(node_num)) {
+        rsndcmd += specific_aos_args[node_num] + " ";
      }
   }
 
   if( add_enable_stale_production ) {
-    eosdcmd += "--enable-stale-production true ";
+    rsndcmd += "--enable-stale-production true ";
     add_enable_stale_production = false;
   }
 
-  eosdcmd += " --config-dir " + instance.config_dir_name + " --data-dir " + instance.data_dir_name;
-  eosdcmd += " --genesis-json " + instance.config_dir_name + "/genesis.json";
+  rsndcmd += " --config-dir " + instance.config_dir_name + " --data-dir " + instance.data_dir_name;
+  rsndcmd += " --genesis-json " + instance.config_dir_name + "/genesis.json";
   if (gts.length()) {
-    eosdcmd += " --genesis-timestamp " + gts;
+    rsndcmd += " --genesis-timestamp " + gts;
   }
 
   if (!host->is_local()) {
@@ -1583,7 +1583,7 @@ launcher_def::launch (eosd_def &instance, string &gts) {
       exit (-1);
     }
     string cmdl ("cd ");
-    cmdl += host->arisen_home + "; nohup " + eosdcmd + " > "
+    cmdl += host->arisen_home + "; nohup " + rsndcmd + " > "
       + reout.string() + " 2> " + reerr.string() + "& echo $! > " + pidf.string()
       + "; rm -f " + reerr_sl.string()
       + "; ln -s " + reerr_base.string() + " " + reerr_sl.string();
@@ -1597,9 +1597,9 @@ launcher_def::launch (eosd_def &instance, string &gts) {
     format_ssh (cmd, host->host_name, info.kill_cmd);
   }
   else if (!instance.node->dont_start) {
-    cerr << "spawning child, " << eosdcmd << endl;
+    cerr << "spawning child, " << rsndcmd << endl;
 
-    bp::child c(eosdcmd, bp::std_out > reout, bp::std_err > reerr );
+    bp::child c(rsndcmd, bp::std_out > reout, bp::std_err > reerr );
     bfs::remove(reerr_sl);
     bfs::create_symlink (reerr_base, reerr_sl);
 
@@ -1611,7 +1611,7 @@ launcher_def::launch (eosd_def &instance, string &gts) {
     info.kill_cmd = "";
 
     if(!c.running()) {
-      cerr << "child not running after spawn " << eosdcmd << endl;
+      cerr << "child not running after spawn " << rsndcmd << endl;
       for (int i = 0; i > 0; i++) {
         if (c.running () ) break;
       }
@@ -1619,13 +1619,13 @@ launcher_def::launch (eosd_def &instance, string &gts) {
     c.detach();
   }
   else {
-    cerr << "not spawning child, " << eosdcmd << endl;
+    cerr << "not spawning child, " << rsndcmd << endl;
 
     const bfs::path dd = instance.data_dir_name;
     const bfs::path start_file  = dd / "start.cmd";
     bfs::ofstream sf (start_file);
 
-    sf << eosdcmd << endl;
+    sf << rsndcmd << endl;
     sf.close();
   }
   last_run.running_nodes.emplace_back (move(info));
@@ -1633,7 +1633,7 @@ launcher_def::launch (eosd_def &instance, string &gts) {
 
 #if 0
 void
-launcher_def::kill_instance(eosd_def, string sig_opt) {
+launcher_def::kill_instance(rsnd_def, string sig_opt) {
 }
 #endif
 
@@ -1698,7 +1698,7 @@ launcher_def::get_node_num(uint16_t node_num) {
    return node_num_str;
 }
 
-pair<host_def, eosd_def>
+pair<host_def, rsnd_def>
 launcher_def::find_node(uint16_t node_num) {
    const string node_name = network.name + get_node_num(node_num);
    for (const auto& host: bindings) {
@@ -1712,9 +1712,9 @@ launcher_def::find_node(uint16_t node_num) {
    exit (-1);
 }
 
-vector<pair<host_def, eosd_def>>
+vector<pair<host_def, rsnd_def>>
 launcher_def::get_nodes(const string& node_number_list) {
-   vector<pair<host_def, eosd_def>> node_list;
+   vector<pair<host_def, rsnd_def>> node_list;
    if (fc::to_lower(node_number_list) == "all") {
       for (auto host: bindings) {
          for (auto node: host.instances) {
@@ -1773,14 +1773,14 @@ launcher_def::bounce (const string& node_numbers) {
    auto node_list = get_nodes(node_numbers);
    for (auto node_pair: node_list) {
       const host_def& host = node_pair.first;
-      const eosd_def& node = node_pair.second;
+      const rsnd_def& node = node_pair.second;
       const string node_num = node.get_node_num();
       cout << "Bouncing " << node.name << endl;
-      string cmd = "./scripts/arisen-tn_bounce.sh " + eosd_extra_args;
-      if (node_num != "bios" && !specific_nodeos_args.empty()) {
+      string cmd = "./scripts/arisen-tn_bounce.sh " + rsnd_extra_args;
+      if (node_num != "bios" && !specific_aos_args.empty()) {
          const auto node_num_i = boost::lexical_cast<uint16_t,string>(node_num);
-         if (specific_nodeos_args.count(node_num_i)) {
-            cmd += " " + specific_nodeos_args[node_num_i];
+         if (specific_aos_args.count(node_num_i)) {
+            cmd += " " + specific_aos_args[node_num_i];
          }
       }
 
@@ -1793,7 +1793,7 @@ launcher_def::down (const string& node_numbers) {
    auto node_list = get_nodes(node_numbers);
    for (auto node_pair: node_list) {
       const host_def& host = node_pair.first;
-      const eosd_def& node = node_pair.second;
+      const rsnd_def& node = node_pair.second;
       const string node_num = node.get_node_num();
       cout << "Taking down " << node.name << endl;
       string cmd = "./scripts/arisen-tn_down.sh ";
@@ -2083,7 +2083,7 @@ FC_REFLECT( host_def,
             (instances) )
 
 // @ignore node, dot_label_str
-FC_REFLECT( eosd_def,
+FC_REFLECT( rsnd_def,
             (config_dir_name)(data_dir_name)(p2p_port)
             (http_port)(file_size)(has_db)(name)(host)
             (p2p_endpoint) )

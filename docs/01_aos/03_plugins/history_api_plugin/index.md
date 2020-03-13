@@ -15,9 +15,9 @@ It provides four RPC API endpoints:
 * get_controlled_accounts
 
 [[info | More Info]]
-| See HISTORY section of [RPC API](https://developers.eos.io/arisen-nodeos/reference).
+| See HISTORY section of [RPC API](https://developers.rsn.io/arisen-aos/reference).
 
-The four actions listed above are used by the following `cleos` commands (matching order):
+The four actions listed above are used by the following `arisecli` commands (matching order):
 
 * get actions
 * get transaction
@@ -32,7 +32,7 @@ plugin = arisen::history_api_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::history_api_plugin
+aos ... --plugin arisen::history_api_plugin
 ```
 
 ## Options
@@ -58,7 +58,7 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::history_plugin [options]  \
+aos ... --plugin arisen::history_plugin [options]  \
            --plugin arisen::chain_plugin [operations] [options]  \
            --plugin arisen::http_plugin [options]
 ```

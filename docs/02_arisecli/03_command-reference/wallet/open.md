@@ -10,11 +10,11 @@ None
 
 
 ```sh
-cleos wallet open
+arisecli wallet open
 ```
 or
 ```sh
-cleos wallet open -n second-wallet
+arisecli wallet open -n second-wallet
 ```
 
 ## Outputs

@@ -1,5 +1,5 @@
 ---
-content_title: Nodeos Upgrade Guides
+content_title: Aos Upgrade Guides
 ---
 
 This section contains important instructions for node operators and other ARISEN stakeholders to transition an ARISEN network successfully through an ARISEN version or protocol upgrade.

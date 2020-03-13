@@ -9,11 +9,11 @@ Retrieves a full block from the blockchain
 
 
 ```sh
-cleos get block 1
+arisecli get block 1
 ```
 or
 ```sh
-cleos get block 0000000130d70e94e0022fd2fa035cabb9e542c34ea27f572ac90b5a7aa3d891
+arisecli get block 0000000130d70e94e0022fd2fa035cabb9e542c34ea27f572ac90b5a7aa3d891
 ```
 
 This will output a block object similar to the following

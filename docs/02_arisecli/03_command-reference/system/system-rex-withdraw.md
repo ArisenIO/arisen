@@ -1,6 +1,6 @@
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
-- `amount` _TEXT_ - Amount to be withdrawn from REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
+- `amount` _TEXT_ - Amount to be withdrawn from BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -19,5 +19,5 @@
 
 
 ```sh
-cleos system rex withdraw accountname1 "1 SYS"
+arisecli system bex withdraw accountname1 "1 RSN"
 ```

@@ -37,6 +37,6 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin [operations] [options]  \
+aos ... --plugin arisen::chain_plugin [operations] [options]  \
            --plugin arisen::http_plugin [options]
 ```

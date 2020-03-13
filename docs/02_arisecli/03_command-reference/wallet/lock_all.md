@@ -10,7 +10,7 @@ None
 
 
 ```sh
-cleos wallet lock_all
+arisecli wallet lock_all
 ```
 
 ## Outputs

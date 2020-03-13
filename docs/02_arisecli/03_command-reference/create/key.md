@@ -5,7 +5,7 @@ Creates a new keypair and prints the public and private keys
 ## Usage
 
 ```console
-Usage: cleos create key [OPTIONS]
+Usage: arisecli create key [OPTIONS]
 
 Options:
   -h,--help                   Print this help message and exit
@@ -17,12 +17,12 @@ Options:
 ## Command
 
 ```sh
-cleos create key -f passwd
+arisecli create key -f passwd
 ```
 
 ## Output
 
 ```console
 Private key: 5KCkcSxYKZfh5Cr8CCunS2PiUKzNZLhtfBjudaUnad3PDargFQo
-Public key: EOS5uHeBsURAT6bBXNtvwKtWaiDSDJSdSmc96rHVws5M1qqVCkAm6
+Public key: RSN5uHeBsURAT6bBXNtvwKtWaiDSDJSdSmc96rHVws5M1qqVCkAm6
 ```

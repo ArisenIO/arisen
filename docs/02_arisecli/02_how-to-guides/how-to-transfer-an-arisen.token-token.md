@@ -4,7 +4,7 @@ Transfer token created by arisen.token contract
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * You are going to transfer a token created by arisen.token contract and arisen.token contract has been deployed on the network which you are connected to
 
@@ -14,8 +14,8 @@ Transfer token created by arisen.token contract
 
 ## Steps
 
-Assume you would like to transfer `0.0001 SYS` token to an account called `bob` from an account called `alice`, execute the following:
+Assume you would like to transfer `0.0001 RSN` token to an account called `bob` from an account called `alice`, execute the following:
 
 ```sh
-cleos transfer alice bob "0.0001 SYS" "Hodl!" -p alice@active
+arisecli transfer alice bob "0.0001 RSN" "Hodl!" -p alice@active
 ```

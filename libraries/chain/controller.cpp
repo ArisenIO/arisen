@@ -201,7 +201,7 @@ struct pending_state {
          // Calling is_protocol_feature_activated during the assembled_block stage is not efficient.
          // We should avoid doing it.
          // In fact for now it isn't even implemented.
-         EOS_THROW( misc_exception,
+         RSN_THROW( misc_exception,
                     "checking if protocol feature is activated in the assembled_block stage is not yet supported" );
          // TODO: implement this
       }
@@ -245,7 +245,7 @@ struct controller_impl {
    uint32_t                       snapshot_head_block = 0;
    named_thread_pool              thread_pool;
    platform_timer                 timer;
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
    vm::wasm_allocator                 wasm_alloc;
 #endif
 
@@ -257,7 +257,7 @@ struct controller_impl {
       auto prev = fork_db.get_block( head->header.previous );
 
       if( !prev ) {
-         EOS_ASSERT( fork_db.root()->id == head->header.previous, block_validate_exception, "attempt to pop beyond last irreversible block" );
+         RSN_ASSERT( fork_db.root()->id == head->header.previous, block_validate_exception, "attempt to pop beyond last irreversible block" );
          prev = fork_db.root();
       }
 
@@ -267,7 +267,7 @@ struct controller_impl {
       }
 
       if ( read_mode == db_read_mode::SPECULATIVE ) {
-         EOS_ASSERT( head->block, block_validate_exception, "attempting to pop a block that was sparsely loaded from a snapshot");
+         RSN_ASSERT( head->block, block_validate_exception, "attempting to pop a block that was sparsely loaded from a snapshot");
       }
 
       head = prev;
@@ -283,7 +283,7 @@ struct controller_impl {
    template<builtin_protocol_feature_t F>
    inline void set_activation_handler() {
       auto res = protocol_feature_activation_handlers.emplace( F, &controller_impl::on_activation<F> );
-      EOS_ASSERT( res.second, misc_exception, "attempting to set activation handler twice" );
+      RSN_ASSERT( res.second, misc_exception, "attempting to set activation handler twice" );
    }
 
    inline void trigger_activation_handler( builtin_protocol_feature_t f ) {
@@ -307,7 +307,7 @@ struct controller_impl {
         cfg.reversible_cache_size, false, cfg.db_map_mode, cfg.db_hugepage_paths ),
     blog( cfg.blocks_dir ),
     fork_db( cfg.state_dir ),
-    wasmif( cfg.wasm_runtime, cfg.eosvmoc_tierup, db, cfg.state_dir, cfg.eosvmoc_config ),
+    wasmif( cfg.wasm_runtime, cfg.rsnvmoc_tierup, db, cfg.state_dir, cfg.rsnvmoc_config ),
     resource_limits( db ),
     authorization( s, db ),
     protocol_features( std::move(pfs) ),
@@ -385,7 +385,7 @@ struct controller_impl {
    }
 
    void log_irreversible() {
-      EOS_ASSERT( fork_db.root(), fork_database_exception, "fork database not properly initialized" );
+      RSN_ASSERT( fork_db.root(), fork_database_exception, "fork database not properly initialized" );
 
       const auto& log_head = blog.head();
 
@@ -394,9 +394,9 @@ struct controller_impl {
       auto root_id = fork_db.root()->id;
 
       if( log_head ) {
-         EOS_ASSERT( root_id == blog.head_id(), fork_database_exception, "fork database root does not match block log head" );
+         RSN_ASSERT( root_id == blog.head_id(), fork_database_exception, "fork database root does not match block log head" );
       } else {
-         EOS_ASSERT( fork_db.root()->block_num == lib_num, fork_database_exception,
+         RSN_ASSERT( fork_db.root()->block_num == lib_num, fork_database_exception,
                      "empty block log expects the first appended block to build off a block that is not the fork database root" );
       }
 
@@ -501,7 +501,7 @@ struct controller_impl {
             fork_db.reset( *head );
          } else if( head->block_num != fork_db.root()->block_num ) {
             auto new_root = fork_db.search_on_branch( pending_head->id, head->block_num );
-            EOS_ASSERT( new_root, fork_database_exception, "unexpected error: could not find new LIB in fork database" );
+            RSN_ASSERT( new_root, fork_database_exception, "unexpected error: could not find new LIB in fork database" );
             ilog( "advancing fork database root to new last irreversible block within existing fork database: ${id}",
                   ("id", new_root->id) );
             fork_db.mark_valid( new_root );
@@ -537,7 +537,7 @@ struct controller_impl {
    }
 
    void startup(std::function<bool()> shutdown, const snapshot_reader_ptr& snapshot) {
-      EOS_ASSERT( snapshot, snapshot_exception, "No snapshot reader provided" );
+      RSN_ASSERT( snapshot, snapshot_exception, "No snapshot reader provided" );
       ilog( "Starting initialization from snapshot, this may take a significant amount of time" );
       try {
          snapshot->validate();
@@ -546,7 +546,7 @@ struct controller_impl {
          } else {
             read_from_snapshot( snapshot, 0, std::numeric_limits<uint32_t>::max() );
             const uint32_t lib_num = head->block_num;
-            EOS_ASSERT( lib_num > 0, snapshot_exception,
+            RSN_ASSERT( lib_num > 0, snapshot_exception,
                         "Snapshot indicates controller head at block number 0, but that is not allowed. "
                         "Snapshot is invalid." );
             blog.reset( chain_id, lib_num + 1 );
@@ -564,9 +564,9 @@ struct controller_impl {
    }
 
    void startup(std::function<bool()> shutdown, const genesis_state& genesis) {
-      EOS_ASSERT( db.revision() < 1, database_exception, "This version of controller::startup only works with a fresh state database." );
+      RSN_ASSERT( db.revision() < 1, database_exception, "This version of controller::startup only works with a fresh state database." );
       const auto& genesis_chain_id = genesis.compute_chain_id();
-      EOS_ASSERT( genesis_chain_id == chain_id, chain_id_type_exception,
+      RSN_ASSERT( genesis_chain_id == chain_id, chain_id_type_exception,
                   "genesis state provided to startup corresponds to a chain ID (${genesis_chain_id}) that does not match the chain ID that controller was constructed with (${controller_chain_id})",
                   ("genesis_chain_id", genesis_chain_id)("controller_chain_id", chain_id)
       );
@@ -586,7 +586,7 @@ struct controller_impl {
       }
 
       if( blog.head() ) {
-         EOS_ASSERT( blog.first_block_num() == 1, block_log_exception,
+         RSN_ASSERT( blog.first_block_num() == 1, block_log_exception,
                      "block log does not start with genesis block"
          );
       } else {
@@ -596,13 +596,13 @@ struct controller_impl {
    }
 
    void startup(std::function<bool()> shutdown) {
-      EOS_ASSERT( db.revision() >= 1, database_exception, "This version of controller::startup does not work with a fresh state database." );
-      EOS_ASSERT( fork_db.head(), fork_database_exception, "No existing fork database despite existing chain state. Replay required." );
+      RSN_ASSERT( db.revision() >= 1, database_exception, "This version of controller::startup does not work with a fresh state database." );
+      RSN_ASSERT( fork_db.head(), fork_database_exception, "No existing fork database despite existing chain state. Replay required." );
 
       uint32_t lib_num = fork_db.root()->block_num;
       auto first_block_num = blog.first_block_num();
       if( blog.head() ) {
-         EOS_ASSERT( first_block_num <= lib_num && lib_num <= blog.head()->block_num(),
+         RSN_ASSERT( first_block_num <= lib_num && lib_num <= blog.head()->block_num(),
                      block_log_exception,
                      "block log (ranging from ${block_log_first_num} to ${block_log_last_num}) does not contain the last irreversible block (${fork_db_lib})",
                      ("block_log_first_num", first_block_num)
@@ -629,7 +629,7 @@ struct controller_impl {
       // check database version
       const auto& header_idx = db.get_index<database_header_multi_index>().indices().get<by_id>();
 
-      EOS_ASSERT(header_idx.begin() != header_idx.end(), bad_database_version_exception,
+      RSN_ASSERT(header_idx.begin() != header_idx.end(), bad_database_version_exception,
                  "state database version pre-dates versioning, please restore from a compatible snapshot or replay!");
 
       auto header_itr = header_idx.begin();
@@ -645,7 +645,7 @@ struct controller_impl {
 
       {
          const auto& state_chain_id = db.get<global_property_object>().chain_id;
-         EOS_ASSERT( state_chain_id == chain_id, chain_id_type_exception,
+         RSN_ASSERT( state_chain_id == chain_id, chain_id_type_exception,
                      "chain ID in state (${state_chain_id}) does not match the chain ID that controller was constructed with (${controller_chain_id})",
                      ("state_chain_id", state_chain_id)("controller_chain_id", chain_id)
          );
@@ -662,7 +662,7 @@ struct controller_impl {
       // Furthermore, fork_db.root()->block_num <= lib_num.
       // Also, even though blog.head() may still be nullptr, blog.first_block_num() is guaranteed to be lib_num + 1.
 
-      EOS_ASSERT( db.revision() >= head->block_num, fork_database_exception,
+      RSN_ASSERT( db.revision() >= head->block_num, fork_database_exception,
                   "fork database head (${head}) is inconsistent with state (${db})",
                   ("db",db.revision())("head",head->block_num) );
 
@@ -693,7 +693,7 @@ struct controller_impl {
          for( ; itr != rbi.end() && itr->blocknum <= lib_num; itr = rbi.begin() )
             reversible_blocks.remove( *itr );
 
-         EOS_ASSERT( itr == rbi.end() || itr->blocknum == lib_num + 1, reversible_blocks_exception,
+         RSN_ASSERT( itr == rbi.end() || itr->blocknum == lib_num + 1, reversible_blocks_exception,
                      "gap exists between last irreversible block (${lib}) and first reversible block (${first_reversible_block_num})",
                      ("lib", lib_num)("first_reversible_block_num", itr->blocknum)
          );
@@ -704,7 +704,7 @@ struct controller_impl {
             last_block_num = ritr->blocknum;
          }
 
-         EOS_ASSERT( head->block_num <= last_block_num, reversible_blocks_exception,
+         RSN_ASSERT( head->block_num <= last_block_num, reversible_blocks_exception,
                      "head block (${head_num}) is greater than the last locally stored block (${last_block_num})",
                      ("head_num", head->block_num)("last_block_num", last_block_num)
          );
@@ -716,9 +716,9 @@ struct controller_impl {
              && pending_head->block_num <= last_block_num
          ) {
             auto rbitr = rbi.find( pending_head->block_num );
-            EOS_ASSERT( rbitr != rbi.end(), reversible_blocks_exception, "pending head block not found in reversible blocks");
+            RSN_ASSERT( rbitr != rbi.end(), reversible_blocks_exception, "pending head block not found in reversible blocks");
             auto rev_id = rbitr->get_block_id();
-            EOS_ASSERT( rev_id == pending_head->id,
+            RSN_ASSERT( rev_id == pending_head->id,
                         reversible_blocks_exception,
                         "mismatch in block id of pending head block ${num} in reversible blocks database: "
                         "expected: ${expected}, actual: ${actual}",
@@ -728,7 +728,7 @@ struct controller_impl {
             const auto b = fork_db.search_on_branch( pending_head->id, last_block_num );
             FC_ASSERT( b, "unexpected violation of invariants" );
             auto rev_id = ritr->get_block_id();
-            EOS_ASSERT( rev_id == b->id,
+            RSN_ASSERT( rev_id == b->id,
                         reversible_blocks_exception,
                         "mismatch in block id of last block (${num}) in reversible blocks database: "
                         "expected: ${expected}, actual: ${actual}",
@@ -912,7 +912,7 @@ struct controller_impl {
          }
 
          snapshot_head_block = head_header_state.block_num;
-         EOS_ASSERT( blog_start <= (snapshot_head_block + 1) && snapshot_head_block <= blog_end,
+         RSN_ASSERT( blog_start <= (snapshot_head_block + 1) && snapshot_head_block <= blog_end,
                      block_log_exception,
                      "Block log is provided with snapshot but does not contain the head block from the snapshot nor a block right after it",
                      ("snapshot_head_block", snapshot_head_block)
@@ -945,7 +945,7 @@ struct controller_impl {
 
             if (std::clamp(header.version, v2::minimum_version, v2::maximum_version) == header.version ) {
                fc::optional<genesis_state> genesis = extract_legacy_genesis_state(*snapshot, header.version);
-               EOS_ASSERT( genesis, snapshot_exception,
+               RSN_ASSERT( genesis, snapshot_exception,
                            "Snapshot indicates chain_snapshot_header version 2, but does not contain a genesis_state. "
                            "It must be corrupted.");
                snapshot->read_section<global_property_object>([&db=this->db,gs_chain_id=genesis->compute_chain_id()]( auto &section ) {
@@ -981,7 +981,7 @@ struct controller_impl {
       });
 
       const auto& gpo = db.get<global_property_object>();
-      EOS_ASSERT( gpo.chain_id == chain_id, chain_id_type_exception,
+      RSN_ASSERT( gpo.chain_id == chain_id, chain_id_type_exception,
                   "chain ID in snapshot (${snapshot_chain_id}) does not match the chain ID that controller was constructed with (${controller_chain_id})",
                   ("snapshot_chain_id", gpo.chain_id)("controller_chain_id", chain_id)
       );
@@ -1002,7 +1002,7 @@ struct controller_impl {
          a.creation_date = initial_timestamp;
 
          if( name == config::system_account_name ) {
-            // The initial arisen ABI value affects consensus; see  https://github.com/ARISEN/eos/issues/7794
+            // The initial arisen ABI value affects consensus; see  https://github.com/ARISEN/rsn/issues/7794
             // TODO: This doesn't charge RAM; a fix requires a consensus upgrade.
             a.abi.resize(sizeof(arisen_abi_bin));
             memcpy(a.abi.data(), arisen_abi_bin, sizeof(arisen_abi_bin));
@@ -1197,7 +1197,7 @@ struct controller_impl {
    transaction_trace_ptr push_scheduled_transaction( const transaction_id_type& trxid, fc::time_point deadline, uint32_t billed_cpu_time_us, bool explicit_billed_cpu_time = false ) {
       const auto& idx = db.get_index<generated_transaction_multi_index,by_trx_id>();
       auto itr = idx.find( trxid );
-      EOS_ASSERT( itr != idx.end(), unknown_transaction_exception, "unknown transaction" );
+      RSN_ASSERT( itr != idx.end(), unknown_transaction_exception, "unknown transaction" );
       return push_scheduled_transaction( *itr, deadline, billed_cpu_time_us, explicit_billed_cpu_time );
    }
 
@@ -1219,7 +1219,7 @@ struct controller_impl {
 
       fc::datastream<const char*> ds( gtrx.packed_trx.data(), gtrx.packed_trx.size() );
 
-      EOS_ASSERT( gtrx.delay_until <= self.pending_block_time(), transaction_exception, "this transaction isn't ready",
+      RSN_ASSERT( gtrx.delay_until <= self.pending_block_time(), transaction_exception, "this transaction isn't ready",
                  ("gtrx.delay_until",gtrx.delay_until)("pbt",self.pending_block_time())          );
 
       signed_transaction dtrx;
@@ -1377,7 +1377,7 @@ struct controller_impl {
    const transaction_receipt& push_receipt( const T& trx, transaction_receipt_header::status_enum status,
                                             uint64_t cpu_usage_us, uint64_t net_usage ) {
       uint64_t net_usage_words = net_usage / 8;
-      EOS_ASSERT( net_usage_words*8 == net_usage, transaction_exception, "net_usage is not divisible by 8" );
+      RSN_ASSERT( net_usage_words*8 == net_usage, transaction_exception, "net_usage is not divisible by 8" );
       auto& receipts = pending->_block_stage.get<building_block>()._pending_trx_receipts;
       receipts.emplace_back( trx );
       transaction_receipt& r = receipts.back();
@@ -1397,7 +1397,7 @@ struct controller_impl {
                                            uint32_t billed_cpu_time_us,
                                            bool explicit_billed_cpu_time = false )
    {
-      EOS_ASSERT(deadline != fc::time_point(), transaction_exception, "deadline cannot be uninitialized");
+      RSN_ASSERT(deadline != fc::time_point(), transaction_exception, "deadline cannot be uninitialized");
 
       transaction_trace_ptr trace;
       try {
@@ -1406,7 +1406,7 @@ struct controller_impl {
          const fc::microseconds sig_cpu_usage = trx->signature_cpu_usage();
 
          if( !explicit_billed_cpu_time ) {
-            fc::microseconds already_consumed_time( EOS_PERCENT(sig_cpu_usage.count(), conf.sig_cpu_bill_pct) );
+            fc::microseconds already_consumed_time( RSN_PERCENT(sig_cpu_usage.count(), conf.sig_cpu_bill_pct) );
 
             if( start.time_since_epoch() <  already_consumed_time ) {
                start = fc::time_point();
@@ -1510,7 +1510,7 @@ struct controller_impl {
                      controller::block_status s,
                      const optional<block_id_type>& producer_block_id )
    {
-      EOS_ASSERT( !pending, block_validate_exception, "pending block already exists" );
+      RSN_ASSERT( !pending, block_validate_exception, "pending block already exists" );
 
       auto guard_pending = fc::make_scoped_exit([this, head_block_num=head->block_num](){
          protocol_features.popped_blocks_to( head_block_num );
@@ -1518,7 +1518,7 @@ struct controller_impl {
       });
 
       if (!self.skip_db_sessions(s)) {
-         EOS_ASSERT( db.revision() == head->block_num, database_exception, "db revision is not on par with head block",
+         RSN_ASSERT( db.revision() == head->block_num, database_exception, "db revision is not on par with head block",
                      ("db.revision()", db.revision())("controller_head_block", head->block_num)("fork_db_head_block", fork_db.head()->block_num) );
 
          pending.emplace( maybe_session(db), *head, when, confirm_block_count, new_protocol_feature_activations );
@@ -1557,12 +1557,12 @@ struct controller_impl {
                auto res = activated_protocol_features.emplace( feature_digest, true );
                if( res.second ) {
                   // feature_digest was not preactivated
-                  EOS_ASSERT( !f.preactivation_required, protocol_feature_exception,
+                  RSN_ASSERT( !f.preactivation_required, protocol_feature_exception,
                               "attempted to activate protocol feature without prior required preactivation: ${digest}",
                               ("digest", feature_digest)
                   );
                } else {
-                  EOS_ASSERT( !res.first->second, block_validate_exception,
+                  RSN_ASSERT( !res.first->second, block_validate_exception,
                               "attempted duplicate activation within a single block: ${digest}",
                               ("digest", feature_digest)
                   );
@@ -1585,7 +1585,7 @@ struct controller_impl {
             }
          }
 
-         EOS_ASSERT( handled_all_preactivated_features, block_validate_exception,
+         RSN_ASSERT( handled_all_preactivated_features, block_validate_exception,
                      "There are pre-activated protocol features that were not activated at the start of this block"
          );
 
@@ -1616,7 +1616,7 @@ struct controller_impl {
                      ("schedule", producer_authority_schedule::from_shared(gpo.proposed_schedule) ) );
             }
 
-            EOS_ASSERT( gpo.proposed_schedule.version == pbhs.active_schedule_version + 1,
+            RSN_ASSERT( gpo.proposed_schedule.version == pbhs.active_schedule_version + 1,
                         producer_schedule_exception, "wrong producer schedule version specified" );
 
             pending->_block_stage.get<building_block>()._new_pending_producer_schedule = producer_authority_schedule::from_shared(gpo.proposed_schedule);
@@ -1657,8 +1657,8 @@ struct controller_impl {
 
    void finalize_block()
    {
-      EOS_ASSERT( pending, block_validate_exception, "it is not valid to finalize when there is no pending block");
-      EOS_ASSERT( pending->_block_stage.contains<building_block>(), block_validate_exception, "already called finalize_block");
+      RSN_ASSERT( pending, block_validate_exception, "it is not valid to finalize when there is no pending block");
+      RSN_ASSERT( pending->_block_stage.contains<building_block>(), block_validate_exception, "already called finalize_block");
 
       try {
 
@@ -1667,10 +1667,10 @@ struct controller_impl {
       // Update resource limits:
       resource_limits.process_account_limit_updates();
       const auto& chain_config = self.get_global_properties().configuration;
-      uint64_t CPU_TARGET = EOS_PERCENT(chain_config.max_block_cpu_usage, chain_config.target_block_cpu_usage_pct);
+      uint64_t CPU_TARGET = RSN_PERCENT(chain_config.max_block_cpu_usage, chain_config.target_block_cpu_usage_pct);
       resource_limits.set_block_parameters(
          { CPU_TARGET, chain_config.max_block_cpu_usage, config::block_cpu_usage_average_window_ms / config::block_interval_ms, config::maximum_elastic_resource_multiplier, {99, 100}, {1000, 999}},
-         {EOS_PERCENT(chain_config.max_block_net_usage, chain_config.target_block_net_usage_pct), chain_config.max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms, config::maximum_elastic_resource_multiplier, {99, 100}, {1000, 999}}
+         {RSN_PERCENT(chain_config.max_block_net_usage, chain_config.target_block_net_usage_pct), chain_config.max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms, config::maximum_elastic_resource_multiplier, {99, 100}, {1000, 999}}
       );
       resource_limits.process_block_usage(pbhs.block_num);
 
@@ -1724,7 +1724,7 @@ struct controller_impl {
       });
 
       try {
-         EOS_ASSERT( pending->_block_stage.contains<completed_block>(), block_validate_exception,
+         RSN_ASSERT( pending->_block_stage.contains<completed_block>(), block_validate_exception,
                      "cannot call commit_block until pending block is completed" );
 
          auto bsp = pending->_block_stage.get<completed_block>()._block_state;
@@ -1734,7 +1734,7 @@ struct controller_impl {
             fork_db.mark_valid( bsp );
             emit( self.accepted_block_header, bsp );
             head = fork_db.head();
-            EOS_ASSERT( bsp == head, fork_database_exception, "committed block did not become the new head in fork database");
+            RSN_ASSERT( bsp == head, fork_database_exception, "committed block did not become the new head in fork database");
          }
 
          if( !replay_head_time && read_mode != db_read_mode::IRREVERSIBLE ) {
@@ -1781,25 +1781,25 @@ struct controller_impl {
          auto status = pfs.is_recognized( f, timestamp );
          switch( status ) {
             case protocol_feature_set::recognized_t::unrecognized:
-               EOS_THROW( protocol_feature_exception,
+               RSN_THROW( protocol_feature_exception,
                           "protocol feature with digest '${digest}' is unrecognized", ("digest", f) );
             break;
             case protocol_feature_set::recognized_t::disabled:
-               EOS_THROW( protocol_feature_exception,
+               RSN_THROW( protocol_feature_exception,
                           "protocol feature with digest '${digest}' is disabled", ("digest", f) );
             break;
             case protocol_feature_set::recognized_t::too_early:
-               EOS_THROW( protocol_feature_exception,
+               RSN_THROW( protocol_feature_exception,
                           "${timestamp} is too early for the earliest allowed activation time of the protocol feature with digest '${digest}'", ("digest", f)("timestamp", timestamp) );
             break;
             case protocol_feature_set::recognized_t::ready:
             break;
             default:
-               EOS_THROW( protocol_feature_exception, "unexpected recognized_t status" );
+               RSN_THROW( protocol_feature_exception, "unexpected recognized_t status" );
             break;
          }
 
-         EOS_ASSERT( currently_activated_protocol_features.find( f ) == currently_activated_protocol_features.end(),
+         RSN_ASSERT( currently_activated_protocol_features.find( f ) == currently_activated_protocol_features.end(),
                      protocol_feature_exception,
                      "protocol feature with digest '${digest}' has already been activated",
                      ("digest", f)
@@ -1814,7 +1814,7 @@ struct controller_impl {
             return (std::find( new_protocol_features.begin(), itr, f ) != itr);
          };
 
-         EOS_ASSERT( pfs.validate_dependencies( f, dependency_checker ), protocol_feature_exception,
+         RSN_ASSERT( pfs.validate_dependencies( f, dependency_checker ), protocol_feature_exception,
                      "not all dependencies of protocol feature with digest '${digest}' have been activated",
                      ("digest", f)
          );
@@ -1823,22 +1823,22 @@ struct controller_impl {
 
    void report_block_header_diff( const block_header& b, const block_header& ab ) {
 
-#define EOS_REPORT(DESC,A,B) \
+#define RSN_REPORT(DESC,A,B) \
    if( A != B ) { \
       elog("${desc}: ${bv} != ${abv}", ("desc", DESC)("bv", A)("abv", B)); \
    }
 
-      EOS_REPORT( "timestamp", b.timestamp, ab.timestamp )
-      EOS_REPORT( "producer", b.producer, ab.producer )
-      EOS_REPORT( "confirmed", b.confirmed, ab.confirmed )
-      EOS_REPORT( "previous", b.previous, ab.previous )
-      EOS_REPORT( "transaction_mroot", b.transaction_mroot, ab.transaction_mroot )
-      EOS_REPORT( "action_mroot", b.action_mroot, ab.action_mroot )
-      EOS_REPORT( "schedule_version", b.schedule_version, ab.schedule_version )
-      EOS_REPORT( "new_producers", b.new_producers, ab.new_producers )
-      EOS_REPORT( "header_extensions", b.header_extensions, ab.header_extensions )
+      RSN_REPORT( "timestamp", b.timestamp, ab.timestamp )
+      RSN_REPORT( "producer", b.producer, ab.producer )
+      RSN_REPORT( "confirmed", b.confirmed, ab.confirmed )
+      RSN_REPORT( "previous", b.previous, ab.previous )
+      RSN_REPORT( "transaction_mroot", b.transaction_mroot, ab.transaction_mroot )
+      RSN_REPORT( "action_mroot", b.action_mroot, ab.action_mroot )
+      RSN_REPORT( "schedule_version", b.schedule_version, ab.schedule_version )
+      RSN_REPORT( "new_producers", b.new_producers, ab.new_producers )
+      RSN_REPORT( "header_extensions", b.header_extensions, ab.header_extensions )
 
-#undef EOS_REPORT
+#undef RSN_REPORT
    }
 
 
@@ -1896,7 +1896,7 @@ struct controller_impl {
             } else if( receipt.trx.contains<transaction_id_type>() ) {
                trace = push_scheduled_transaction( receipt.trx.get<transaction_id_type>(), fc::time_point::maximum(), receipt.cpu_usage_us, true );
             } else {
-               EOS_ASSERT( false, block_validate_exception, "encountered unexpected receipt type" );
+               RSN_ASSERT( false, block_validate_exception, "encountered unexpected receipt type" );
             }
 
             bool transaction_failed =  trace && trace->except;
@@ -1906,16 +1906,16 @@ struct controller_impl {
                throw *trace->except;
             }
 
-            EOS_ASSERT( trx_receipts.size() > 0,
+            RSN_ASSERT( trx_receipts.size() > 0,
                         block_validate_exception, "expected a receipt",
                         ("block", *b)("expected_receipt", receipt)
                       );
-            EOS_ASSERT( trx_receipts.size() == num_pending_receipts + 1,
+            RSN_ASSERT( trx_receipts.size() == num_pending_receipts + 1,
                         block_validate_exception, "expected receipt was not added",
                         ("block", *b)("expected_receipt", receipt)
                       );
             const transaction_receipt_header& r = trx_receipts.back();
-            EOS_ASSERT( r == static_cast<const transaction_receipt_header&>(receipt),
+            RSN_ASSERT( r == static_cast<const transaction_receipt_header&>(receipt),
                         block_validate_exception, "receipt does not match",
                         ("producer_receipt", receipt)("validator_receipt", trx_receipts.back()) );
          }
@@ -1931,7 +1931,7 @@ struct controller_impl {
             elog( "Validation block id does not match producer block id" );
             report_block_header_diff( *b, *ab._unsigned_block );
             // this implicitly asserts that all header fields (less the signature) are identical
-            EOS_ASSERT( producer_block_id == ab._id, block_validate_exception, "Block ID does not match",
+            RSN_ASSERT( producer_block_id == ab._id, block_validate_exception, "Block ID does not match",
                         ("producer_block_id", producer_block_id)("validator_block_id", ab._id) );
          }
 
@@ -1951,23 +1951,23 @@ struct controller_impl {
    } FC_CAPTURE_AND_RETHROW() } /// apply_block
 
    std::future<block_state_ptr> create_block_state_future( const signed_block_ptr& b ) {
-      EOS_ASSERT( b, block_validate_exception, "null block" );
+      RSN_ASSERT( b, block_validate_exception, "null block" );
 
       auto id = b->id();
 
       // no reason for a block_state if fork_db already knows about block
       auto existing = fork_db.get_block( id );
-      EOS_ASSERT( !existing, fork_database_exception, "we already know about this block: ${id}", ("id", id) );
+      RSN_ASSERT( !existing, fork_database_exception, "we already know about this block: ${id}", ("id", id) );
 
       auto prev = fork_db.get_block_header( b->previous );
-      EOS_ASSERT( prev, unlinkable_block_exception,
+      RSN_ASSERT( prev, unlinkable_block_exception,
                   "unlinkable block ${id}", ("id", id)("previous", b->previous) );
 
       return async_thread_pool( thread_pool.get_executor(), [b, prev, control=this]() {
          const bool skip_validate_signee = false;
 
          auto trx_mroot = calculate_trx_merkle( b->transactions );
-         EOS_ASSERT( b->transaction_mroot == trx_mroot, block_validate_exception,
+         RSN_ASSERT( b->transaction_mroot == trx_mroot, block_validate_exception,
                      "invalid block transaction merkle root ${b} != ${c}", ("b", b->transaction_mroot)("c", trx_mroot) );
 
          return std::make_shared<block_state>(
@@ -1987,7 +1987,7 @@ struct controller_impl {
                     const forked_branch_callback& forked_branch_cb, const trx_meta_cache_lookup& trx_lookup )
    {
       controller::block_status s = controller::block_status::complete;
-      EOS_ASSERT(!pending, block_validate_exception, "it is not valid to push a block when there is a pending block");
+      RSN_ASSERT(!pending, block_validate_exception, "it is not valid to push a block when there is a pending block");
 
       auto reset_prod_light_validation = fc::make_scoped_exit([old_value=trusted_producer_light_validation, this]() {
          trusted_producer_light_validation = old_value;
@@ -2019,11 +2019,11 @@ struct controller_impl {
       self.validate_db_available_size();
       self.validate_reversible_available_size();
 
-      EOS_ASSERT(!pending, block_validate_exception, "it is not valid to push a block when there is a pending block");
+      RSN_ASSERT(!pending, block_validate_exception, "it is not valid to push a block when there is a pending block");
 
       try {
-         EOS_ASSERT( b, block_validate_exception, "trying to push empty block" );
-         EOS_ASSERT( (s == controller::block_status::irreversible || s == controller::block_status::validated),
+         RSN_ASSERT( b, block_validate_exception, "trying to push empty block" );
+         RSN_ASSERT( (s == controller::block_status::irreversible || s == controller::block_status::validated),
                      block_validate_exception, "invalid block status for replay" );
          emit( self.pre_accepted_block, b );
          const bool skip_validate_signee = !conf.force_all_checks;
@@ -2058,7 +2058,7 @@ struct controller_impl {
             }
 
          } else {
-            EOS_ASSERT( read_mode != db_read_mode::IRREVERSIBLE, block_validate_exception,
+            RSN_ASSERT( read_mode != db_read_mode::IRREVERSIBLE, block_validate_exception,
                         "invariant failure: cannot replay reversible blocks while in irreversible mode" );
             maybe_switch_forks( bsp, s, forked_branch_callback{}, trx_meta_cache_lookup{} );
          }
@@ -2089,7 +2089,7 @@ struct controller_impl {
             for( auto itr = branches.second.begin(); itr != branches.second.end(); ++itr ) {
                pop_block();
             }
-            EOS_ASSERT( self.head_block_id() == branches.second.back()->header.previous, fork_database_exception,
+            RSN_ASSERT( self.head_block_id() == branches.second.back()->header.previous, fork_database_exception,
                      "loss of sync between fork_db and chainbase during fork switch" ); // _should_ never fail
 
             if( forked_branch_cb ) forked_branch_cb( branches.second );
@@ -2118,7 +2118,7 @@ struct controller_impl {
                for( auto itr = applied_itr; itr != branches.first.end(); ++itr ) {
                   pop_block();
                }
-               EOS_ASSERT( self.head_block_id() == branches.second.back()->header.previous, fork_database_exception,
+               RSN_ASSERT( self.head_block_id() == branches.second.back()->header.previous, fork_database_exception,
                            "loss of sync between fork_db and chainbase during fork switch reversal" ); // _should_ never fail
 
                // re-apply good blocks
@@ -2272,7 +2272,7 @@ struct controller_impl {
             return excluded;
          };
 
-         EOS_ASSERT( is_subset,  actor_whitelist_exception,
+         RSN_ASSERT( is_subset,  actor_whitelist_exception,
                      "authorizing actor(s) in transaction are not on the actor whitelist: ${actors}",
                      ("actors", generate_missing_actors(actors, whitelist))
                    );
@@ -2312,7 +2312,7 @@ struct controller_impl {
             return blacklisted;
          };
 
-         EOS_ASSERT( !intersects, actor_blacklist_exception,
+         RSN_ASSERT( !intersects, actor_blacklist_exception,
                      "authorizing actor(s) in transaction are on the actor blacklist: ${actors}",
                      ("actors", generate_blacklisted_actors(actors, blacklist))
                    );
@@ -2321,12 +2321,12 @@ struct controller_impl {
 
    void check_contract_list( account_name code )const {
       if( conf.contract_whitelist.size() > 0 ) {
-         EOS_ASSERT( conf.contract_whitelist.find( code ) != conf.contract_whitelist.end(),
+         RSN_ASSERT( conf.contract_whitelist.find( code ) != conf.contract_whitelist.end(),
                      contract_whitelist_exception,
                      "account '${code}' is not on the contract whitelist", ("code", code)
                    );
       } else if( conf.contract_blacklist.size() > 0 ) {
-         EOS_ASSERT( conf.contract_blacklist.find( code ) == conf.contract_blacklist.end(),
+         RSN_ASSERT( conf.contract_blacklist.find( code ) == conf.contract_blacklist.end(),
                      contract_blacklist_exception,
                      "account '${code}' is on the contract blacklist", ("code", code)
                    );
@@ -2335,7 +2335,7 @@ struct controller_impl {
 
    void check_action_list( account_name code, action_name action )const {
       if( conf.action_blacklist.size() > 0 ) {
-         EOS_ASSERT( conf.action_blacklist.find( std::make_pair(code, action) ) == conf.action_blacklist.end(),
+         RSN_ASSERT( conf.action_blacklist.find( std::make_pair(code, action) ) == conf.action_blacklist.end(),
                      action_blacklist_exception,
                      "action '${code}::${action}' is on the action blacklist",
                      ("code", code)("action", action)
@@ -2345,7 +2345,7 @@ struct controller_impl {
 
    void check_key_list( const public_key_type& key )const {
       if( conf.key_blacklist.size() > 0 ) {
-         EOS_ASSERT( conf.key_blacklist.find( key ) == conf.key_blacklist.end(),
+         RSN_ASSERT( conf.key_blacklist.find( key ) == conf.key_blacklist.end(),
                      key_blacklist_exception,
                      "public key '${key}' is on the key blacklist",
                      ("key", key)
@@ -2362,7 +2362,7 @@ struct controller_impl {
       const auto& tapos_block_summary = db.get<block_summary_object>((uint16_t)trx.ref_block_num);
 
       //Verify TaPoS block summary has correct ID prefix, and that this block's time is not past the expiration
-      EOS_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
+      RSN_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
                  "Transaction's reference block did not match. Is this transaction from a different fork?",
                  ("tapos_summary", tapos_block_summary));
    }
@@ -2469,28 +2469,28 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
    switch( status ) {
       case protocol_feature_set::recognized_t::unrecognized:
          if( is_producing_block() ) {
-            EOS_THROW( subjective_block_production_exception,
+            RSN_THROW( subjective_block_production_exception,
                        "protocol feature with digest '${digest}' is unrecognized", ("digest", feature_digest) );
          } else {
-            EOS_THROW( protocol_feature_bad_block_exception,
+            RSN_THROW( protocol_feature_bad_block_exception,
                        "protocol feature with digest '${digest}' is unrecognized", ("digest", feature_digest) );
          }
       break;
       case protocol_feature_set::recognized_t::disabled:
          if( is_producing_block() ) {
-            EOS_THROW( subjective_block_production_exception,
+            RSN_THROW( subjective_block_production_exception,
                        "protocol feature with digest '${digest}' is disabled", ("digest", feature_digest) );
          } else {
-            EOS_THROW( protocol_feature_bad_block_exception,
+            RSN_THROW( protocol_feature_bad_block_exception,
                        "protocol feature with digest '${digest}' is disabled", ("digest", feature_digest) );
          }
       break;
       case protocol_feature_set::recognized_t::too_early:
          if( is_producing_block() ) {
-            EOS_THROW( subjective_block_production_exception,
+            RSN_THROW( subjective_block_production_exception,
                        "${timestamp} is too early for the earliest allowed activation time of the protocol feature with digest '${digest}'", ("digest", feature_digest)("timestamp", cur_time) );
          } else {
-            EOS_THROW( protocol_feature_bad_block_exception,
+            RSN_THROW( protocol_feature_bad_block_exception,
                        "${timestamp} is too early for the earliest allowed activation time of the protocol feature with digest '${digest}'", ("digest", feature_digest)("timestamp", cur_time) );
          }
       break;
@@ -2498,9 +2498,9 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
       break;
       default:
          if( is_producing_block() ) {
-            EOS_THROW( subjective_block_production_exception, "unexpected recognized_t status" );
+            RSN_THROW( subjective_block_production_exception, "unexpected recognized_t status" );
          } else {
-            EOS_THROW( protocol_feature_bad_block_exception, "unexpected recognized_t status" );
+            RSN_THROW( protocol_feature_bad_block_exception, "unexpected recognized_t status" );
          }
       break;
    }
@@ -2514,7 +2514,7 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
    // But it is still possible for a producer to retire a deferred transaction that deals with this subjective
    // information. If they recognized the feature, they would retire it successfully, but a validator that
    // does not recognize the feature should reject the entire block (not just fail the deferred transaction).
-   // Even if they don't recognize the feature, the producer could change their nodeos code to treat it like an
+   // Even if they don't recognize the feature, the producer could change their aos code to treat it like an
    // objective failure thus leading the deferred transaction to retire with soft_fail or hard_fail.
    // In this case, validators that don't recognize the feature would reject the whole block immediately, and
    // validators that do recognize the feature would likely lead to a different retire status which would
@@ -2526,7 +2526,7 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
    // Thus the exceptions that can be thrown below can be regular objective exceptions
    // that do not cause immediate rejection of the block.
 
-   EOS_ASSERT( !is_protocol_feature_activated( feature_digest ),
+   RSN_ASSERT( !is_protocol_feature_activated( feature_digest ),
                protocol_feature_exception,
                "protocol feature with digest '${digest}' is already activated",
                ("digest", feature_digest)
@@ -2534,7 +2534,7 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
 
    const auto& pso = my->db.get<protocol_state_object>();
 
-   EOS_ASSERT( std::find( pso.preactivated_protocol_features.begin(),
+   RSN_ASSERT( std::find( pso.preactivated_protocol_features.begin(),
                           pso.preactivated_protocol_features.end(),
                           feature_digest
                ) == pso.preactivated_protocol_features.end(),
@@ -2552,7 +2552,7 @@ void controller::preactivate_feature( const digest_type& feature_digest ) {
                           d ) != pso.preactivated_protocol_features.end() );
    };
 
-   EOS_ASSERT( pfs.validate_dependencies( feature_digest, dependency_checker ),
+   RSN_ASSERT( pfs.validate_dependencies( feature_digest, dependency_checker ),
                protocol_feature_exception,
                "not all dependencies of protocol feature with digest '${digest}' have been activated or pre-activated",
                ("digest", feature_digest)
@@ -2587,7 +2587,7 @@ void controller::start_block( block_timestamp_type when, uint16_t confirm_block_
 {
    validate_db_available_size();
 
-   EOS_ASSERT( !my->pending, block_validate_exception, "pending block already exists" );
+   RSN_ASSERT( !my->pending, block_validate_exception, "pending block already exists" );
 
    vector<digest_type> new_protocol_feature_activations;
 
@@ -2676,14 +2676,14 @@ bool controller::in_immutable_mode()const{
 
 transaction_trace_ptr controller::push_transaction( const transaction_metadata_ptr& trx, fc::time_point deadline, uint32_t billed_cpu_time_us ) {
    validate_db_available_size();
-   EOS_ASSERT( !in_immutable_mode(), transaction_type_exception, "push transaction not allowed in read-only mode" );
-   EOS_ASSERT( trx && !trx->implicit && !trx->scheduled, transaction_type_exception, "Implicit/Scheduled transaction not allowed" );
+   RSN_ASSERT( !in_immutable_mode(), transaction_type_exception, "push transaction not allowed in read-only mode" );
+   RSN_ASSERT( trx && !trx->implicit && !trx->scheduled, transaction_type_exception, "Implicit/Scheduled transaction not allowed" );
    return my->push_transaction(trx, deadline, billed_cpu_time_us, billed_cpu_time_us > 0 );
 }
 
 transaction_trace_ptr controller::push_scheduled_transaction( const transaction_id_type& trxid, fc::time_point deadline, uint32_t billed_cpu_time_us )
 {
-   EOS_ASSERT( !in_immutable_mode(), transaction_type_exception, "push scheduled transaction not allowed in read-only mode" );
+   RSN_ASSERT( !in_immutable_mode(), transaction_type_exception, "push scheduled transaction not allowed in read-only mode" );
    validate_db_available_size();
    return my->push_scheduled_transaction( trxid, deadline, billed_cpu_time_us, billed_cpu_time_us > 0 );
 }
@@ -2721,8 +2721,8 @@ void controller::set_contract_blacklist( const flat_set<account_name>& new_contr
 }
 void controller::set_action_blacklist( const flat_set< pair<account_name, action_name> >& new_action_blacklist ) {
    for (auto& act: new_action_blacklist) {
-      EOS_ASSERT(act.first != account_name(), name_type_exception, "Action blacklist - contract name should not be empty");
-      EOS_ASSERT(act.second != action_name(), action_type_exception, "Action blacklist - action name should not be empty");
+      RSN_ASSERT(act.first != account_name(), name_type_exception, "Action blacklist - contract name should not be empty");
+      RSN_ASSERT(act.second != action_name(), action_type_exception, "Action blacklist - action name should not be empty");
    }
    my->conf.action_blacklist = new_action_blacklist;
 }
@@ -2782,7 +2782,7 @@ account_name  controller::fork_db_pending_head_block_producer()const {
 }
 
 time_point controller::pending_block_time()const {
-   EOS_ASSERT( my->pending, block_validate_exception, "no pending block" );
+   RSN_ASSERT( my->pending, block_validate_exception, "no pending block" );
 
    if( my->pending->_block_stage.contains<completed_block>() )
       return my->pending->_block_stage.get<completed_block>()._block_state->header.timestamp;
@@ -2791,7 +2791,7 @@ time_point controller::pending_block_time()const {
 }
 
 account_name controller::pending_block_producer()const {
-   EOS_ASSERT( my->pending, block_validate_exception, "no pending block" );
+   RSN_ASSERT( my->pending, block_validate_exception, "no pending block" );
 
    if( my->pending->_block_stage.contains<completed_block>() )
       return my->pending->_block_stage.get<completed_block>()._block_state->header.producer;
@@ -2800,7 +2800,7 @@ account_name controller::pending_block_producer()const {
 }
 
 const block_signing_authority& controller::pending_block_signing_authority()const {
-   EOS_ASSERT( my->pending, block_validate_exception, "no pending block" );
+   RSN_ASSERT( my->pending, block_validate_exception, "no pending block" );
 
    if( my->pending->_block_stage.contains<completed_block>() )
       return my->pending->_block_stage.get<completed_block>()._block_state->valid_block_signing_authority;
@@ -2809,12 +2809,12 @@ const block_signing_authority& controller::pending_block_signing_authority()cons
 }
 
 optional<block_id_type> controller::pending_producer_block_id()const {
-   EOS_ASSERT( my->pending, block_validate_exception, "no pending block" );
+   RSN_ASSERT( my->pending, block_validate_exception, "no pending block" );
    return my->pending->_producer_block_id;
 }
 
 const vector<transaction_receipt>& controller::get_pending_trx_receipts()const {
-   EOS_ASSERT( my->pending, block_validate_exception, "no pending block" );
+   RSN_ASSERT( my->pending, block_validate_exception, "no pending block" );
    return my->pending->get_trx_receipts();
 }
 
@@ -2898,7 +2898,7 @@ block_id_type controller::get_block_id_for_num( uint32_t block_num )const { try 
 
    auto id = my->blog.read_block_id_by_num(block_num);
 
-   EOS_ASSERT( BOOST_LIKELY( id != block_id_type() ), unknown_block_exception,
+   RSN_ASSERT( BOOST_LIKELY( id != block_id_type() ), unknown_block_exception,
                "Could not find block: ${block}", ("block", block_num) );
 
    return id;
@@ -2909,7 +2909,7 @@ sha256 controller::calculate_integrity_hash()const { try {
 } FC_LOG_AND_RETHROW() }
 
 void controller::write_snapshot( const snapshot_writer_ptr& snapshot ) const {
-   EOS_ASSERT( !my->pending, block_validate_exception, "cannot take a consistent snapshot with a pending block" );
+   RSN_ASSERT( !my->pending, block_validate_exception, "cannot take a consistent snapshot with a pending block" );
    return my->add_to_snapshot(snapshot);
 }
 
@@ -3121,12 +3121,12 @@ uint32_t controller::configured_subjective_signature_length_limit()const {
 void controller::validate_expiration( const transaction& trx )const { try {
    const auto& chain_configuration = get_global_properties().configuration;
 
-   EOS_ASSERT( time_point(trx.expiration) >= pending_block_time(),
+   RSN_ASSERT( time_point(trx.expiration) >= pending_block_time(),
                expired_tx_exception,
                "transaction has expired, "
                "expiration is ${trx.expiration} and pending block time is ${pending_block_time}",
                ("trx.expiration",trx.expiration)("pending_block_time",pending_block_time()));
-   EOS_ASSERT( time_point(trx.expiration) <= pending_block_time() + fc::seconds(chain_configuration.max_transaction_lifetime),
+   RSN_ASSERT( time_point(trx.expiration) <= pending_block_time() + fc::seconds(chain_configuration.max_transaction_lifetime),
                tx_exp_too_far_exception,
                "Transaction expiration is too far in the future relative to the reference time of ${reference_time}, "
                "expiration is ${trx.expiration} and the maximum transaction lifetime is ${max_til_exp} seconds",
@@ -3138,7 +3138,7 @@ void controller::validate_tapos( const transaction& trx )const { try {
    const auto& tapos_block_summary = db().get<block_summary_object>((uint16_t)trx.ref_block_num);
 
    //Verify TaPoS block summary has correct ID prefix, and that this block's time is not past the expiration
-   EOS_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
+   RSN_ASSERT(trx.verify_reference_block(tapos_block_summary.block_id), invalid_ref_block_exception,
               "Transaction's reference block did not match. Is this transaction from a different fork?",
               ("tapos_summary", tapos_block_summary));
 } FC_CAPTURE_AND_RETHROW() }
@@ -3146,13 +3146,13 @@ void controller::validate_tapos( const transaction& trx )const { try {
 void controller::validate_db_available_size() const {
    const auto free = db().get_segment_manager()->get_free_memory();
    const auto guard = my->conf.state_guard_size;
-   EOS_ASSERT(free >= guard, database_guard_exception, "database free: ${f}, guard size: ${g}", ("f", free)("g",guard));
+   RSN_ASSERT(free >= guard, database_guard_exception, "database free: ${f}, guard size: ${g}", ("f", free)("g",guard));
 }
 
 void controller::validate_reversible_available_size() const {
    const auto free = my->reversible_blocks.get_segment_manager()->get_free_memory();
    const auto guard = my->conf.reversible_guard_size;
-   EOS_ASSERT(free >= guard, reversible_guard_exception, "reversible free: ${f}, guard size: ${g}", ("f", free)("g",guard));
+   RSN_ASSERT(free >= guard, reversible_guard_exception, "reversible free: ${f}, guard size: ${g}", ("f", free)("g",guard));
 }
 
 bool controller::is_protocol_feature_activated( const digest_type& feature_digest )const {
@@ -3186,7 +3186,7 @@ fc::optional<fc::microseconds> controller::get_subjective_cpu_leeway() const {
 }
 
 void controller::set_greylist_limit( uint32_t limit ) {
-   EOS_ASSERT( 0 < limit && limit <= chain::config::maximum_elastic_resource_multiplier,
+   RSN_ASSERT( 0 < limit && limit <= chain::config::maximum_elastic_resource_multiplier,
                misc_exception,
                "Invalid limit (${limit}) passed into set_greylist_limit. "
                "Must be between 1 and ${max}.",
@@ -3233,7 +3233,7 @@ bool controller::all_subjective_mitigations_disabled()const {
    return my->conf.disable_all_subjective_mitigations;
 }
 
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
 vm::wasm_allocator& controller::get_wasm_allocator() {
    return my->wasm_alloc;
 }

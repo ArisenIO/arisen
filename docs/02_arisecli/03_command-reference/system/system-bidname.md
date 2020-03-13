@@ -24,5 +24,5 @@ Place a bid on "premium" usernames (account names less than 12 characters)
 
 
 ```sh
-cleos system bidname accountname1 bob "10 SYS"
+arisecli system bidname accountname1 bob "10 RSN"
 ```

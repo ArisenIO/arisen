@@ -12,7 +12,7 @@ plugin = arisen::chain_api_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_api_plugin
+aos ... --plugin arisen::chain_api_plugin
 ```
 
 ## Options
@@ -35,6 +35,6 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin [operations] [options]  \
+aos ... --plugin arisen::chain_plugin [operations] [options]  \
            --plugin arisen::http_plugin [options]
 ```

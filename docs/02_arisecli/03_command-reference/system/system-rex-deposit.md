@@ -1,10 +1,10 @@
 ---
-title: "system rex deposit"
-excerpt: "Deposit into owner's REX fund by transfering from owner's liquid token balance"
+title: "system bex deposit"
+excerpt: "Deposit into owner's BEX fund by transfering from owner's liquid token balance"
 ---
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
-- `amount` _TEXT_ - Amount to be deposited into REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
+- `amount` _TEXT_ - Amount to be deposited into BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -21,5 +21,5 @@ excerpt: "Deposit into owner's REX fund by transfering from owner's liquid token
 
 
 ```sh
-cleos system rex deposit accountname1 "1 SYS"
+arisecli system bex deposit accountname1 "1 RSN"
 ```

@@ -55,7 +55,7 @@ cd $( dirname "${BASH_SOURCE[0]}" )/..
 # Load bash script helper functions
 . ./scripts/helpers/arisen.sh
 
-# Support relative paths : https://github.com/ARISEN/eos/issues/7560
+# Support relative paths : https://github.com/ARISEN/rsn/issues/7560
 ( [[ ! -z $INSTALL_LOCATION ]] && [[ ! $INSTALL_LOCATION =~ ^\/ ]] ) && export INSTALL_LOCATION="${CURRENT_WORKING_DIR}/$INSTALL_LOCATION"
 
 INSTALL_PATHS=()
@@ -80,7 +80,7 @@ export ARISEN_INSTALL_DIR=${INSTALL_LOCATION:-$ARISEN_INSTALL_DIR}
 if [[ ! -d "${ARISEN_INSTALL_DIR}" ]]; then
    echo "[ARISEN installation ${COLOR_YELLOW}NOT${COLOR_NC} found in ${ARISEN_INSTALL_DIR}]"
 else
-   # As of 1.8.0, we're using a versioned directories under home: https://github.com/ARISEN/eos/issues/6940
+   # As of 1.8.0, we're using a versioned directories under home: https://github.com/ARISEN/rsn/issues/6940
    echo "[ARISEN installation found: ${ARISEN_INSTALL_DIR}]" && INSTALL_PATHS+=("${ARISEN_INSTALL_DIR}") # ARISEN_INSTALL_DIR set in .environment
    while true; do
       [[ $NONINTERACTIVE == false ]] && read -p "Do you wish to remove the installation in ${ARISEN_INSTALL_DIR}? (y/n) " PROCEED

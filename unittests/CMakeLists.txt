@@ -7,7 +7,7 @@ if( ARISEN_COMPILE_TEST_CONTRACTS )
    set(ARISEN_WASM_OLD_BEHAVIOR "Off")
    find_package(arisen.cdt REQUIRED)
 
-   message( STATUS "Building contracts in directory `eos/unittests/test-contracts/`" )
+   message( STATUS "Building contracts in directory `rsn/unittests/test-contracts/`" )
    ExternalProject_Add(
       test_contracts_project
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test-contracts
@@ -20,7 +20,7 @@ if( ARISEN_COMPILE_TEST_CONTRACTS )
       BUILD_ALWAYS 1
    )
 else()
-  message( STATUS "Not building contracts in directory `eos/unittests/test-contracts/`" )
+  message( STATUS "Not building contracts in directory `rsn/unittests/test-contracts/`" )
   add_subdirectory(test-contracts)
 endif()
 
@@ -41,7 +41,7 @@ add_executable( unit_test ${UNIT_TESTS}) # build unit tests as one executable
 
 target_link_libraries( unit_test arisen_chain chainbase arisen_testing fc appbase ${PLATFORM_SPECIFIC_LIBS} )
 
-target_compile_options(unit_test PUBLIC -DDISABLE_EOSLIB_SERIALIZE)
+target_compile_options(unit_test PUBLIC -DDISABLE_RSNLIB_SERIALIZE)
 target_include_directories( unit_test PUBLIC
                             ${CMAKE_SOURCE_DIR}/libraries/testing/include
                             ${CMAKE_SOURCE_DIR}/test-contracts

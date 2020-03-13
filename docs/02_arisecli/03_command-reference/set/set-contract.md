@@ -38,7 +38,7 @@ Creates or updates the contract on an account.
 Here we deploy the standard currency contract. 
 
 ```sh
-cleos set contract currency ../../../contracts/currency/currency.wast ../../../contracts/currency/currency.abi
+arisecli set contract currency ../../../contracts/currency/currency.wast ../../../contracts/currency/currency.abi
 ```
 This will output something similar to...
 
@@ -56,11 +56,11 @@ Publishing contract...
     "expiration": "2017-08-24T18:29:52",
     "scope": [
       "currency",
-      "eos"
+      "rsn"
     ],
     "signatures": [],
     "messages": [{
-        "code": "eos",
+        "code": "rsn",
         "type": "setcode",
         "authorization": [{
             "account": "currency",

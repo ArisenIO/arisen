@@ -37,7 +37,7 @@ echo "class Arisen < Formula
 
    homepage \"${URL}\"
    revision 0
-   url \"https://github.com/arisen/eos/archive/v${VERSION}.tar.gz\"
+   url \"https://github.com/arisen/rsn/archive/v${VERSION}.tar.gz\"
    version \"${VERSION}\"
 
    option :universal
@@ -50,7 +50,7 @@ echo "class Arisen < Formula
    depends_on :arch =>  :intel
 
    bottle do
-      root_url \"https://github.com/arisen/eos/releases/download/v${VERSION}\"
+      root_url \"https://github.com/arisen/rsn/releases/download/v${VERSION}\"
       sha256 \"${hash}\" => :${MAC_VERSION}
    end
    def install

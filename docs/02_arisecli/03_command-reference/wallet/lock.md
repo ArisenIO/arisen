@@ -11,11 +11,11 @@ None
 
 
 ```sh
-cleos wallet lock
+arisecli wallet lock
 ```
 or
 ```sh
-cleos wallet lock -n second-wallet
+arisecli wallet lock -n second-wallet
 ```
 
 ## Outputs

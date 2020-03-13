@@ -1,5 +1,5 @@
 /*
-The EOS VM Optimized Compiler was created in part based on WAVM
+The RSN VM Optimized Compiler was created in part based on WAVM
 https://github.com/WebAssembly/wasm-jit-prototype
 subject the following:
 
@@ -99,7 +99,7 @@ static void disassembleFunction(U8* bytes,Uptr numBytes)
 }
 #endif
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 namespace LLVMJIT
 {

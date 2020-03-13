@@ -11,7 +11,7 @@ Retrieves the code and ABI for an account
 Simply output the hash of arisen.token contract 
 
 ```sh
-cleos get code arisen.token
+arisecli get code arisen.token
 ```
 ```console
 code hash: f675e7aeffbf562c033acfaf33eadff255dacb90d002db51c7ad7cbf057eb791
@@ -20,7 +20,7 @@ code hash: f675e7aeffbf562c033acfaf33eadff255dacb90d002db51c7ad7cbf057eb791
 Retrieve and save abi for arisen.token contract
 
 ```sh
-cleos get code arisen.token -a arisen.token.abi
+arisecli get code arisen.token -a arisen.token.abi
 ```
 ```console
 code hash: f675e7aeffbf562c033acfaf33eadff255dacb90d002db51c7ad7cbf057eb791
@@ -30,7 +30,7 @@ saving abi to arisen.token.abi
 Retrieve and save wast code for arisen.token contract
 
 ```sh
-cleos get code arisen.token -c arisen.token.wast
+arisecli get code arisen.token -c arisen.token.wast
 ```
 ```console
 code hash: f675e7aeffbf562c033acfaf33eadff255dacb90d002db51c7ad7cbf057eb791

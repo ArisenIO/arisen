@@ -16,7 +16,7 @@ struct check_auth_msg {
    arisen::name                    permission;
    std::vector<arisen::public_key> pubkeys;
 
-   EOSLIB_SERIALIZE( check_auth_msg, (account)(permission)(pubkeys)  )
+   RSNLIB_SERIALIZE( check_auth_msg, (account)(permission)(pubkeys)  )
 };
 
 void test_permission::check_authorization( uint64_t receiver, uint64_t code, uint64_t action ) {
@@ -47,7 +47,7 @@ struct test_permission_last_used_msg {
    arisen::name permission;
    int64_t     last_used_time;
 
-   EOSLIB_SERIALIZE( test_permission_last_used_msg, (account)(permission)(last_used_time) )
+   RSNLIB_SERIALIZE( test_permission_last_used_msg, (account)(permission)(last_used_time) )
 };
 
 void test_permission::test_permission_last_used( uint64_t /* receiver */, uint64_t code, uint64_t action ) {

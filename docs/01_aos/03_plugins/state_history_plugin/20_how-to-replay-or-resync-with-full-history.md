@@ -9,7 +9,7 @@ This procedure records the entire chain history.
 ## Before you begin
 
 * Make sure [ARISEN is installed](../../../00_install/index.md).
-* Learn about [Using Nodeos](../../02_usage/index.md).
+* Learn about [Using Aos](../../02_usage/index.md).
 * Get familiar with [state_history_plugin](../../03_plugins/state_history_plugin/index.md).
 
 ## Steps
@@ -18,4 +18,4 @@ This procedure records the entire chain history.
 
 2. Make sure `data/state` does not exist, or use the `--replay-blockchain` option
 
-3. Start `nodeos` with the options listed in the [`state_history_plugin`](index.md)
+3. Start `aos` with the options listed in the [`state_history_plugin`](index.md)

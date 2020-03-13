@@ -4,12 +4,12 @@ Sets or updates an action's state on the blockchain.
 **Command**
 
 ```sh
-cleos set action
+arisecli set action
 ```
 **Output**
 
 ```console
-Usage: cleos set action [OPTIONS] SUBCOMMAND
+Usage: arisecli set action [OPTIONS] SUBCOMMAND
 
 Options:
   -h,--help                   Print this help message and exit
@@ -20,7 +20,7 @@ Subcommands:
 **Command**
 
 ```sh
-cleos set action permission
+arisecli set action permission
 ```
 
 ## Positionals
@@ -63,8 +63,8 @@ should be used to sign transaction
 
 ```sh
 #Link a `voteproducer` action to the 'voting' permissions
-cleos set action permission sandwichfarm arisen.system voteproducer voting -p sandwichfarm@voting
+arisecli set action permission sandwichfarm arisen.system voteproducer voting -p sandwichfarm@voting
 
 #Now can execute the transaction with the previously set permissions. 
-cleos system voteproducer approve sandwichfarm someproducer -p sandwichfarm@voting
+arisecli system voteproducer approve sandwichfarm someproducer -p sandwichfarm@voting
 ```

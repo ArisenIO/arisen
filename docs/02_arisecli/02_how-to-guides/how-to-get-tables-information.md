@@ -4,7 +4,7 @@ Query infomation of a table
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is an account
@@ -14,5 +14,5 @@ Query infomation of a table
 ## Steps
 
 ```sh
-cleos get table ACCOUNT SCOPE TABLE
+arisecli get table ACCOUNT SCOPE TABLE
 ```

@@ -12,7 +12,7 @@ None
 
 
 ```sh
-cleos wallet list
+arisecli wallet list
 ```
 
 ## Outputs

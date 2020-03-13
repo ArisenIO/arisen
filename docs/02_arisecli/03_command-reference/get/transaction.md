@@ -10,14 +10,14 @@ Retrieves a transaction from the blockchain
 **Command**
 
 ```sh
-cleos get transaction
+arisecli get transaction
 ```
 **Output**
 
 ## Example
 
 ```sh
-cleos get transaction eb4b94b72718a369af09eb2e7885b3f494dd1d8a20278a6634611d5edd76b703
+arisecli get transaction eb4b94b72718a369af09eb2e7885b3f494dd1d8a20278a6634611d5edd76b703
 ```
 ```json
 {
@@ -34,7 +34,7 @@ cleos get transaction eb4b94b72718a369af09eb2e7885b3f494dd1d8a20278a6634611d5edd
       "1f22e64240e1e479eee6ccbbd79a29f1a6eb6020384b4cca1a958e7c708d3e562009ae6e60afac96f9a3b89d729a50cd5a7b5a7a647540ba1678831bf970e83312"
     ],
     "messages": [{
-        "code": "eos",
+        "code": "rsn",
         "type": "transfer",
         "authorization": [{
             "account": "inita",

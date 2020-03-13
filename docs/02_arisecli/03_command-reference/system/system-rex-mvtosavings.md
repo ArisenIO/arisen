@@ -1,10 +1,10 @@
 ---
-title: "system rex mvtosavings"
-excerpt: "Move REX tokens to savings bucket"
+title: "system bex mvtosavings"
+excerpt: "Move BEX tokens to savings bucket"
 ---
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
-- `rex` _TEXT_ - Amount to be Amount of REX to be moved to savings bucket (required) into REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
+- `bex` _TEXT_ - Amount to be Amount of BEX to be moved to savings bucket (required) into BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -24,5 +24,5 @@ excerpt: "Move REX tokens to savings bucket"
 
 
 ```sh
-cleos system rex mvtosavings accountname1 "1 REX"
+arisecli system bex mvtosavings accountname1 "1 BEX"
 ```

@@ -432,7 +432,7 @@ void txn_test_gen_plugin::plugin_initialize(const variables_map& options) {
       my->newaccountA = arisen::chain::name(thread_pool_account_prefix + "a");
       my->newaccountB = arisen::chain::name(thread_pool_account_prefix + "b");
       my->newaccountT = arisen::chain::name(thread_pool_account_prefix + "t");
-      EOS_ASSERT( my->thread_pool_size > 0, chain::plugin_config_exception,
+      RSN_ASSERT( my->thread_pool_size > 0, chain::plugin_config_exception,
                   "txn-test-gen-threads ${num} must be greater than 0", ("num", my->thread_pool_size) );
    } FC_LOG_AND_RETHROW()
 }

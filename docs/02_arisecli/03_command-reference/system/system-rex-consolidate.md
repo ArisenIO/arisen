@@ -1,9 +1,9 @@
 ---
-title: "system rex consolidate"
-excerpt: "Consolidate REX maturity buckets into one that matures in 4 days"
+title: "system bex consolidate"
+excerpt: "Consolidate BEX maturity buckets into one that matures in 4 days"
 ---
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -22,5 +22,5 @@ excerpt: "Consolidate REX maturity buckets into one that matures in 4 days"
 
 
 ```sh
-cleos system rex consolidate accountname1
+arisecli system bex consolidate accountname1
 ```

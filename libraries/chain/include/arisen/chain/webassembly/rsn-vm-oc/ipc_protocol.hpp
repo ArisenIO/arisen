@@ -1,10 +1,10 @@
 #pragma once
 
-#include <arisen/chain/webassembly/eos-vm-oc/config.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/eos-vm-oc.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/config.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/rsn-vm-oc.hpp>
 #include <arisen/chain/types.hpp>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 struct initialize_message {
    //Two sent fds: 1) communication socket for this instance  2) the cache file 
@@ -30,7 +30,7 @@ struct evict_wasms_message {
 };
 
 struct code_compilation_result_message {
-   eosvmoc_optional_offset_or_import_t start;
+   rsnvmoc_optional_offset_or_import_t start;
    unsigned apply_offset;
    int starting_memory_pages;
    unsigned initdata_prologue_size;
@@ -51,7 +51,7 @@ struct wasm_compilation_result_message {
    size_t cache_free_bytes;
 };
 
-using eosvmoc_message = fc::static_variant<initialize_message,
+using rsnvmoc_message = fc::static_variant<initialize_message,
                                            initalize_response_message,
                                            compile_wasm_message,
                                            evict_wasms_message,
@@ -60,12 +60,12 @@ using eosvmoc_message = fc::static_variant<initialize_message,
                                           >;
 }}}
 
-FC_REFLECT(arisen::chain::eosvmoc::initialize_message, )
-FC_REFLECT(arisen::chain::eosvmoc::initalize_response_message, (error_message))
-FC_REFLECT(arisen::chain::eosvmoc::code_tuple, (code_id)(vm_version))
-FC_REFLECT(arisen::chain::eosvmoc::compile_wasm_message, (code))
-FC_REFLECT(arisen::chain::eosvmoc::evict_wasms_message, (codes))
-FC_REFLECT(arisen::chain::eosvmoc::code_compilation_result_message, (start)(apply_offset)(starting_memory_pages)(initdata_prologue_size))
-FC_REFLECT(arisen::chain::eosvmoc::compilation_result_unknownfailure, )
-FC_REFLECT(arisen::chain::eosvmoc::compilation_result_toofull, )
-FC_REFLECT(arisen::chain::eosvmoc::wasm_compilation_result_message, (code)(result)(cache_free_bytes))
+FC_REFLECT(arisen::chain::rsnvmoc::initialize_message, )
+FC_REFLECT(arisen::chain::rsnvmoc::initalize_response_message, (error_message))
+FC_REFLECT(arisen::chain::rsnvmoc::code_tuple, (code_id)(vm_version))
+FC_REFLECT(arisen::chain::rsnvmoc::compile_wasm_message, (code))
+FC_REFLECT(arisen::chain::rsnvmoc::evict_wasms_message, (codes))
+FC_REFLECT(arisen::chain::rsnvmoc::code_compilation_result_message, (start)(apply_offset)(starting_memory_pages)(initdata_prologue_size))
+FC_REFLECT(arisen::chain::rsnvmoc::compilation_result_unknownfailure, )
+FC_REFLECT(arisen::chain::rsnvmoc::compilation_result_toofull, )
+FC_REFLECT(arisen::chain::rsnvmoc::wasm_compilation_result_message, (code)(result)(cache_free_bytes))

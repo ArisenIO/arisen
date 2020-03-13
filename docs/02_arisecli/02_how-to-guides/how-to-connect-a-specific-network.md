@@ -1,25 +1,25 @@
 ## Goal
 
-Connect to a specific `nodeos` or `keosd` host to send COMMAND
+Connect to a specific `aos` or `awalletd` host to send COMMAND
 
-`cleos` and `keosd` can connect to a specific node by using the `--url` or `--wallet-url` optional arguments, respectively, followed by the http address and port number these services are listening to.
+`arisecli` and `awalletd` can connect to a specific node by using the `--url` or `--wallet-url` optional arguments, respectively, followed by the http address and port number these services are listening to.
 
 [[info | Default address:port]]
-| If no optional arguments are used (i.e. `--url` or `--wallet-url`), `cleos` attempts to connect to a local `nodeos` or `keosd` running at localhost `127.0.0.1` and default port `8888`.
+| If no optional arguments are used (i.e. `--url` or `--wallet-url`), `arisecli` attempts to connect to a local `aos` or `awalletd` running at localhost `127.0.0.1` and default port `8888`.
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 ## Steps
-### Connecting to Nodeos
+### Connecting to Aos
 
 ```sh
-cleos -url http://nodeos-host:8888 COMMAND
+arisecli -url http://aos-host:8888 COMMAND
 ```
 
-### Connecting to Keosd
+### Connecting to Awalletd
 
 ```sh
-cleos --wallet-url http://keosd-host:8888 COMMAND
+arisecli --wallet-url http://awalletd-host:8888 COMMAND
 ```

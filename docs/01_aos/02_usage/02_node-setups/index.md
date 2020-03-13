@@ -1,8 +1,8 @@
 ---
-content_title: Nodeos Common Setups
+content_title: Aos Common Setups
 ---
 
-`Nodeos` generally runs in two modes:
+`Aos` generally runs in two modes:
 
  * [Producing Node](00_producing-node.md)
  * [Non-Producing Node](01_non-producing-node.md)

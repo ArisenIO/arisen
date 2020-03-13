@@ -23,13 +23,13 @@ Select a task below, then copy/paste the shell commands to a Unix terminal to ex
 These commands set the ARISEN directories, install git, and clone the ARISEN repository.
 ```sh
 # set ARISEN directories
-export ARISEN_LOCATION=~/arisen/eos
+export ARISEN_LOCATION=~/arisen/rsn
 export ARISEN_INSTALL_LOCATION=$ARISEN_LOCATION/../install
 mkdir -p $ARISEN_INSTALL_LOCATION
 # install git
 yum update -y && yum install -y git
 # clone ARISEN repository
-git clone https://github.com/ARISEN/eos.git $ARISEN_LOCATION
+git clone https://github.com/ARISEN/rsn.git $ARISEN_LOCATION
 cd $ARISEN_LOCATION && git submodule update --init --recursive
 ```
 

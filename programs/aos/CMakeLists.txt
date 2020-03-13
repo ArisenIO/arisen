@@ -16,15 +16,15 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../.git)
     execute_process(
       COMMAND ${GIT_EXECUTABLE} rev-parse --short=8 HEAD
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../.."
-      OUTPUT_VARIABLE "nodeos_BUILD_VERSION"
+      OUTPUT_VARIABLE "aos_BUILD_VERSION"
       ERROR_QUIET
       OUTPUT_STRIP_TRAILING_WHITESPACE)
-    message(STATUS "Git commit revision: ${nodeos_BUILD_VERSION}")
+    message(STATUS "Git commit revision: ${aos_BUILD_VERSION}")
   else()
-    set(nodeos_BUILD_VERSION 0)
+    set(aos_BUILD_VERSION 0)
   endif()
 else()
-  set(nodeos_BUILD_VERSION 0)
+  set(aos_BUILD_VERSION 0)
 endif()
 
 configure_file(config.hpp.in config.hpp ESCAPE_QUOTES)

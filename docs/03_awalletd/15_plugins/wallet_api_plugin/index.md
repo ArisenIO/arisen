@@ -5,7 +5,7 @@
 The `wallet_api_plugin` exposes functionality from the [`wallet_plugin`](../wallet_plugin/index.md) to the RPC API interface managed by the [`http_plugin`](../http_plugin/index.md).
 
 [[caution | Caution]]
-| This plugin exposes wallets. Therefore, running this plugin on a publicly accessible node is not recommended. As of 1.2.0, `nodeos` will no longer allow the `wallet_api_plugin`.
+| This plugin exposes wallets. Therefore, running this plugin on a publicly accessible node is not recommended. As of 1.2.0, `aos` will no longer allow the `wallet_api_plugin`.
 
 ## Usage
 
@@ -14,7 +14,7 @@ The `wallet_api_plugin` exposes functionality from the [`wallet_plugin`](../wall
 plugin = arisen::wallet_api_plugin
 
 # command-line
-nodeos ... --plugin arisen::wallet_api_plugin
+aos ... --plugin arisen::wallet_api_plugin
 ```
 
 ## Options
@@ -36,6 +36,6 @@ plugin = arisen::http_plugin
 [options]
 
 # command-line
-nodeos ... --plugin arisen::wallet_plugin [options]  \
+aos ... --plugin arisen::wallet_plugin [options]  \
            --plugin arisen::http_plugin [options]
 ```

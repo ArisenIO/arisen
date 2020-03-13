@@ -13,8 +13,8 @@
 
 pushd $ARISEN_HOME
 
-if [ ! -f programs/nodeos/nodeos ]; then
-    echo unable to locate binary for nodeos
+if [ ! -f programs/aos/aos ]; then
+    echo unable to locate binary for aos
     exit 1
 fi
 

@@ -16,36 +16,36 @@ else()
    endif()
 endif()
 
-if("eos-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
-   set(CHAIN_EOSVMOC_SOURCES webassembly/eos-vm-oc/code_cache.cpp
-                             webassembly/eos-vm-oc/executor.cpp
-                             webassembly/eos-vm-oc/memory.cpp
-                             webassembly/eos-vm-oc/intrinsic.cpp
-                             webassembly/eos-vm-oc/LLVMJIT.cpp
-                             webassembly/eos-vm-oc/LLVMEmitIR.cpp
-                             webassembly/eos-vm-oc/compile_monitor.cpp
-                             webassembly/eos-vm-oc/compile_trampoline.cpp
-                             webassembly/eos-vm-oc/ipc_helpers.cpp
-                             webassembly/eos-vm-oc/gs_seg_helpers.c
-                             webassembly/eos-vm-oc.cpp)
+if("rsn-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
+   set(CHAIN_RSNVMOC_SOURCES webassembly/rsn-vm-oc/code_cache.cpp
+                             webassembly/rsn-vm-oc/executor.cpp
+                             webassembly/rsn-vm-oc/memory.cpp
+                             webassembly/rsn-vm-oc/intrinsic.cpp
+                             webassembly/rsn-vm-oc/LLVMJIT.cpp
+                             webassembly/rsn-vm-oc/LLVMEmitIR.cpp
+                             webassembly/rsn-vm-oc/compile_monitor.cpp
+                             webassembly/rsn-vm-oc/compile_trampoline.cpp
+                             webassembly/rsn-vm-oc/ipc_helpers.cpp
+                             webassembly/rsn-vm-oc/gs_seg_helpers.c
+                             webassembly/rsn-vm-oc.cpp)
 
    if(LLVM_VERSION VERSION_LESS 7.1 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
       enable_language(ASM-LLVMWAR)
-      list(APPEND CHAIN_EOSVMOC_SOURCES webassembly/eos-vm-oc/llvmWARshim.llvmwar)
+      list(APPEND CHAIN_RSNVMOC_SOURCES webassembly/rsn-vm-oc/llvmWARshim.llvmwar)
    else()
-      list(APPEND CHAIN_EOSVMOC_SOURCES webassembly/eos-vm-oc/llvmWARshim.cpp)
+      list(APPEND CHAIN_RSNVMOC_SOURCES webassembly/rsn-vm-oc/llvmWARshim.cpp)
    endif()
 
    llvm_map_components_to_libnames(LLVM_LIBS support core passes mcjit native orcjit)
    include_directories(${LLVM_INCLUDE_DIRS})
    add_definitions(${LLVM_DEFINITIONS})
 
-   option(EOSVMOC_ENABLE_DEVELOPER_OPTIONS "enable developer options for EOS VM OC" OFF)
+   option(RSNVMOC_ENABLE_DEVELOPER_OPTIONS "enable developer options for RSN VM OC" OFF)
 endif()
 
-if("eos-vm" IN_LIST ARISEN_WASM_RUNTIMES OR "eos-vm-jit" IN_LIST ARISEN_WASM_RUNTIMES)
-   set(CHAIN_EOSVM_SOURCES "webassembly/eos-vm.cpp")
-   set(CHAIN_EOSVM_LIBRARIES eos-vm)
+if("rsn-vm" IN_LIST ARISEN_WASM_RUNTIMES OR "rsn-vm-jit" IN_LIST ARISEN_WASM_RUNTIMES)
+   set(CHAIN_RSNVM_SOURCES "webassembly/rsn-vm.cpp")
+   set(CHAIN_RSNVM_LIBRARIES rsn-vm)
 endif()
 
 ## SORT .cpp by most likely to change / break compile
@@ -83,8 +83,8 @@ add_library( arisen_chain
               snapshot.cpp
 
              webassembly/wabt.cpp
-             ${CHAIN_EOSVMOC_SOURCES}
-             ${CHAIN_EOSVM_SOURCES}
+             ${CHAIN_RSNVMOC_SOURCES}
+             ${CHAIN_RSNVM_SOURCES}
 
 #             get_config.cpp
 #
@@ -105,17 +105,17 @@ add_library( arisen_chain
              )
 
 target_link_libraries( arisen_chain fc chainbase Logging IR WAST WASM Runtime
-                       softfloat builtins wabt ${CHAIN_EOSVM_LIBRARIES} ${LLVM_LIBS}
+                       softfloat builtins wabt ${CHAIN_RSNVM_LIBRARIES} ${LLVM_LIBS}
                      )
 target_include_directories( arisen_chain
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/../wasm-jit/Include"
-                                   "${CMAKE_CURRENT_SOURCE_DIR}/libraries/eos-vm/include"
+                                   "${CMAKE_CURRENT_SOURCE_DIR}/libraries/rsn-vm/include"
                                    "${CMAKE_SOURCE_DIR}/libraries/wabt"
                                    "${CMAKE_BINARY_DIR}/libraries/wabt"
                             )
 
-if("eos-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
+if("rsn-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
    target_link_libraries(arisen_chain "-Wl,-wrap=main")
 endif()
 
@@ -125,9 +125,9 @@ foreach(RUNTIME ${ARISEN_WASM_RUNTIMES})
    target_compile_definitions(arisen_chain PUBLIC "ARISEN_${RUNTIMEUC}_RUNTIME_ENABLED")
 endforeach()
 
-if(EOSVMOC_ENABLE_DEVELOPER_OPTIONS)
-   message(WARNING "EOS VM OC Developer Options are enabled; these are NOT supported")
-   target_compile_definitions(arisen_chain PUBLIC ARISEN_EOS_VM_OC_DEVELOPER)
+if(RSNVMOC_ENABLE_DEVELOPER_OPTIONS)
+   message(WARNING "RSN VM OC Developer Options are enabled; these are NOT supported")
+   target_compile_definitions(arisen_chain PUBLIC ARISEN_RSN_VM_OC_DEVELOPER)
 endif()
 
 install( TARGETS arisen_chain

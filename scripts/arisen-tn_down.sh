@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # arisen-tn_down.sh is used by the arisen-tn_bounce.sh and arisen-tn_roll.sh scripts.
-# It is intended to terminate specific EOS.IO daemon processes.
+# It is intended to terminate specific RSN.IO daemon processes.
 #
 
 
@@ -10,7 +10,7 @@ if [ "$PWD" != "$ARISEN_HOME" ]; then
     exit -1
 fi
 
-prog=nodeos
+prog=aos
 
 DD=var/lib/node_$ARISEN_NODE
 runtest=`cat $DD/$prog.pid`

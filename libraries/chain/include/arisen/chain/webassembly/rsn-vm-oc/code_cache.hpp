@@ -2,8 +2,8 @@
 
 #include <boost/lockfree/spsc_queue.hpp>
 
-#include <arisen/chain/webassembly/eos-vm-oc/eos-vm-oc.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/ipc_helpers.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/rsn-vm-oc.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/ipc_helpers.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
@@ -17,14 +17,14 @@
 #include <thread>
 
 namespace std {
-    template<> struct hash<arisen::chain::eosvmoc::code_tuple> {
-        size_t operator()(const arisen::chain::eosvmoc::code_tuple& ct) const noexcept {
+    template<> struct hash<arisen::chain::rsnvmoc::code_tuple> {
+        size_t operator()(const arisen::chain::rsnvmoc::code_tuple& ct) const noexcept {
             return ct.code_id._hash[0];
         }
     };
 }
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 using namespace boost::multi_index;
 using namespace boost::asio;
@@ -38,7 +38,7 @@ struct config;
 
 class code_cache_base {
    public:
-      code_cache_base(const bfs::path data_dir, const eosvmoc::config& eosvmoc_config, const chainbase::database& db);
+      code_cache_base(const bfs::path data_dir, const rsnvmoc::config& rsnvmoc_config, const chainbase::database& db);
       ~code_cache_base();
 
       const int& fd() const { return _cache_fd; }
@@ -88,7 +88,7 @@ class code_cache_base {
 
 class code_cache_async : public code_cache_base {
    public:
-      code_cache_async(const bfs::path data_dir, const eosvmoc::config& eosvmoc_config, const chainbase::database& db);
+      code_cache_async(const bfs::path data_dir, const rsnvmoc::config& rsnvmoc_config, const chainbase::database& db);
       ~code_cache_async();
 
       //If code is in cache: returns pointer & bumps to front of MRU list

@@ -5,7 +5,7 @@
 
 ## Description
 
-The optional `arisen::mongo_db_plugin` provides archiving of blockchain data into a MongoDB. It is recommended that the plugin be added to a non-producing node as it is designed to shut down on any failed insert into the MongoDB and it is resource intensive. For best results dedicate a `nodeos` instance to running this one plugin. The rationale behind this shutdown on error is so that any issues with connectivity or the mongo database can be fixed and `nodeos` can be restarted without having to resync or replay.
+The optional `arisen::mongo_db_plugin` provides archiving of blockchain data into a MongoDB. It is recommended that the plugin be added to a non-producing node as it is designed to shut down on any failed insert into the MongoDB and it is resource intensive. For best results dedicate a `aos` instance to running this one plugin. The rationale behind this shutdown on error is so that any issues with connectivity or the mongo database can be fixed and `aos` can be restarted without having to resync or replay.
 
 ## Important Notes
 
@@ -15,8 +15,8 @@ The optional `arisen::mongo_db_plugin` provides archiving of blockchain data int
 
 ## Recommendations
 
-* It is recommended that a large `--abi-serializer-max-time-ms` value be passed into the `nodeos` running the `mongo_db_plugin` as the default ABI serializer time limit is not large enough to serialize large blocks.
-* Read-only mode should be used to avoid speculative execution. See [Nodeos Read Modes](../../02_usage/05_nodeos-implementation.md#nodeos-read-modes). Forked data is still recorded (data that never becomes irreversible) but speculative transaction processing and signaling is avoided, minimizing the transaction_traces/action_traces stored.
+* It is recommended that a large `--abi-serializer-max-time-ms` value be passed into the `aos` running the `mongo_db_plugin` as the default ABI serializer time limit is not large enough to serialize large blocks.
+* Read-only mode should be used to avoid speculative execution. See [Aos Read Modes](../../02_usage/05_aos-implementation.md#aos-read-modes). Forked data is still recorded (data that never becomes irreversible) but speculative transaction processing and signaling is avoided, minimizing the transaction_traces/action_traces stored.
 
 ## Options
 
@@ -24,7 +24,7 @@ These can be specified from both the command-line or the `config.ini` file:
 
 ```console
   -q [ --mongodb-queue-size ] arg (=256)
-                                        The target queue size between nodeos
+                                        The target queue size between aos
                                         and MongoDB plugin thread.
   --mongodb-abi-cache-size              The maximum size of the abi cache for
                                         serializing data.
@@ -41,9 +41,9 @@ These can be specified from both the command-line or the `config.ini` file:
                                         https://docs.mongodb.com/master/referen
                                         ce/connection-string/. If not specified
                                         then plugin is disabled. Default
-                                        database 'EOS' is used if not specified
+                                        database 'RSN' is used if not specified
                                         in URI. Example: mongodb://127.0.0.1:27
-                                        017/EOS
+                                        017/RSN
   --mongodb-update-via-block-num arg (=0)
                                         Update blocks/block_state with latest
                                         via block number so that duplicates are
@@ -146,7 +146,7 @@ The equivalent of `/v1/history/get_controlled_acounts` with mongo: `db.account_c
 The mongodb equivalent of `/v1/history/get_key_accounts` RPC API endpoint:
 
 ```console
-db.pub_keys.find({"public_key":"EOS7EarnUhcyYqmdnPon8rm7mBCTnBoot6o7fE2WzjvEX2TdggbL3"}).pretty()
+db.pub_keys.find({"public_key":"RSN7EarnUhcyYqmdnPon8rm7mBCTnBoot6o7fE2WzjvEX2TdggbL3"}).pretty()
 ```
 
 ## Dependencies

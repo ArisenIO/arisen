@@ -3,6 +3,6 @@
  */
 #pragma once
 
-namespace arisen { namespace keosd { namespace config {
+namespace arisen { namespace awalletd { namespace config {
   const string key_store_executable_name = "${KEY_STORE_EXECUTABLE_NAME}";
 }}}

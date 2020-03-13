@@ -1,10 +1,10 @@
 ---
-title: "system rex buyrex"
-excerpt: "Buy REX using tokens in owner's REX fund"
+title: "system bex buyrex"
+excerpt: "Buy BEX using tokens in owner's BEX fund"
 ---
 ## Positionals
-- `from` _TEXT_ - Account buying REX tokens (required)
-- `amount` _TEXT_ - Amount to be taken from REX fund and used in buying REX (required)
+- `from` _TEXT_ - Account buying BEX tokens (required)
+- `amount` _TEXT_ - Amount to be taken from BEX fund and used in buying BEX (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -23,5 +23,5 @@ excerpt: "Buy REX using tokens in owner's REX fund"
 
 
 ```sh
-cleos system rex buyrex accountname1 "1 REX"
+arisecli system bex buyrex accountname1 "1 BEX"
 ```

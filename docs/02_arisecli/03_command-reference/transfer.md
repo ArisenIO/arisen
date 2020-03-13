@@ -2,9 +2,9 @@
 Transfer tokens from account to account
 
 ## Positional Parameters
-- `sender` _TEXT_ - The account sending EOS
-- `recipient` _TEXT_ - The account receiving EOS
-- `amount` _UINT_ - The amount of EOS to send
+- `sender` _TEXT_ - The account sending RSN
+- `recipient` _TEXT_ - The account receiving RSN
+- `amount` _UINT_ - The amount of RSN to send
 - `memo` _TEXT_ - The memo for the transfer
 
 ## Options
@@ -25,10 +25,10 @@ Transfer tokens from account to account
 - `--delay-sec` _UINT_ - set the delay_sec seconds, defaults to 0s
 
 ## Example
-Transfer 1000 SYS from **inita** to **tester**
+Transfer 1000 RSN from **inita** to **tester**
 
 ```sh
-cleos transfer inita tester 1000
+arisecli transfer inita tester 1000
 ```
 The response should look something like this:
 
@@ -47,7 +47,7 @@ The response should look something like this:
       "1f22e64240e1e479eee6ccbbd79a29f1a6eb6020384b4cca1a958e7c708d3e562009ae6e60afac96f9a3b89d729a50cd5a7b5a7a647540ba1678831bf970e83312"
     ],
     "messages": [{
-        "code": "eos",
+        "code": "rsn",
         "type": "transfer",
         "authorization": [{
             "account": "inita",

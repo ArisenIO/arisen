@@ -7,40 +7,40 @@
 #include <softfloat.hpp>
 #include "IR/Types.h"
 
-#include <arisen/chain/webassembly/eos-vm-oc/eos-vm-oc.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/memory.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/executor.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/code_cache.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/config.hpp>
-#include <arisen/chain/webassembly/eos-vm-oc/intrinsic.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/rsn-vm-oc.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/memory.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/executor.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/code_cache.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/config.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/intrinsic.hpp>
 
 #include <boost/hana/equal.hpp>
 
-namespace arisen { namespace chain { namespace webassembly { namespace eosvmoc {
+namespace arisen { namespace chain { namespace webassembly { namespace rsnvmoc {
 
 using namespace IR;
 using namespace Runtime;
 using namespace fc;
 using namespace arisen::chain::webassembly::common;
 
-using namespace arisen::chain::eosvmoc;
+using namespace arisen::chain::rsnvmoc;
 
-class eosvmoc_instantiated_module;
+class rsnvmoc_instantiated_module;
 
-class eosvmoc_runtime : public arisen::chain::wasm_runtime_interface {
+class rsnvmoc_runtime : public arisen::chain::wasm_runtime_interface {
    public:
-      eosvmoc_runtime(const boost::filesystem::path data_dir, const eosvmoc::config& eosvmoc_config, const chainbase::database& db);
-      ~eosvmoc_runtime();
+      rsnvmoc_runtime(const boost::filesystem::path data_dir, const rsnvmoc::config& rsnvmoc_config, const chainbase::database& db);
+      ~rsnvmoc_runtime();
       bool inject_module(IR::Module&) override { return false; }
       std::unique_ptr<wasm_instantiated_module_interface> instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t> initial_memory,
                                                                              const digest_type& code_hash, const uint8_t& vm_type, const uint8_t& vm_version) override;
 
       void immediately_exit_currently_running_module() override;
 
-      friend eosvmoc_instantiated_module;
-      eosvmoc::code_cache_sync cc;
-      eosvmoc::executor exec;
-      eosvmoc::memory mem;
+      friend rsnvmoc_instantiated_module;
+      rsnvmoc::code_cache_sync cc;
+      rsnvmoc::executor exec;
+      rsnvmoc::memory mem;
 };
 
 /**
@@ -354,7 +354,7 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<>, std::tuple<Transla
       try {
          if constexpr(!is_injected) {
             constexpr int cb_current_call_depth_remaining_segment_offset = OFFSET_OF_CONTROL_BLOCK_MEMBER(current_call_depth_remaining);
-            constexpr int depth_assertion_intrinsic_offset = OFFSET_OF_FIRST_INTRINSIC - (int)boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("eosvmoc_internal.depth_assert"))).value()*8;
+            constexpr int depth_assertion_intrinsic_offset = OFFSET_OF_FIRST_INTRINSIC - (int)boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("rsnvmoc_internal.depth_assert"))).value()*8;
             asm volatile("cmpl   $1,%%gs:%c[callDepthRemainOffset]\n"
                          "jne    1f\n"
                          "callq  *%%gs:%c[depthAssertionIntrinsicOffset]\n"
@@ -367,9 +367,9 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<>, std::tuple<Transla
          return convert_native_to_wasm(Method(translated...));
       }
       catch(...) {
-         *reinterpret_cast<std::exception_ptr*>(eos_vm_oc_get_exception_ptr()) = std::current_exception();
+         *reinterpret_cast<std::exception_ptr*>(rsn_vm_oc_get_exception_ptr()) = std::current_exception();
       }
-      siglongjmp(*eos_vm_oc_get_jmp_buf(), EOSVMOC_EXIT_EXCEPTION);
+      siglongjmp(*rsn_vm_oc_get_jmp_buf(), RSNVMOC_EXIT_EXCEPTION);
       __builtin_unreachable();
    }
 
@@ -392,7 +392,7 @@ struct intrinsic_invoker_impl<is_injected, void_type, std::tuple<>, std::tuple<T
       try {
          if constexpr(!is_injected) {
             constexpr int cb_current_call_depth_remaining_segment_offset = OFFSET_OF_CONTROL_BLOCK_MEMBER(current_call_depth_remaining);
-            constexpr int depth_assertion_intrinsic_offset = OFFSET_OF_FIRST_INTRINSIC - (int)boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("eosvmoc_internal.depth_assert"))).value()*8;
+            constexpr int depth_assertion_intrinsic_offset = OFFSET_OF_FIRST_INTRINSIC - (int)boost::hana::index_if(intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING("rsnvmoc_internal.depth_assert"))).value()*8;
             asm volatile("cmpl   $1,%%gs:%c[callDepthRemainOffset]\n"
                          "jne    1f\n"
                          "callq  *%%gs:%c[depthAssertionIntrinsicOffset]\n"
@@ -406,9 +406,9 @@ struct intrinsic_invoker_impl<is_injected, void_type, std::tuple<>, std::tuple<T
          return;
       }
       catch(...) {
-         *reinterpret_cast<std::exception_ptr*>(eos_vm_oc_get_exception_ptr()) = std::current_exception();
+         *reinterpret_cast<std::exception_ptr*>(rsn_vm_oc_get_exception_ptr()) = std::current_exception();
       }
-      siglongjmp(*eos_vm_oc_get_jmp_buf(), EOSVMOC_EXIT_EXCEPTION);
+      siglongjmp(*rsn_vm_oc_get_jmp_buf(), RSNVMOC_EXIT_EXCEPTION);
       __builtin_unreachable();
    }
 
@@ -463,7 +463,7 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<array_ptr<T>, uint32_
       const auto length = size_t((U32)size);
       T* base = array_ptr_impl<T>((U32)ptr, length);
       if ( reinterpret_cast<uintptr_t>(base) % alignof(T) != 0 ) {
-         std::vector<std::byte>& copy = reinterpret_cast<std::list<std::vector<std::byte>>*>(eos_vm_oc_get_bounce_buffer_list())->emplace_back(length > 0 ? length*sizeof(T) : 1);
+         std::vector<std::byte>& copy = reinterpret_cast<std::list<std::vector<std::byte>>*>(rsn_vm_oc_get_bounce_buffer_list())->emplace_back(length > 0 ? length*sizeof(T) : 1);
          T* copy_ptr = (T*)&copy[0];
          memcpy( (void*)copy.data(), (void*)base, length * sizeof(T) );
          return Then(static_cast<array_ptr<T>>(copy_ptr), length, rest..., translated...);
@@ -477,7 +477,7 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<array_ptr<T>, uint32_
       const auto length = size_t((U32)size);
       T* base = array_ptr_impl<T>((U32)ptr, length);
       if ( reinterpret_cast<uintptr_t>(base) % alignof(T) != 0 ) {
-         std::vector<std::byte>& copy = reinterpret_cast<std::list<std::vector<std::byte>>*>(eos_vm_oc_get_bounce_buffer_list())->emplace_back(length > 0 ? length*sizeof(T) : 1);
+         std::vector<std::byte>& copy = reinterpret_cast<std::list<std::vector<std::byte>>*>(rsn_vm_oc_get_bounce_buffer_list())->emplace_back(length > 0 ? length*sizeof(T) : 1);
          T* copy_ptr = (T*)&copy[0];
          memcpy( (void*)copy.data(), (void*)base, length * sizeof(T) );
          Ret ret = Then(static_cast<array_ptr<T>>(copy_ptr), length, rest..., translated...);
@@ -657,7 +657,7 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<T &, Inputs...>, std:
 
    template<then_type Then, typename U=T>
    static auto translate_one(Inputs... rest, Translated... translated, I32 ptr) -> std::enable_if_t<std::is_const<U>::value, Ret> {
-      EOS_ASSERT((U32)ptr != 0, wasm_exception, "references cannot be created for null pointers");
+      RSN_ASSERT((U32)ptr != 0, wasm_exception, "references cannot be created for null pointers");
       T &base = *array_ptr_impl<T>((uint32_t)ptr, 1);
 
       if ( reinterpret_cast<uintptr_t>(&base) % alignof(T) != 0 ) {
@@ -671,7 +671,7 @@ struct intrinsic_invoker_impl<is_injected, Ret, std::tuple<T &, Inputs...>, std:
 
    template<then_type Then, typename U=T>
    static auto translate_one(Inputs... rest, Translated... translated, I32 ptr) -> std::enable_if_t<!std::is_const<U>::value, Ret> {
-      EOS_ASSERT((U32)ptr != 0, wasm_exception, "reference cannot be created for null pointers");
+      RSN_ASSERT((U32)ptr != 0, wasm_exception, "reference cannot be created for null pointers");
       T &base = *array_ptr_impl<T>((uint32_t)ptr, 1);
 
       if ( reinterpret_cast<uintptr_t>(&base) % alignof(T) != 0 ) {
@@ -787,13 +787,13 @@ struct intrinsic_function_invoker_wrapper<is_injected, WasmSig, Ret (Cls::*)(Par
 #define __INTRINSIC_NAME(LABEL, SUFFIX) LABEL##SUFFIX
 #define _INTRINSIC_NAME(LABEL, SUFFIX) __INTRINSIC_NAME(LABEL,SUFFIX)
 
-#define _REGISTER_EOSVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)\
-   static arisen::chain::eosvmoc::intrinsic _INTRINSIC_NAME(__intrinsic_fn, __COUNTER__) EOSVMOC_INTRINSIC_INIT_PRIORITY (\
+#define _REGISTER_RSNVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)\
+   static arisen::chain::rsnvmoc::intrinsic _INTRINSIC_NAME(__intrinsic_fn, __COUNTER__) RSNVMOC_INTRINSIC_INIT_PRIORITY (\
       MOD "." NAME,\
-      arisen::chain::webassembly::eosvmoc::wasm_function_type_provider<WASM_SIG>::type(),\
-      (void *)arisen::chain::webassembly::eosvmoc::intrinsic_function_invoker_wrapper<std::string_view(MOD) != "env", WASM_SIG, SIG>::type::fn<&CLS::METHOD>(),\
-      ::boost::hana::index_if(arisen::chain::eosvmoc::intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING(MOD "." NAME))).value()\
+      arisen::chain::webassembly::rsnvmoc::wasm_function_type_provider<WASM_SIG>::type(),\
+      (void *)arisen::chain::webassembly::rsnvmoc::intrinsic_function_invoker_wrapper<std::string_view(MOD) != "env", WASM_SIG, SIG>::type::fn<&CLS::METHOD>(),\
+      ::boost::hana::index_if(arisen::chain::rsnvmoc::intrinsic_table, ::boost::hana::equal.to(BOOST_HANA_STRING(MOD "." NAME))).value()\
    );\
 
 
-} } } }// arisen::chain::webassembly::eosvmoc
+} } } }// arisen::chain::webassembly::rsnvmoc

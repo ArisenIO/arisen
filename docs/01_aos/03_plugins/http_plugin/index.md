@@ -2,7 +2,7 @@
 
 ## Description
 
-The `http_plugin` is a core plugin supported by both `nodeos` and `keosd`. The plugin is required to enable any RPC API functionality provided by a `nodeos` or `keosd` instance.
+The `http_plugin` is a core plugin supported by both `aos` and `awalletd`. The plugin is required to enable any RPC API functionality provided by a `aos` or `awalletd` instance.
 
 ## Usage
 
@@ -13,9 +13,9 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::http_plugin [options]
+aos ... --plugin arisen::http_plugin [options]
  (or)
-keosd ... --plugin arisen::http_plugin [options]
+awalletd ... --plugin arisen::http_plugin [options]
 ```
 
 ## Options
@@ -26,8 +26,8 @@ These can be specified from both the command-line or the `config.ini` file:
 Config Options for arisen::http_plugin:
   --unix-socket-path arg                The filename (relative to data-dir) to 
                                         create a unix socket for HTTP RPC; set 
-                                        blank to disable (=keosd.sock for keosd)
-  --http-server-address arg (=127.0.0.1:8888 for nodeos)
+                                        blank to disable (=awalletd.sock for awalletd)
+  --http-server-address arg (=127.0.0.1:8888 for aos)
                                         The local IP and port to listen for 
                                         incoming http connections; set blank to
                                         disable.

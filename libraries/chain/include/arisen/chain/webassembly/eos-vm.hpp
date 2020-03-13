@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
 
 #include <arisen/chain/webassembly/common.hpp>
 #include <arisen/chain/webassembly/runtime_interface.hpp>
@@ -8,7 +8,7 @@
 #include <arisen/chain/apply_context.hpp>
 #include <softfloat_types.h>
 
-//eos-vm includes
+//rsn-vm includes
 #include <arisen/vm/backend.hpp>
 
 // arisen specific specializations
@@ -43,7 +43,7 @@ namespace arisen { namespace vm {
    template<typename T>
    struct wasm_type_converter<T&> : linear_memory_access {
       auto from_wasm(uint32_t val) {
-         EOS_VM_ASSERT( val != 0, wasm_memory_exception, "references cannot be created for null pointers" );
+         RSN_VM_ASSERT( val != 0, wasm_memory_exception, "references cannot be created for null pointers" );
          void* ptr = get_ptr(val);
          validate_ptr<T>(ptr, 1);
          return arisen::vm::aligned_ref_wrapper<T, alignof(T)>{ptr};
@@ -109,16 +109,16 @@ namespace arisen { namespace vm {
 
 }} // ns arisen::vm
 
-namespace arisen { namespace chain { namespace webassembly { namespace eos_vm_runtime {
+namespace arisen { namespace chain { namespace webassembly { namespace rsn_vm_runtime {
 
 using namespace fc;
 using namespace arisen::vm;
 using namespace arisen::chain::webassembly::common;
 
 template<typename Backend>
-class eos_vm_runtime : public arisen::chain::wasm_runtime_interface {
+class rsn_vm_runtime : public arisen::chain::wasm_runtime_interface {
    public:
-      eos_vm_runtime();
+      rsn_vm_runtime();
       bool inject_module(IR::Module&) override;
       std::unique_ptr<wasm_instantiated_module_interface> instantiate_module(const char* code_bytes, size_t code_size, std::vector<uint8_t>,
                                                                              const digest_type& code_hash, const uint8_t& vm_type, const uint8_t& vm_version) override;
@@ -132,19 +132,19 @@ class eos_vm_runtime : public arisen::chain::wasm_runtime_interface {
       backend<apply_context, Backend>* _bkend = nullptr;  // non owning pointer to allow for immediate exit
 
    template<typename Impl>
-   friend class eos_vm_instantiated_module;
+   friend class rsn_vm_instantiated_module;
 };
 
 } } } }// arisen::chain::webassembly::wabt_runtime
 
-#define __EOS_VM_INTRINSIC_NAME(LBL, SUF) LBL##SUF
-#define _EOS_VM_INTRINSIC_NAME(LBL, SUF) __INTRINSIC_NAME(LBL, SUF)
+#define __RSN_VM_INTRINSIC_NAME(LBL, SUF) LBL##SUF
+#define _RSN_VM_INTRINSIC_NAME(LBL, SUF) __INTRINSIC_NAME(LBL, SUF)
 
-#define _REGISTER_EOS_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG) \
-   arisen::vm::registered_function<arisen::chain::apply_context, CLS, &CLS::METHOD> _EOS_VM_INTRINSIC_NAME(__eos_vm_intrinsic_fn, __COUNTER__)(std::string(MOD), std::string(NAME));
+#define _REGISTER_RSN_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG) \
+   arisen::vm::registered_function<arisen::chain::apply_context, CLS, &CLS::METHOD> _RSN_VM_INTRINSIC_NAME(__rsn_vm_intrinsic_fn, __COUNTER__)(std::string(MOD), std::string(NAME));
 
 #else
 
-#define _REGISTER_EOS_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
+#define _REGISTER_RSN_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
 
 #endif

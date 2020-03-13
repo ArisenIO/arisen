@@ -11,7 +11,7 @@ The `net_api_plugin` provides four RPC API endpoints:
 * connections
 * status
 
-See [Net section of RPC API](https://developers.eos.io/arisen-nodeos/reference).
+See [Net section of RPC API](https://developers.rsn.io/arisen-aos/reference).
 
 [[caution | Caution]]
 | This plugin exposes endpoints that allow management of p2p connections. Running this plugin on a publicly accessible node is not recommended as it can be exploited.
@@ -24,7 +24,7 @@ plugin = arisen::net_api_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::net_api_plugin
+aos ... --plugin arisen::net_api_plugin
 ```
 
 ## Options
@@ -47,6 +47,6 @@ plugin = arisen::http_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::net_plugin [options]  \
+aos ... --plugin arisen::net_plugin [options]  \
            --plugin arisen::http_plugin [options]
 ```

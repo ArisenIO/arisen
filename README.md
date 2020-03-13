@@ -26,7 +26,7 @@ Block.one is neither launching nor operating any initial public blockchains base
 
 ## Official Testnet
 
-[testnet.eos.io](https://testnet.eos.io/)
+[testnet.rsn.io](https://testnet.rsn.io/)
 
 ## Supported Operating Systems
 
@@ -46,7 +46,7 @@ ARISEN currently supports the following operating systems:
 
 ## Software Installation
 
-If you are new to ARISEN, it is recommended that you install the [ARISEN Prebuilt Binaries](#prebuilt-binaries), then proceed to the [Getting Started](https://developers.eos.io/arisen-home/docs) walkthrough. If you are an advanced developer, a block producer, or no binaries are available for your platform, you may need to [Build ARISEN from source](https://arisen.github.io/eos/latest/install/build-from-source).
+If you are new to ARISEN, it is recommended that you install the [ARISEN Prebuilt Binaries](#prebuilt-binaries), then proceed to the [Getting Started](https://developers.rsn.io/arisen-home/docs) walkthrough. If you are an advanced developer, a block producer, or no binaries are available for your platform, you may need to [Build ARISEN from source](https://arisen.github.io/rsn/latest/install/build-from-source).
 
 ---
 
@@ -74,12 +74,12 @@ $ brew remove arisen
 
 #### Ubuntu 18.04 Package Install
 ```sh
-$ wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
+$ wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 $ sudo apt install ./arisen_2.0.3-1-ubuntu-18.04_amd64.deb
 ```
 #### Ubuntu 16.04 Package Install
 ```sh
-$ wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
+$ wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 $ sudo apt install ./arisen_2.0.3-1-ubuntu-16.04_amd64.deb
 ```
 #### Ubuntu Package Uninstall
@@ -91,7 +91,7 @@ $ sudo apt remove arisen
 
 #### RPM Package Install
 ```sh
-$ wget https://github.com/arisen/eos/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
+$ wget https://github.com/arisen/rsn/releases/download/v2.0.3/arisen-2.0.3-1.el7.x86_64.rpm
 $ sudo yum install ./arisen-2.0.3-1.el7.x86_64.rpm
 ```
 #### RPM Package Uninstall
@@ -106,27 +106,27 @@ To uninstall the ARISEN built/installed binaries and dependencies, run:
 ```
 
 ## Documentation
-1. [Nodeos](http://arisen.github.io/eos/latest/nodeos/)
-    - [Usage](http://arisen.github.io/eos/latest/nodeos/usage/index)
-    - [Replays](http://arisen.github.io/eos/latest/nodeos/replays/index)
-    - [Chain API Reference](http://arisen.github.io/eos/latest/nodeos/plugins/chain_api_plugin/api-reference/index)
-    - [Troubleshooting](http://arisen.github.io/eos/latest/nodeos/troubleshooting/index)
-1. [Cleos](http://arisen.github.io/eos/latest/cleos/)
-1. [Keosd](http://arisen.github.io/eos/latest/keosd/)
+1. [Aos](http://arisen.github.io/rsn/latest/aos/)
+    - [Usage](http://arisen.github.io/rsn/latest/aos/usage/index)
+    - [Replays](http://arisen.github.io/rsn/latest/aos/replays/index)
+    - [Chain API Reference](http://arisen.github.io/rsn/latest/aos/plugins/chain_api_plugin/api-reference/index)
+    - [Troubleshooting](http://arisen.github.io/rsn/latest/aos/troubleshooting/index)
+1. [Arisecli](http://arisen.github.io/rsn/latest/arisecli/)
+1. [Awalletd](http://arisen.github.io/rsn/latest/awalletd/)
 
 ## Resources
-1. [Website](https://eos.io)
+1. [Website](https://rsn.io)
 1. [Blog](https://medium.com/arisen)
-1. [Developer Portal](https://developers.eos.io)
+1. [Developer Portal](https://developers.rsn.io)
 1. [StackExchange for Q&A](https://arisen.stackexchange.com/)
-1. [Community Telegram Group](https://t.me/EOSProject)
+1. [Community Telegram Group](https://t.me/RSNProject)
 1. [Developer Telegram Group](https://t.me/joinchat/EaEnSUPktgfoI-XPfMYtcQ)
 1. [White Paper](https://github.com/ARISEN/Documentation/blob/master/TechnicalWhitePaper.md)
 1. [Roadmap](https://github.com/ARISEN/Documentation/blob/master/Roadmap.md)
 
 <a name="gettingstarted"></a>
 ## Getting Started
-Instructions detailing the process of getting the software, building it, running a simple test network that produces blocks, account creation and uploading a sample contract to the blockchain can be found in the [Getting Started](https://developers.eos.io/arisen-home/docs) walkthrough. 
+Instructions detailing the process of getting the software, building it, running a simple test network that produces blocks, account creation and uploading a sample contract to the blockchain can be found in the [Getting Started](https://developers.rsn.io/arisen-home/docs) walkthrough. 
 
 ## Contributing
 

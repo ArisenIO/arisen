@@ -48,8 +48,8 @@ TEST_LABEL="[arisen_build]"
     run bash -c "printf \"y\ny\nn\nn\n\" | ./$SCRIPT_LOCATION -o Debug -P"
     [[ ! -z $(echo "${output}" | grep "CMAKE_BUILD_TYPE: Debug") ]] || exit
     ## -s
-    run bash -c "printf \"y\ny\nn\nn\n\" | ./$SCRIPT_LOCATION -s EOS2 -P"
-    [[ ! -z $(echo "${output}" | grep "CORE_SYMBOL_NAME: EOS2") ]] || exit
+    run bash -c "printf \"y\ny\nn\nn\n\" | ./$SCRIPT_LOCATION -s RSN2 -P"
+    [[ ! -z $(echo "${output}" | grep "CORE_SYMBOL_NAME: RSN2") ]] || exit
     ## -b
     run bash -c "printf \"y\ny\nn\nn\n\" | ./$SCRIPT_LOCATION -b /test -P"
     [[ ! -z $(echo "${output}" | grep "BOOST_LOCATION: /test") ]] || exit

@@ -15,7 +15,7 @@ public:
 
       uint64_t primary_key()const { return key; }
 
-      EOSLIB_SERIALIZE( payload, (key)(data) )
+      RSNLIB_SERIALIZE( payload, (key)(data) )
    };
 
    using payloads_table = arisen::multi_index< "payloads"_n,  payload >;

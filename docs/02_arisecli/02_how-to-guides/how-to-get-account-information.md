@@ -4,7 +4,7 @@ Query infomation of an ARISEN account
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is an account
@@ -14,7 +14,7 @@ Query infomation of an ARISEN account
 Execute the command below:
 
 ```sh
-cleos get account ACCOUNT_NAME
+arisecli get account ACCOUNT_NAME
 ```
 
 This should produce similar output as below:
@@ -23,8 +23,8 @@ This should produce similar output as below:
 created: 2018-06-01T12:00:00.000
 privileged: true
 permissions:
-     owner     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
-        active     1:    1 EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+     owner     1:    1 RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+        active     1:    1 RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 memory:
      quota:       unlimited  used:     3.004 KiB
 

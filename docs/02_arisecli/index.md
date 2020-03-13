@@ -1,40 +1,40 @@
 ---
-content_title: Cleos
+content_title: Arisecli
 ---
 
 ## Introduction
 
-`cleos` is a command line tool that interfaces with the REST API exposed by `nodeos`. Developers can also use `cleos` to deploy and test ARISEN smart contracts.
+`arisecli` is a command line tool that interfaces with the REST API exposed by `aos`. Developers can also use `arisecli` to deploy and test ARISEN smart contracts.
 
 ## Installation
 
-`cleos` is distributed as part of the [ARISEN software suite](https://github.com/ARISEN/eos/blob/master/README.md). To install `cleos` just visit the [ARISEN Software Installation](../00_install/index.md) section.
+`arisecli` is distributed as part of the [ARISEN software suite](https://github.com/ARISEN/rsn/blob/master/README.md). To install `arisecli` just visit the [ARISEN Software Installation](../00_install/index.md) section.
 
-## Using Cleos
+## Using Arisecli
 
-To use `cleos`, you need the end point (IP address and port number) of a running `nodeos` instance. Also, the `nodeos` instance must be configured to load the `arisen::chain_api_plugin` when launched. This allows `nodeos` to respond to the RPC requests coming from `cleos`.
+To use `arisecli`, you need the end point (IP address and port number) of a running `aos` instance. Also, the `aos` instance must be configured to load the `arisen::chain_api_plugin` when launched. This allows `aos` to respond to the RPC requests coming from `arisecli`.
 
-### Cleos Commands
+### Arisecli Commands
 
-For a list of all `cleos` commands, run:
+For a list of all `arisecli` commands, run:
 
 ```sh
-cleos --help
+arisecli --help
 ```
 
 ```console
 Command Line Interface to ARISEN Client
-Usage: cleos [OPTIONS] SUBCOMMAND
+Usage: arisecli [OPTIONS] SUBCOMMAND
 
 Options:
   -h,--help                   Print this help message and exit
   -u,--url TEXT=http://127.0.0.1:8888/
-                              the http/https URL where nodeos is running
-  --wallet-url TEXT=unix:///Users/username/arisen-wallet/keosd.sock
-                              the http/https URL where keosd is running
+                              the http/https URL where aos is running
+  --wallet-url TEXT=unix:///Users/username/arisen-wallet/awalletd.sock
+                              the http/https URL where awalletd is running
   -r,--header                 pass specific HTTP header; repeat this option to pass multiple headers
   -n,--no-verify              don't verify peer certificate when using HTTPS
-  --no-auto-keosd             don't automatically launch a keosd if one is not currently running
+  --no-auto-awalletd             don't automatically launch a awalletd if one is not currently running
   -v,--verbose                output verbose errors and action console output
   --print-request             print HTTP request to STDERR
   --print-response            print HTTP response to STDERR
@@ -55,17 +55,17 @@ Subcommands:
   system                      Send arisen.system contract action to the blockchain.
 ```
 
-### Cleos Subcommands
+### Arisecli Subcommands
 
-To get help with any particular subcommand, run `cleos SUBCOMMAND --help`. For instance:
+To get help with any particular subcommand, run `arisecli SUBCOMMAND --help`. For instance:
 
 ```sh
-cleos create --help
+arisecli create --help
 ```
 
 ```console
 Create various items, on and off the blockchain
-Usage: cleos create SUBCOMMAND
+Usage: arisecli create SUBCOMMAND
 
 Subcommands:
   key                         Create a new keypair and print the public and private keys
@@ -73,15 +73,15 @@ Subcommands:
                               (assumes system contract does not restrict RAM usage)
 ```
 
-`cleos` can also provide usage help for subcommands within subcommands. For instance:
+`arisecli` can also provide usage help for subcommands within subcommands. For instance:
 
 ```sh
-cleos create account --help
+arisecli create account --help
 ```
 
 ```console
 Create a new account on the blockchain (assumes system contract does not restrict RAM usage)
-Usage: cleos create account [OPTIONS] creator name OwnerKey [ActiveKey]
+Usage: arisecli create account [OPTIONS] creator name OwnerKey [ActiveKey]
 
 Positionals:
   creator TEXT                The name of the account creating the new account (required)
@@ -106,12 +106,12 @@ Options:
   --delay-sec UINT            set the delay_sec seconds, defaults to 0s
 ```
 
-## Cleos Example
+## Arisecli Example
 
-The following `cleos` command creates a local wallet named `mywallet` and displays the password to the screen:
+The following `arisecli` command creates a local wallet named `mywallet` and displays the password to the screen:
 
 ```sh
-cleos wallet create -n mywallet --to-console
+arisecli wallet create -n mywallet --to-console
 ```
 
 ```console

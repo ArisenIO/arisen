@@ -34,9 +34,9 @@ else()
     set(VERSION_FULL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 endif()
 
-set( CLI_CLIENT_EXECUTABLE_NAME cleos )
-set( NODE_EXECUTABLE_NAME nodeos )
-set( KEY_STORE_EXECUTABLE_NAME keosd )
+set( CLI_CLIENT_EXECUTABLE_NAME arisecli )
+set( NODE_EXECUTABLE_NAME aos )
+set( KEY_STORE_EXECUTABLE_NAME awalletd )
 
 # http://stackoverflow.com/a/18369825
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -56,7 +56,7 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(BUILD_DOXYGEN FALSE CACHE BOOL "Build doxygen documentation on every make")
 set(BUILD_MONGO_DB_PLUGIN FALSE CACHE BOOL "Build mongo database plugin")
-set(ENABLE_MULTIVERSION_PROTOCOL_TEST FALSE CACHE BOOL "Enable nodeos multiversion protocol test")
+set(ENABLE_MULTIVERSION_PROTOCOL_TEST FALSE CACHE BOOL "Enable aos multiversion protocol test")
 
 # add defaults for openssl
 if(APPLE AND UNIX AND "${OPENSSL_ROOT_DIR}" STREQUAL "")
@@ -69,8 +69,8 @@ endif()
 list(APPEND ARISEN_WASM_RUNTIMES wabt)   #always enable wabt; it works everywhere and parts of arisen still assume it's always available
 if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT WIN32)
    if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
-      list(APPEND ARISEN_WASM_RUNTIMES eos-vm-oc)
-      # EOS VM OC requires LLVM, but move the check up here to a central location so that the ArisenTester.cmakes
+      list(APPEND ARISEN_WASM_RUNTIMES rsn-vm-oc)
+      # RSN VM OC requires LLVM, but move the check up here to a central location so that the ArisenTester.cmakes
       # can be created with the exact version found
       find_package(LLVM REQUIRED CONFIG)
       if(LLVM_VERSION_MAJOR VERSION_LESS 7 OR LLVM_VERSION_MAJOR VERSION_GREATER 9)
@@ -80,9 +80,9 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT WIN32)
 endif()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT WIN32)
-   list(APPEND ARISEN_WASM_RUNTIMES eos-vm)
+   list(APPEND ARISEN_WASM_RUNTIMES rsn-vm)
    if(CMAKE_SYSTEM_PROCESSOR STREQUAL x86_64)
-      list(APPEND ARISEN_WASM_RUNTIMES eos-vm-jit)
+      list(APPEND ARISEN_WASM_RUNTIMES rsn-vm-jit)
    endif()
 endif()
 
@@ -139,7 +139,7 @@ endif()
 include(utils)
 
 if ("${CORE_SYMBOL_NAME}" STREQUAL "")
-  set( CORE_SYMBOL_NAME "SYS" )
+  set( CORE_SYMBOL_NAME "RSN" )
 endif()
 string(TOUPPER ${CORE_SYMBOL_NAME} CORE_SYMBOL_NAME)
 
@@ -151,7 +151,7 @@ endif()
 message( STATUS "Using '${CORE_SYMBOL_NAME}' as CORE symbol name" )
 
 if ("${ARISEN_ROOT_KEY}" STREQUAL "")
-   set(ARISEN_ROOT_KEY "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
+   set(ARISEN_ROOT_KEY "RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV")
 endif()
 
 message( STATUS "Using '${ARISEN_ROOT_KEY}' as public key for 'arisen' account" )
@@ -178,11 +178,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/testnet.template ${CMAKE_CURRENT_BINA
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/arisen.version.in ${CMAKE_CURRENT_BINARY_DIR}/arisen.version.hpp)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/arisen.version.hpp DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
 
-set(EOS_ROOT_DIR ${CMAKE_BINARY_DIR})
+set(RSN_ROOT_DIR ${CMAKE_BINARY_DIR})
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/arisen-config.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/arisen/arisen-config.cmake @ONLY)
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/ArisenTesterBuild.cmake.in ${CMAKE_BINARY_DIR}/lib/cmake/arisen/ArisenTester.cmake @ONLY)
 
-set(EOS_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
+set(RSN_ROOT_DIR ${CMAKE_INSTALL_PREFIX})
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/arisen-config.cmake.in ${CMAKE_BINARY_DIR}/modules/arisen-config.cmake @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/modules/arisen-config.cmake DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/arisen)
 configure_file(${CMAKE_SOURCE_DIR}/CMakeModules/ArisenTester.cmake.in ${CMAKE_BINARY_DIR}/modules/ArisenTester.cmake @ONLY)
@@ -202,8 +202,8 @@ configure_file(${CMAKE_SOURCE_DIR}/libraries/fc/src/network/LICENSE.go
                ${CMAKE_BINARY_DIR}/licenses/arisen/LICENSE.go COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/libraries/yubihsm/LICENSE
                ${CMAKE_BINARY_DIR}/licenses/arisen/LICENSE.yubihsm COPYONLY)
-configure_file(${CMAKE_SOURCE_DIR}/libraries/eos-vm/LICENSE
-               ${CMAKE_BINARY_DIR}/licenses/arisen/LICENSE.eos-vm COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/libraries/rsn-vm/LICENSE
+               ${CMAKE_BINARY_DIR}/licenses/arisen/LICENSE.rsn-vm COPYONLY)
 
 install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ COMPONENT base)
 install(FILES libraries/wabt/LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ RENAME LICENSE.wabt COMPONENT base)
@@ -212,7 +212,7 @@ install(FILES libraries/wasm-jit/LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATARO
 install(FILES libraries/fc/secp256k1/upstream/COPYING DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ RENAME LICENSE.secp256k1 COMPONENT base)
 install(FILES libraries/fc/src/network/LICENSE.go DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ COMPONENT base)
 install(FILES libraries/yubihsm/LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ RENAME LICENSE.yubihsm COMPONENT base)
-install(FILES libraries/eos-vm/LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ RENAME LICENSE.eos-vm COMPONENT base)
+install(FILES libraries/rsn-vm/LICENSE DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/licenses/arisen/ RENAME LICENSE.rsn-vm COMPONENT base)
 
 add_custom_target(base-install
   COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}"

@@ -2,7 +2,7 @@
 
 ## Description
 
-The `state_history_plugin` is useful for capturing historical data about the blockchain state. The plugin receives blockchain data from other connected nodes and caches the data into files. The plugin listens on a socket for applications to connect and sends blockchain data back based on the plugin options specified when starting `nodeos`.
+The `state_history_plugin` is useful for capturing historical data about the blockchain state. The plugin receives blockchain data from other connected nodes and caches the data into files. The plugin listens on a socket for applications to connect and sends blockchain data back based on the plugin options specified when starting `aos`.
 
 ## Usage
 
@@ -13,12 +13,12 @@ plugin = arisen::state_history_plugin
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::state_history_plugin [operations] [options]
+aos ... --plugin arisen::state_history_plugin [operations] [options]
 ```
 
 ## Operations
 
-These can only be specified from the `nodeos` command-line:
+These can only be specified from the `aos` command-line:
 
 ```console
 Command Line Options for arisen::state_history_plugin:
@@ -28,7 +28,7 @@ Command Line Options for arisen::state_history_plugin:
 
 ## Options
 
-These can be specified from both the `nodeos` command-line or the `config.ini` file:
+These can be specified from both the `aos` command-line or the `config.ini` file:
 
 ```console
 Config Options for arisen::state_history_plugin:
@@ -66,7 +66,7 @@ plugin = arisen::chain_plugin --disable-replay-opts
 ```
 ```sh
 # command-line
-nodeos ... --plugin arisen::chain_plugin --disable-replay-opts
+aos ... --plugin arisen::chain_plugin --disable-replay-opts
 ```
 
 ## How-To Guides

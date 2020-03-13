@@ -1,23 +1,23 @@
 /**
-  @defgroup eosclienttool
+  @defgroup rsnclienttool
 
-  @section intro Introduction to cleos
+  @section intro Introduction to arisecli
 
-  `cleos` is a command line tool that interfaces with the REST api exposed by @ref nodeos. In order to use `cleos` you will need to
-  have a local copy of `nodeos` running and configured to load the 'arisen::chain_api_plugin'.
+  `arisecli` is a command line tool that interfaces with the REST api exposed by @ref aos. In order to use `arisecli` you will need to
+  have a local copy of `aos` running and configured to load the 'arisen::chain_api_plugin'.
 
-   cleos contains documentation for all of its commands. For a list of all commands known to cleos, simply run it with no arguments:
+   arisecli contains documentation for all of its commands. For a list of all commands known to arisecli, simply run it with no arguments:
 ```
-$ ./cleos
+$ ./arisecli
 Command Line Interface to ARISEN Client
-Usage: programs/cleos/cleos [OPTIONS] SUBCOMMAND
+Usage: programs/arisecli/arisecli [OPTIONS] SUBCOMMAND
 
 Options:
   -h,--help                   Print this help message and exit
   -u,--url TEXT=http://localhost:8888/
-                              the http/https URL where nodeos is running
+                              the http/https URL where aos is running
   --wallet-url TEXT=http://localhost:8888/
-                              the http/https URL where keosd is running
+                              the http/https URL where awalletd is running
   -r,--header                 pass specific HTTP header, repeat this option to pass multiple headers
   -n,--no-verify              don't verify peer certificate when using HTTPS
   -v,--verbose                output verbose errors and action output
@@ -37,17 +37,17 @@ Subcommands:
 ```
 To get help with any particular subcommand, run it with no arguments as well:
 ```
-$ ./cleos create
+$ ./arisecli create
 Create various items, on and off the blockchain
-Usage: ./cleos create SUBCOMMAND
+Usage: ./arisecli create SUBCOMMAND
 
 Subcommands:
   key                         Create a new keypair and print the public and private keys
   account                     Create a new account on the blockchain (assumes system contract does not restrict RAM usage)
 
-$ ./cleos create account
+$ ./arisecli create account
 Create a new account on the blockchain (assumes system contract does not restrict RAM usage)
-Usage: ./cleos create account [OPTIONS] creator name OwnerKey ActiveKey
+Usage: ./arisecli create account [OPTIONS] creator name OwnerKey ActiveKey
 
 Positionals:
   creator TEXT                The name of the account creating the new account
@@ -132,7 +132,7 @@ using auth_type = fc::static_variant<public_key_type, permission_level>;
 
 FC_DECLARE_EXCEPTION( explained_exception, 9000000, "explained exception, see error log" );
 FC_DECLARE_EXCEPTION( localized_exception, 10000000, "an error occured" );
-#define EOSC_ASSERT( TEST, ... ) \
+#define RSNC_ASSERT( TEST, ... ) \
   FC_EXPAND_MACRO( \
     FC_MULTILINE_MACRO_BEGIN \
       if( UNLIKELY(!(TEST)) ) \
@@ -143,7 +143,7 @@ FC_DECLARE_EXCEPTION( localized_exception, 10000000, "an error occured" );
     FC_MULTILINE_MACRO_END \
   )
 
-//copy pasta from keosd's main.cpp
+//copy pasta from awalletd's main.cpp
 bfs::path determine_home_directory()
 {
    bfs::path home;
@@ -177,7 +177,7 @@ bool   tx_use_old_rpc = false;
 string tx_json_save_file;
 bool   print_request = false;
 bool   print_response = false;
-bool   no_auto_keosd = false;
+bool   no_auto_awalletd = false;
 bool   verbose = false;
 
 uint8_t  tx_max_cpu_usage = 0;
@@ -317,7 +317,7 @@ fc::variant push_transaction( signed_transaction& trx, packed_transaction::compr
             ref_block = call(get_block_func, fc::mutable_variant_object("block_num_or_id", tx_ref_block_num_or_id));
             ref_block_id = ref_block["id"].as<block_id_type>();
          }
-      } EOS_RETHROW_EXCEPTIONS(invalid_ref_block_exception, "Invalid reference block num or id: ${block_num_or_id}", ("block_num_or_id", tx_ref_block_num_or_id));
+      } RSN_RETHROW_EXCEPTIONS(invalid_ref_block_exception, "Invalid reference block num or id: ${block_num_or_id}", ("block_num_or_id", tx_ref_block_num_or_id));
       trx.set_reference_block(ref_block_id);
 
       if (tx_force_unique) {
@@ -435,12 +435,12 @@ fc::variant json_from_file_or_string(const string& file_or_str, fc::json::parse_
    if ( !regex_search(file_or_str, r) && fc::is_regular_file(file_or_str) ) {
       try {
          return fc::json::from_file(file_or_str, ptype);
-      } EOS_RETHROW_EXCEPTIONS(json_parse_exception, "Fail to parse JSON from file: ${file}", ("file", file_or_str));
+      } RSN_RETHROW_EXCEPTIONS(json_parse_exception, "Fail to parse JSON from file: ${file}", ("file", file_or_str));
 
    } else {
       try {
          return fc::json::from_string(file_or_str, ptype);
-      } EOS_RETHROW_EXCEPTIONS(json_parse_exception, "Fail to parse JSON from string: ${string}", ("string", file_or_str));
+      } RSN_RETHROW_EXCEPTIONS(json_parse_exception, "Fail to parse JSON from string: ${string}", ("string", file_or_str));
    }
 }
 
@@ -515,7 +515,7 @@ void send_actions(std::vector<chain::action>&& actions, packed_transaction::comp
    std::ofstream out;
    if (tx_json_save_file.length()) {
       out.open(tx_json_save_file);
-      EOSC_ASSERT(!out.fail(), "ERROR: Failed to create file \"${p}\"", ("p", tx_json_save_file));
+      RSNC_ASSERT(!out.fail(), "ERROR: Failed to create file \"${p}\"", ("p", tx_json_save_file));
    }
    auto result = push_actions( move(actions), compression);
 
@@ -539,7 +539,7 @@ void send_transaction( signed_transaction& trx, packed_transaction::compression_
    std::ofstream out;
    if (tx_json_save_file.length()) {
       out.open(tx_json_save_file);
-      EOSC_ASSERT(!out.fail(), "ERROR: Failed to create file \"${p}\"", ("p", tx_json_save_file));
+      RSNC_ASSERT(!out.fail(), "ERROR: Failed to create file \"${p}\"", ("p", tx_json_save_file));
    }
    auto result = push_transaction(trx, compression);
 
@@ -689,18 +689,18 @@ authority parse_json_authority(const std::string& authorityJsonOrFile) {
    fc::variant authority_var = json_from_file_or_string(authorityJsonOrFile);
    try {
       return authority_var.as<authority>();
-   } EOS_RETHROW_EXCEPTIONS(authority_type_exception, "Invalid authority format '${data}'",
+   } RSN_RETHROW_EXCEPTIONS(authority_type_exception, "Invalid authority format '${data}'",
                             ("data", fc::json::to_string(authority_var, fc::time_point::maximum())))
 }
 
 authority parse_json_authority_or_key(const std::string& authorityJsonOrFile) {
-   if (boost::istarts_with(authorityJsonOrFile, "EOS") || boost::istarts_with(authorityJsonOrFile, "PUB_R1")) {
+   if (boost::istarts_with(authorityJsonOrFile, "RSN") || boost::istarts_with(authorityJsonOrFile, "PUB_R1")) {
       try {
          return authority(public_key_type(authorityJsonOrFile));
-      } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", authorityJsonOrFile))
+      } RSN_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", authorityJsonOrFile))
    } else {
       auto result = parse_json_authority(authorityJsonOrFile);
-      EOS_ASSERT( arisen::chain::validate(result), authority_type_exception, "Authority failed validation! ensure that keys, accounts, and waits are sorted and that the threshold is valid and satisfiable!");
+      RSN_ASSERT( arisen::chain::validate(result), authority_type_exception, "Authority failed validation! ensure that keys, accounts, and waits are sorted and that the threshold is valid and satisfiable!");
       return result;
    }
 }
@@ -723,7 +723,7 @@ asset to_asset( account_name code, const string& s ) {
          auto p = cache.emplace( make_pair( code, sym ), result.max_supply.get_symbol() );
          it = p.first;
       } else {
-         EOS_THROW(symbol_type_exception, "Symbol ${s} is not supported by token contract ${c}", ("s", sym_str)("c", code));
+         RSN_THROW(symbol_type_exception, "Symbol ${s} is not supported by token contract ${c}", ("s", sym_str)("c", code));
       }
    }
    auto expected_symbol = it->second;
@@ -731,7 +731,7 @@ asset to_asset( account_name code, const string& s ) {
       auto factor = expected_symbol.precision() / a.precision();
       a = asset( a.get_amount() * factor, expected_symbol );
    } else if ( a.decimals() > expected_symbol.decimals() ) {
-      EOS_THROW(symbol_type_exception, "Too many decimal digits in ${a}, only ${d} supported", ("a", a)("d", expected_symbol.decimals()));
+      RSN_THROW(symbol_type_exception, "Too many decimal digits in ${a}, only ${d} supported", ("a", a)("d", expected_symbol.decimals()));
    } // else precision matches
    return a;
 }
@@ -760,8 +760,8 @@ struct set_account_permission_subcommand {
       add_standard_transaction_options(permissions, "account@active");
 
       permissions->set_callback([this] {
-         EOSC_ASSERT( !(add_code && remove_code), "ERROR: Either --add-code or --remove-code can be set" );
-         EOSC_ASSERT( (add_code ^ remove_code) || !authority_json_or_file.empty(), "ERROR: authority should be specified unless add or remove code permission" );
+         RSNC_ASSERT( !(add_code && remove_code), "ERROR: Either --add-code or --remove-code can be set" );
+         RSNC_ASSERT( (add_code ^ remove_code) || !authority_json_or_file.empty(), "ERROR: authority should be specified unless add or remove code permission" );
 
          authority auth;
 
@@ -926,10 +926,10 @@ void try_local_port(uint32_t duration) {
    }
 }
 
-void ensure_keosd_running(CLI::App* app) {
-    if (no_auto_keosd)
+void ensure_awalletd_running(CLI::App* app) {
+    if (no_auto_awalletd)
         return;
-    // get, version, net, convert do not require keosd
+    // get, version, net, convert do not require awalletd
     if (tx_skip_sign || app->got_subcommand("get") || app->got_subcommand("version") || app->got_subcommand("net") || app->got_subcommand("convert"))
         return;
     if (app->get_subcommand("create")->got_subcommand("key")) // create key does not require wallet
@@ -948,12 +948,12 @@ void ensure_keosd_running(CLI::App* app) {
 
     boost::filesystem::path binPath = boost::dll::program_location();
     binPath.remove_filename();
-    // This extra check is necessary when running cleos like this: ./cleos ...
+    // This extra check is necessary when running arisecli like this: ./arisecli ...
     if (binPath.filename_is_dot())
         binPath.remove_filename();
-    binPath.append(key_store_executable_name); // if cleos and keosd are in the same installation directory
+    binPath.append(key_store_executable_name); // if arisecli and awalletd are in the same installation directory
     if (!boost::filesystem::exists(binPath)) {
-        binPath.remove_filename().remove_filename().append("keosd").append(key_store_executable_name);
+        binPath.remove_filename().remove_filename().append("awalletd").append(key_store_executable_name);
     }
 
     if (boost::filesystem::exists(binPath)) {
@@ -968,13 +968,13 @@ void ensure_keosd_running(CLI::App* app) {
         pargs.push_back("--unix-socket-path");
         pargs.push_back(string(key_store_executable_name) + ".sock");
 
-        ::boost::process::child keos(binPath, pargs,
+        ::boost::process::child awallet(binPath, pargs,
                                      bp::std_in.close(),
                                      bp::std_out > bp::null,
                                      bp::std_err > bp::null);
-        if (keos.running()) {
+        if (awallet.running()) {
             std::cerr << binPath << " launched" << std::endl;
-            keos.detach();
+            awallet.detach();
             try_local_port(2000);
         } else {
             std::cerr << "No wallet service listening on " << wallet_url << ". Failed to launch " << binPath << std::endl;
@@ -1012,7 +1012,7 @@ struct register_producer_subcommand {
          public_key_type producer_key;
          try {
             producer_key = public_key_type(producer_key_str);
-         } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid producer public key: ${public_key}", ("public_key", producer_key_str))
+         } RSN_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid producer public key: ${public_key}", ("public_key", producer_key_str))
 
          auto regprod_var = regproducer_variant(name(producer_str), producer_key, url, loc );
          auto accountPermissions = get_account_permissions(tx_permission, {name(producer_str), config::active_name});
@@ -1030,7 +1030,7 @@ struct create_account_subcommand {
    string stake_cpu;
    uint32_t buy_ram_bytes_in_kbytes = 0;
    uint32_t buy_ram_bytes = 0;
-   string buy_ram_eos;
+   string buy_ram_rsn;
    bool transfer;
    bool simple;
 
@@ -1054,7 +1054,7 @@ struct create_account_subcommand {
                                    (localized("The amount of RAM bytes to purchase for the new account in kibibytes (KiB)")));
          createAccount->add_option("--buy-ram-bytes", buy_ram_bytes,
                                    (localized("The amount of RAM bytes to purchase for the new account in bytes")));
-         createAccount->add_option("--buy-ram", buy_ram_eos,
+         createAccount->add_option("--buy-ram", buy_ram_rsn,
                                    (localized("The amount of RAM bytes to purchase for the new account in tokens")));
          createAccount->add_flag("--transfer", transfer,
                                  (localized("Transfer voting power and right to unstake tokens to receiver")));
@@ -1068,11 +1068,11 @@ struct create_account_subcommand {
             if( owner_key_str.find('@') != string::npos ) {
                try {
                   owner = to_permission_level(owner_key_str);
-               } EOS_RETHROW_EXCEPTIONS( explained_exception, "Invalid owner permission level: ${permission}", ("permission", owner_key_str) )
+               } RSN_RETHROW_EXCEPTIONS( explained_exception, "Invalid owner permission level: ${permission}", ("permission", owner_key_str) )
             } else {
                try {
                   owner = public_key_type(owner_key_str);
-               } EOS_RETHROW_EXCEPTIONS( public_key_type_exception, "Invalid owner public key: ${public_key}", ("public_key", owner_key_str) );
+               } RSN_RETHROW_EXCEPTIONS( public_key_type_exception, "Invalid owner public key: ${public_key}", ("public_key", owner_key_str) );
             }
 
             if( active_key_str.empty() ) {
@@ -1080,18 +1080,18 @@ struct create_account_subcommand {
             } else if( active_key_str.find('@') != string::npos ) {
                try {
                   active = to_permission_level(active_key_str);
-               } EOS_RETHROW_EXCEPTIONS( explained_exception, "Invalid active permission level: ${permission}", ("permission", active_key_str) )
+               } RSN_RETHROW_EXCEPTIONS( explained_exception, "Invalid active permission level: ${permission}", ("permission", active_key_str) )
             } else {
                try {
                   active = public_key_type(active_key_str);
-               } EOS_RETHROW_EXCEPTIONS( public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str) );
+               } RSN_RETHROW_EXCEPTIONS( public_key_type_exception, "Invalid active public key: ${public_key}", ("public_key", active_key_str) );
             }
 
             auto create = create_newaccount(name(creator), name(account_name), owner, active);
             if (!simple) {
-               EOSC_ASSERT( buy_ram_eos.size() || buy_ram_bytes_in_kbytes || buy_ram_bytes, "ERROR: One of --buy-ram, --buy-ram-kbytes or --buy-ram-bytes should have non-zero value" );
-               EOSC_ASSERT( !buy_ram_bytes_in_kbytes || !buy_ram_bytes, "ERROR: --buy-ram-kbytes and --buy-ram-bytes cannot be set at the same time" );
-               action buyram = !buy_ram_eos.empty() ? create_buyram(name(creator), name(account_name), to_asset(buy_ram_eos))
+               RSNC_ASSERT( buy_ram_rsn.size() || buy_ram_bytes_in_kbytes || buy_ram_bytes, "ERROR: One of --buy-ram, --buy-ram-kbytes or --buy-ram-bytes should have non-zero value" );
+               RSNC_ASSERT( !buy_ram_bytes_in_kbytes || !buy_ram_bytes, "ERROR: --buy-ram-kbytes and --buy-ram-bytes cannot be set at the same time" );
+               action buyram = !buy_ram_rsn.empty() ? create_buyram(name(creator), name(account_name), to_asset(buy_ram_rsn))
                   : create_buyrambytes(name(creator), name(account_name), (buy_ram_bytes_in_kbytes) ? (buy_ram_bytes_in_kbytes * 1024) : buy_ram_bytes);
                auto net = to_asset(stake_net);
                auto cpu = to_asset(stake_cpu);
@@ -1189,19 +1189,19 @@ struct approve_producer_subcommand {
                                ("table_key", "owner")
                                ("lower_bound", name(voter).to_uint64_t())
                                ("upper_bound", name(voter).to_uint64_t() + 1)
-                               // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                               // Change to voter.value when cleos no longer needs to support nodeos versions older than 1.5.0
+                               // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                               // Change to voter.value when arisecli no longer needs to support aos versions older than 1.5.0
                                ("limit", 1)
             );
             auto res = result.as<arisen::chain_apis::read_only::get_table_rows_result>();
-            // Condition in if statement below can simply be res.rows.empty() when cleos no longer needs to support nodeos versions older than 1.5.0
+            // Condition in if statement below can simply be res.rows.empty() when arisecli no longer needs to support aos versions older than 1.5.0
             // Although since this subcommand will actually change the voter's vote, it is probably better to just keep this check to protect
             //  against future potential chain_plugin bugs.
             if( res.rows.empty() || res.rows[0].get_object()["owner"].as_string() != name(voter).to_string() ) {
                std::cerr << "Voter info not found for account " << voter << std::endl;
                return;
             }
-            EOS_ASSERT( 1 == res.rows.size(), multiple_voter_info, "More than one voter_info for account" );
+            RSN_ASSERT( 1 == res.rows.size(), multiple_voter_info, "More than one voter_info for account" );
             auto prod_vars = res.rows[0]["producers"].get_array();
             vector<arisen::name> prods;
             for ( auto& x : prod_vars ) {
@@ -1242,19 +1242,19 @@ struct unapprove_producer_subcommand {
                                ("table_key", "owner")
                                ("lower_bound", name(voter).to_uint64_t())
                                ("upper_bound", name(voter).to_uint64_t() + 1)
-                               // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                               // Change to voter.value when cleos no longer needs to support nodeos versions older than 1.5.0
+                               // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                               // Change to voter.value when arisecli no longer needs to support aos versions older than 1.5.0
                                ("limit", 1)
             );
             auto res = result.as<arisen::chain_apis::read_only::get_table_rows_result>();
-            // Condition in if statement below can simply be res.rows.empty() when cleos no longer needs to support nodeos versions older than 1.5.0
+            // Condition in if statement below can simply be res.rows.empty() when arisecli no longer needs to support aos versions older than 1.5.0
             // Although since this subcommand will actually change the voter's vote, it is probably better to just keep this check to protect
             //  against future potential chain_plugin bugs.
             if( res.rows.empty() || res.rows[0].get_object()["owner"].as_string() != name(voter).to_string() ) {
                std::cerr << "Voter info not found for account " << voter << std::endl;
                return;
             }
-            EOS_ASSERT( 1 == res.rows.size(), multiple_voter_info, "More than one voter_info for account" );
+            RSN_ASSERT( 1 == res.rows.size(), multiple_voter_info, "More than one voter_info for account" );
             auto prod_vars = res.rows[0]["producers"].get_array();
             vector<arisen::name> prods;
             for ( auto& x : prod_vars ) {
@@ -1410,7 +1410,7 @@ struct get_transaction_id_subcommand {
             } else {
                std::cerr << "file/string does not represent a transaction" << std::endl;
             }
-         } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse transaction JSON '${data}'", ("data",trx_to_check))
+         } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse transaction JSON '${data}'", ("data",trx_to_check))
       });
    }
 };
@@ -1445,7 +1445,7 @@ struct delegate_bandwidth_subcommand {
                   ("transfer", transfer);
          auto accountPermissions = get_account_permissions(tx_permission, {name(from_str), config::active_name});
          std::vector<chain::action> acts{create_action(accountPermissions, config::system_account_name, N(delegatebw), act_payload)};
-         EOSC_ASSERT( !(buy_ram_amount.size()) || !buy_ram_bytes, "ERROR: --buyram and --buy-ram-bytes cannot be set at the same time" );
+         RSNC_ASSERT( !(buy_ram_amount.size()) || !buy_ram_bytes, "ERROR: --buyram and --buy-ram-bytes cannot be set at the same time" );
          if (buy_ram_amount.size()) {
             acts.push_back( create_buyram(name(from_str), name(receiver_str), to_asset(buy_ram_amount)) );
          } else if (buy_ram_bytes) {
@@ -1516,15 +1516,15 @@ struct bidname_info_subcommand {
                                ("code", "arisen")("scope", "arisen")("table", "namebids")
                                ("lower_bound", name(newname).to_uint64_t())
                                ("upper_bound", name(newname).to_uint64_t() + 1)
-                               // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                               // Change to newname.value when cleos no longer needs to support nodeos versions older than 1.5.0
+                               // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                               // Change to newname.value when arisecli no longer needs to support aos versions older than 1.5.0
                                ("limit", 1));
          if ( print_json ) {
             std::cout << fc::json::to_pretty_string(rawResult) << std::endl;
             return;
          }
          auto result = rawResult.as<arisen::chain_apis::read_only::get_table_rows_result>();
-         // Condition in if statement below can simply be res.rows.empty() when cleos no longer needs to support nodeos versions older than 1.5.0
+         // Condition in if statement below can simply be res.rows.empty() when arisecli no longer needs to support aos versions older than 1.5.0
          if( result.rows.empty() || result.rows[0].get_object()["newname"].as_string() != name(newname).to_string() ) {
             std::cout << "No bidname record found" << std::endl;
             return;
@@ -1598,7 +1598,7 @@ struct buyram_subcommand {
       buyram->add_flag("--bytes,-b", bytes, localized("buyram in number of bytes"));
       add_standard_transaction_options(buyram, "payer@active");
       buyram->set_callback([this] {
-         EOSC_ASSERT( !kbytes || !bytes, "ERROR: --kbytes and --bytes cannot be set at the same time" );
+         RSNC_ASSERT( !kbytes || !bytes, "ERROR: --kbytes and --bytes cannot be set at the same time" );
          if (kbytes || bytes) {
             send_actions( { create_buyrambytes(name(from_str), name(receiver_str), fc::to_uint64(amount) * ((kbytes) ? 1024ull : 1ull)) } );
          } else {
@@ -1711,9 +1711,9 @@ struct deposit_subcommand {
    const name act_name{ N(deposit) };
 
    deposit_subcommand(CLI::App* actionRoot) {
-      auto deposit = actionRoot->add_subcommand("deposit", localized("Deposit into owner's REX fund by transfering from owner's liquid token balance"));
-      deposit->add_option("owner",  owner_str,  localized("Account which owns the REX fund"))->required();
-      deposit->add_option("amount", amount_str, localized("Amount to be deposited into REX fund"))->required();
+      auto deposit = actionRoot->add_subcommand("deposit", localized("Deposit into owner's BEX fund by transfering from owner's liquid token balance"));
+      deposit->add_option("owner",  owner_str,  localized("Account which owns the BEX fund"))->required();
+      deposit->add_option("amount", amount_str, localized("Amount to be deposited into BEX fund"))->required();
       add_standard_transaction_options(deposit, "owner@active");
       deposit->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
@@ -1731,9 +1731,9 @@ struct withdraw_subcommand {
    const name act_name{ N(withdraw) };
 
    withdraw_subcommand(CLI::App* actionRoot) {
-      auto withdraw = actionRoot->add_subcommand("withdraw", localized("Withdraw from owner's REX fund by transfering to owner's liquid token balance"));
-      withdraw->add_option("owner",  owner_str,  localized("Account which owns the REX fund"))->required();
-      withdraw->add_option("amount", amount_str, localized("Amount to be withdrawn from REX fund"))->required();
+      auto withdraw = actionRoot->add_subcommand("withdraw", localized("Withdraw from owner's BEX fund by transfering to owner's liquid token balance"));
+      withdraw->add_option("owner",  owner_str,  localized("Account which owns the BEX fund"))->required();
+      withdraw->add_option("amount", amount_str, localized("Amount to be withdrawn from BEX fund"))->required();
       add_standard_transaction_options(withdraw, "owner@active");
       withdraw->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
@@ -1751,9 +1751,9 @@ struct buyrex_subcommand {
    const name act_name{ N(buyrex) };
 
    buyrex_subcommand(CLI::App* actionRoot) {
-      auto buyrex = actionRoot->add_subcommand("buyrex", localized("Buy REX using tokens in owner's REX fund"));
-      buyrex->add_option("from",   from_str,   localized("Account buying REX tokens"))->required();
-      buyrex->add_option("amount", amount_str, localized("Amount to be taken from REX fund and used in buying REX"))->required();
+      auto buyrex = actionRoot->add_subcommand("buyrex", localized("Buy BEX using tokens in owner's BEX fund"));
+      buyrex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
+      buyrex->add_option("amount", amount_str, localized("Amount to be taken from BEX fund and used in buying BEX"))->required();
       add_standard_transaction_options(buyrex, "from@active");
       buyrex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
@@ -1772,9 +1772,9 @@ struct lendrex_subcommand {
    const name act_name2{ N(buyrex) };
 
    lendrex_subcommand(CLI::App* actionRoot) {
-      auto lendrex = actionRoot->add_subcommand("lendrex", localized("Deposit tokens to REX fund and use the tokens to buy REX"));
-      lendrex->add_option("from",   from_str,   localized("Account buying REX tokens"))->required();
-      lendrex->add_option("amount", amount_str, localized("Amount of liquid tokens to be used in buying REX"))->required();
+      auto lendrex = actionRoot->add_subcommand("lendrex", localized("Deposit tokens to BEX fund and use the tokens to buy BEX"));
+      lendrex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
+      lendrex->add_option("amount", amount_str, localized("Amount of liquid tokens to be used in buying BEX"))->required();
       add_standard_transaction_options(lendrex, "from@active");
       lendrex->set_callback([this] {
          fc::variant act_payload1 = fc::mutable_variant_object()
@@ -1798,11 +1798,11 @@ struct unstaketorex_subcommand {
    const name act_name{ N(unstaketorex) };
 
    unstaketorex_subcommand(CLI::App* actionRoot) {
-      auto unstaketorex = actionRoot->add_subcommand("unstaketorex", localized("Buy REX using staked tokens"));
-      unstaketorex->add_option("owner",    owner_str,    localized("Account buying REX tokens"))->required();
+      auto unstaketorex = actionRoot->add_subcommand("unstaketorex", localized("Buy BEX using staked tokens"));
+      unstaketorex->add_option("owner",    owner_str,    localized("Account buying BEX tokens"))->required();
       unstaketorex->add_option("receiver", receiver_str, localized("Account that tokens have been staked to"))->required();
-      unstaketorex->add_option("from_net", from_net_str, localized("Amount to be unstaked from Net resources and used in REX purchase"))->required();
-      unstaketorex->add_option("from_cpu", from_cpu_str, localized("Amount to be unstaked from CPU resources and used in REX purchase"))->required();
+      unstaketorex->add_option("from_net", from_net_str, localized("Amount to be unstaked from Net resources and used in BEX purchase"))->required();
+      unstaketorex->add_option("from_cpu", from_cpu_str, localized("Amount to be unstaked from CPU resources and used in BEX purchase"))->required();
       add_standard_transaction_options(unstaketorex, "owner@active");
       unstaketorex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
@@ -1822,14 +1822,14 @@ struct sellrex_subcommand {
    const name act_name{ N(sellrex) };
 
    sellrex_subcommand(CLI::App* actionRoot) {
-      auto sellrex = actionRoot->add_subcommand("sellrex", localized("Sell REX tokens"));
-      sellrex->add_option("from", from_str, localized("Account selling REX tokens"))->required();
-      sellrex->add_option("rex",  rex_str,  localized("Amount of REX tokens to be sold"))->required();
+      auto sellrex = actionRoot->add_subcommand("sellrex", localized("Sell BEX tokens"));
+      sellrex->add_option("from", from_str, localized("Account selling BEX tokens"))->required();
+      sellrex->add_option("bex",  rex_str,  localized("Amount of BEX tokens to be sold"))->required();
       add_standard_transaction_options(sellrex, "from@active");
       sellrex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("from", from_str)
-            ("rex",  rex_str);
+            ("bex",  rex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(from_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
@@ -1841,7 +1841,7 @@ struct cancelrexorder_subcommand {
    const name act_name{ N(cnclrexorder) };
 
    cancelrexorder_subcommand(CLI::App* actionRoot) {
-      auto cancelrexorder = actionRoot->add_subcommand("cancelrexorder", localized("Cancel queued REX sell order if one exists"));
+      auto cancelrexorder = actionRoot->add_subcommand("cancelrexorder", localized("Cancel queued BEX sell order if one exists"));
       cancelrexorder->add_option("owner", owner_str, localized("Owner account of sell order"))->required();
       add_standard_transaction_options(cancelrexorder, "owner@active");
       cancelrexorder->set_callback([this] {
@@ -2002,14 +2002,14 @@ struct mvtosavings_subcommand {
    const name act_name{ N(mvtosavings) };
 
    mvtosavings_subcommand(CLI::App* actionRoot) {
-      auto mvtosavings = actionRoot->add_subcommand("mvtosavings", localized("Move REX tokens to savings bucket"));
-      mvtosavings->add_option("owner", owner_str, localized("REX owner"))->required();
-      mvtosavings->add_option("rex",   rex_str,   localized("Amount of REX to be moved to savings bucket"))->required();
+      auto mvtosavings = actionRoot->add_subcommand("mvtosavings", localized("Move BEX tokens to savings bucket"));
+      mvtosavings->add_option("owner", owner_str, localized("BEX owner"))->required();
+      mvtosavings->add_option("bex",   rex_str,   localized("Amount of BEX to be moved to savings bucket"))->required();
       add_standard_transaction_options(mvtosavings, "owner@active");
       mvtosavings->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("owner", owner_str)
-            ("rex",   rex_str);
+            ("bex",   rex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
@@ -2022,14 +2022,14 @@ struct mvfrsavings_subcommand {
    const name act_name{ N(mvfrsavings) };
 
    mvfrsavings_subcommand(CLI::App* actionRoot) {
-      auto mvfrsavings = actionRoot->add_subcommand("mvfromsavings", localized("Move REX tokens out of savings bucket"));
-      mvfrsavings->add_option("owner", owner_str, localized("REX owner"))->required();
-      mvfrsavings->add_option("rex",   rex_str,   localized("Amount of REX to be moved out of savings bucket"))->required();
+      auto mvfrsavings = actionRoot->add_subcommand("mvfromsavings", localized("Move BEX tokens out of savings bucket"));
+      mvfrsavings->add_option("owner", owner_str, localized("BEX owner"))->required();
+      mvfrsavings->add_option("bex",   rex_str,   localized("Amount of BEX to be moved out of savings bucket"))->required();
       add_standard_transaction_options(mvfrsavings, "owner@active");
       mvfrsavings->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("owner", owner_str)
-            ("rex",   rex_str);
+            ("bex",   rex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
@@ -2041,8 +2041,8 @@ struct updaterex_subcommand {
    const name act_name{ N(updaterex) };
 
    updaterex_subcommand(CLI::App* actionRoot) {
-      auto updaterex = actionRoot->add_subcommand("updaterex", localized("Update REX owner vote stake and vote weight"));
-      updaterex->add_option("owner", owner_str, localized("REX owner"))->required();
+      auto updaterex = actionRoot->add_subcommand("updaterex", localized("Update BEX owner vote stake and vote weight"));
+      updaterex->add_option("owner", owner_str, localized("BEX owner"))->required();
       add_standard_transaction_options(updaterex, "owner@active");
       updaterex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
@@ -2057,8 +2057,8 @@ struct consolidate_subcommand {
    const name act_name{ N(consolidate) };
 
    consolidate_subcommand(CLI::App* actionRoot) {
-      auto consolidate = actionRoot->add_subcommand("consolidate", localized("Consolidate REX maturity buckets into one that matures in 4 days"));
-      consolidate->add_option("owner", owner_str, localized("REX owner"))->required();
+      auto consolidate = actionRoot->add_subcommand("consolidate", localized("Consolidate BEX maturity buckets into one that matures in 4 days"));
+      consolidate->add_option("owner", owner_str, localized("BEX owner"))->required();
       add_standard_transaction_options(consolidate, "owner@active");
       consolidate->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
@@ -2074,7 +2074,7 @@ struct rexexec_subcommand {
    const name act_name{ N(rexexec) };
 
    rexexec_subcommand(CLI::App* actionRoot) {
-      auto rexexec = actionRoot->add_subcommand("rexexec", localized("Perform REX maintenance by processing expired loans and unfilled sell orders"));
+      auto rexexec = actionRoot->add_subcommand("rexexec", localized("Perform BEX maintenance by processing expired loans and unfilled sell orders"));
       rexexec->add_option("user", user_str, localized("User executing the action"))->required();
       rexexec->add_option("max",  max_str,  localized("Maximum number of CPU loans, Network loans, and sell orders to be processed"))->required();
       add_standard_transaction_options(rexexec, "user@active");
@@ -2093,8 +2093,8 @@ struct closerex_subcommand {
    const name act_name{ N(closerex) };
 
    closerex_subcommand(CLI::App* actionRoot) {
-      auto closerex = actionRoot->add_subcommand("closerex", localized("Delete unused REX-related user table entries"));
-      closerex->add_option("owner", owner_str, localized("REX owner"))->required();
+      auto closerex = actionRoot->add_subcommand("closerex", localized("Delete unused BEX-related user table entries"));
+      closerex->add_option("owner", owner_str, localized("BEX owner"))->required();
       add_standard_transaction_options(closerex, "owner@active");
       closerex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
@@ -2212,7 +2212,7 @@ void get_account( const string& accountName, const string& coresym, bool json_fo
          auto net_total = to_asset(res.total_resources.get_object()["net_weight"].as_string());
 
          if( net_total.get_symbol() != unstaking.get_symbol() ) {
-            // Core symbol of nodeos responding to the request is different than core symbol built into cleos
+            // Core symbol of aos responding to the request is different than core symbol built into arisecli
             unstaking = asset( 0, net_total.get_symbol() ); // Correct core symbol for unstaking asset.
             staked = asset( 0, net_total.get_symbol() ); // Correct core symbol for staked asset.
          }
@@ -2411,8 +2411,8 @@ int main( int argc, char** argv ) {
 
    app.add_option( "-r,--header", header_opt_callback, localized("pass specific HTTP header; repeat this option to pass multiple headers"));
    app.add_flag( "-n,--no-verify", no_verify, localized("don't verify peer certificate when using HTTPS"));
-   app.add_flag( "--no-auto-" + string(key_store_executable_name), no_auto_keosd, localized("don't automatically launch a ${k} if one is not currently running", ("k", key_store_executable_name)));
-   app.set_callback([&app]{ ensure_keosd_running(&app);});
+   app.add_flag( "--no-auto-" + string(key_store_executable_name), no_auto_awalletd, localized("don't automatically launch a ${k} if one is not currently running", ("k", key_store_executable_name)));
+   app.set_callback([&app]{ ensure_awalletd_running(&app);});
 
    app.add_flag( "-v,--verbose", verbose, localized("output verbose errors and action console output"));
    app.add_flag("--print-request", print_request, localized("print HTTP request to STDERR"));
@@ -2479,14 +2479,14 @@ int main( int argc, char** argv ) {
          signed_transaction trx;
          try {
             abi_serializer::from_variant( trx_var, trx, abi_serializer_resolver, abi_serializer_max_time );
-         } EOS_RETHROW_EXCEPTIONS( transaction_type_exception, "Invalid transaction format: '${data}'",
+         } RSN_RETHROW_EXCEPTIONS( transaction_type_exception, "Invalid transaction format: '${data}'",
                                    ("data", fc::json::to_string(trx_var, fc::time_point::maximum())))
          std::cout << fc::json::to_pretty_string( packed_transaction( trx, packed_transaction::compression_type::none )) << std::endl;
       } else {
          try {
             signed_transaction trx = trx_var.as<signed_transaction>();
             std::cout << fc::json::to_pretty_string( fc::variant( packed_transaction( trx, packed_transaction::compression_type::none ))) << std::endl;
-         } EOS_RETHROW_EXCEPTIONS( transaction_type_exception, "Fail to convert transaction, --pack-action-data likely needed" )
+         } RSN_RETHROW_EXCEPTIONS( transaction_type_exception, "Fail to convert transaction, --pack-action-data likely needed" )
       }
    });
 
@@ -2501,7 +2501,7 @@ int main( int argc, char** argv ) {
       packed_transaction packed_trx;
       try {
          fc::from_variant<packed_transaction>( packed_trx_var, packed_trx );
-      } EOS_RETHROW_EXCEPTIONS( transaction_type_exception, "Invalid packed transaction format: '${data}'",
+      } RSN_RETHROW_EXCEPTIONS( transaction_type_exception, "Invalid packed transaction format: '${data}'",
                                 ("data", fc::json::to_string(packed_trx_var, fc::time_point::maximum())))
       signed_transaction strx = packed_trx.get_signed_transaction();
       fc::variant trx_var;
@@ -2526,7 +2526,7 @@ int main( int argc, char** argv ) {
       bytes packed_action_data_string;
       try {
          packed_action_data_string = variant_to_bin(name(unpacked_action_data_account_string), name(unpacked_action_data_name_string), unpacked_action_data_json);
-      } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse unpacked action data JSON")
+      } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Fail to parse unpacked action data JSON")
       std::cout << fc::to_hex(packed_action_data_string.data(), packed_action_data_string.size()) << std::endl;
    });
 
@@ -2539,7 +2539,7 @@ int main( int argc, char** argv ) {
    unpack_action_data->add_option("name", packed_action_data_name_string, localized("The name of the function that's called by this action"))->required();
    unpack_action_data->add_option("packed_action_data", packed_action_data_string, localized("The action data expressed as packed hex string"))->required();
    unpack_action_data->set_callback([&] {
-      EOS_ASSERT( packed_action_data_string.size() >= 2, transaction_type_exception, "No packed_action_data found" );
+      RSN_ASSERT( packed_action_data_string.size() >= 2, transaction_type_exception, "No packed_action_data found" );
       vector<char> packed_action_data_blob(packed_action_data_string.size()/2);
       fc::from_hex(packed_action_data_string, packed_action_data_blob.data(), packed_action_data_blob.size());
       fc::variant unpacked_action_data_json = bin_to_variant(name(packed_action_data_account_string), name(packed_action_data_name_string), packed_action_data_blob);
@@ -2610,7 +2610,7 @@ int main( int argc, char** argv ) {
             abi = fc::json::to_pretty_string(abi_d);
       }
       catch(chain::missing_chain_api_plugin_exception&) {
-         //see if this is an old nodeos that doesn't support get_raw_code_and_abi
+         //see if this is an old aos that doesn't support get_raw_code_and_abi
          const auto old_result = call(get_code_func, fc::mutable_variant_object("account_name", accountName)("code_as_wasm",code_as_wasm));
          code_hash = old_result["code_hash"].as_string();
          if(code_as_wasm) {
@@ -2782,7 +2782,7 @@ int main( int argc, char** argv ) {
       public_key_type public_key;
       try {
          public_key = public_key_type(public_key_str);
-      } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", public_key_str))
+      } RSN_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", public_key_str))
       auto arg = fc::mutable_variant_object( "public_key", public_key);
       std::cout << fc::json::to_pretty_string(call(get_key_accounts_func, arg)) << std::endl;
    });
@@ -2924,14 +2924,14 @@ int main( int argc, char** argv ) {
          uint64_t skip_seq;
          try {
             skip_seq = boost::lexical_cast<uint64_t>(skip_seq_str);
-         } EOS_RETHROW_EXCEPTIONS(chain_type_exception, "Invalid Skip Seq: ${skip_seq}", ("skip_seq", skip_seq_str))
+         } RSN_RETHROW_EXCEPTIONS(chain_type_exception, "Invalid Skip Seq: ${skip_seq}", ("skip_seq", skip_seq_str))
          if (num_seq_str.empty()) {
             arg = fc::mutable_variant_object( "account_name", account_name)("skip_seq", skip_seq);
          } else {
             uint64_t num_seq;
             try {
                num_seq = boost::lexical_cast<uint64_t>(num_seq_str);
-            } EOS_RETHROW_EXCEPTIONS(chain_type_exception, "Invalid Num Seq: ${num_seq}", ("num_seq", num_seq_str))
+            } RSN_RETHROW_EXCEPTIONS(chain_type_exception, "Invalid Num Seq: ${num_seq}", ("num_seq", num_seq_str))
             arg = fc::mutable_variant_object( "account_name", account_name)("skip_seq", skip_seq_str)("num_seq", num_seq);
          }
       }
@@ -3030,7 +3030,7 @@ int main( int argc, char** argv ) {
 
         std::cerr << localized(("Reading WASM from " + wasmPath + "...").c_str()) << std::endl;
         fc::read_file_contents(wasmPath, wasm);
-        EOS_ASSERT( !wasm.empty(), wasm_file_not_found, "no wasm file found ${f}", ("f", wasmPath) );
+        RSN_ASSERT( !wasm.empty(), wasm_file_not_found, "no wasm file found ${f}", ("f", wasmPath) );
 
         const string binary_wasm_header("\x00\x61\x73\x6d\x01\x00\x00\x00", 8);
         if(wasm.compare(0, 8, binary_wasm_header))
@@ -3082,7 +3082,7 @@ int main( int argc, char** argv ) {
            abiPath = (cpath / abiPath).generic_string();
         }
 
-        EOS_ASSERT( fc::exists( abiPath ), abi_file_not_found, "no abi file found ${f}", ("f", abiPath)  );
+        RSN_ASSERT( fc::exists( abiPath ), abi_file_not_found, "no abi file found ${f}", ("f", abiPath)  );
 
         abi_bytes = fc::raw::pack(fc::json::from_file(abiPath).as<abi_def>());
       } else {
@@ -3096,7 +3096,7 @@ int main( int argc, char** argv ) {
       if (!duplicate) {
          try {
             actions.emplace_back( create_setabi(name(account), abi_bytes) );
-         } EOS_RETHROW_EXCEPTIONS(abi_type_exception,  "Fail to parse ABI JSON")
+         } RSN_RETHROW_EXCEPTIONS(abi_type_exception,  "Fail to parse ABI JSON")
          if ( shouldSend ) {
             std::cerr << localized("Setting ABI...") << std::endl;
             send_actions(std::move(actions), packed_transaction::compression_type::zlib);
@@ -3110,7 +3110,7 @@ int main( int argc, char** argv ) {
    add_standard_transaction_options(codeSubcommand, "account@active");
    add_standard_transaction_options(abiSubcommand, "account@active");
    contractSubcommand->set_callback([&] {
-      if(!contract_clear) EOS_ASSERT( !contractPath.empty(), contract_exception, " contract-dir is null ", ("f", contractPath) );
+      if(!contract_clear) RSN_ASSERT( !contractPath.empty(), contract_exception, " contract-dir is null ", ("f", contractPath) );
       shouldSend = false;
       set_code_callback();
       set_abi_callback();
@@ -3213,8 +3213,8 @@ int main( int argc, char** argv ) {
    createWallet->add_option("-f,--file", password_file, localized("Name of file to write wallet password output to. (Must be set, unless \"--to-console\" is passed"));
    createWallet->add_flag( "--to-console", print_console, localized("Print password to console."));
    createWallet->set_callback([&wallet_name, &password_file, &print_console] {
-      EOSC_ASSERT( !password_file.empty() ^ print_console, "ERROR: Either indicate a file using \"--file\" or pass \"--to-console\"" );
-      EOSC_ASSERT( password_file.empty() || !std::ofstream(password_file.c_str()).fail(), "ERROR: Failed to create file in specified path" );
+      RSNC_ASSERT( !password_file.empty() ^ print_console, "ERROR: Either indicate a file using \"--file\" or pass \"--to-console\"" );
+      RSNC_ASSERT( password_file.empty() || !std::ofstream(password_file.c_str()).fail(), "ERROR: Failed to create file in specified path" );
 
       const auto& v = call(wallet_url, wallet_create, wallet_name);
       std::cout << localized("Creating wallet: ${wallet_name}", ("wallet_name", wallet_name)) << std::endl;
@@ -3284,7 +3284,7 @@ int main( int argc, char** argv ) {
       try {
          wallet_key = private_key_type( wallet_key_str );
       } catch (...) {
-         EOS_THROW(private_key_type_exception, "Invalid private key")
+         RSN_THROW(private_key_type_exception, "Invalid private key")
       }
       public_key_type pubkey = wallet_key.get_public_key();
 
@@ -3305,7 +3305,7 @@ int main( int argc, char** argv ) {
       try {
          pubkey = public_key_type( wallet_rm_key_str );
       } catch (...) {
-         EOS_THROW(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", wallet_rm_key_str))
+         RSN_THROW(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", wallet_rm_key_str))
       }
       fc::variants vs = {fc::variant(wallet_name), fc::variant(wallet_pw), fc::variant(wallet_rm_key_str)};
       call(wallet_url, wallet_remove_key, vs);
@@ -3350,10 +3350,10 @@ int main( int argc, char** argv ) {
       std::cout << fc::json::to_pretty_string(v) << std::endl;
    });
 
-   auto stopKeosd = wallet->add_subcommand("stop", localized("Stop ${k}.", ("k", key_store_executable_name)), false);
-   stopKeosd->set_callback([] {
-      const auto& v = call(wallet_url, keosd_stop);
-      if ( !v.is_object() || v.get_object().size() != 0 ) { //on success keosd responds with empty object
+   auto stopAwalletd = wallet->add_subcommand("stop", localized("Stop ${k}.", ("k", key_store_executable_name)), false);
+   stopAwalletd->set_callback([] {
+      const auto& v = call(wallet_url, awalletd_stop);
+      if ( !v.is_object() || v.get_object().size() != 0 ) { //on success awalletd responds with empty object
          std::cerr << fc::json::to_pretty_string(v) << std::endl;
       } else {
          std::cout << "OK" << std::endl;
@@ -3378,12 +3378,12 @@ int main( int argc, char** argv ) {
 
    sign->set_callback([&] {
 
-      EOSC_ASSERT( str_private_key.empty() || str_public_key.empty(), "ERROR: Either -k/--private-key or --public-key or none of them can be set" );
+      RSNC_ASSERT( str_private_key.empty() || str_public_key.empty(), "ERROR: Either -k/--private-key or --public-key or none of them can be set" );
       fc::variant trx_var = json_from_file_or_string(trx_json_to_sign);
       signed_transaction trx;
       try {
         trx = trx_var.as<signed_transaction>();
-      } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Invalid transaction format: '${data}'",
+      } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Invalid transaction format: '${data}'",
                                ("data", fc::json::to_string(trx_var, fc::time_point::maximum())))
 
       fc::optional<chain_id_type> chain_id;
@@ -3400,7 +3400,7 @@ int main( int argc, char** argv ) {
          public_key_type pub_key;
          try {
             pub_key = public_key_type(str_public_key);
-         } EOS_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", str_public_key))
+         } RSN_RETHROW_EXCEPTIONS(public_key_type_exception, "Invalid public key: ${public_key}", ("public_key", str_public_key))
          fc::variant keys_var(flat_set<public_key_type>{ pub_key });
          sign_transaction(trx, keys_var, *chain_id);
       } else {
@@ -3413,7 +3413,7 @@ int main( int argc, char** argv ) {
          private_key_type priv_key;
          try {
             priv_key = private_key_type(str_private_key);
-         } EOS_RETHROW_EXCEPTIONS(private_key_type_exception, "Invalid private key")
+         } RSN_RETHROW_EXCEPTIONS(private_key_type_exception, "Invalid private key")
          trx.sign(priv_key, *chain_id);
       }
 
@@ -3525,26 +3525,26 @@ int main( int argc, char** argv ) {
       transaction proposed_trx;
       try {
          proposed_trx = trx_var.as<transaction>();
-      } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Invalid transaction format: '${data}'",
+      } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Invalid transaction format: '${data}'",
                                ("data", fc::json::to_string(trx_var, fc::time_point::maximum())))
       bytes proposed_trx_serialized = variant_to_bin( name(proposed_contract), name(proposed_action), trx_var );
 
       vector<permission_level> reqperm;
       try {
          reqperm = requested_perm_var.as<vector<permission_level>>();
-      } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Wrong requested permissions format: '${data}'", ("data",requested_perm_var));
+      } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Wrong requested permissions format: '${data}'", ("data",requested_perm_var));
 
       vector<permission_level> trxperm;
       try {
          trxperm = transaction_perm_var.as<vector<permission_level>>();
-      } EOS_RETHROW_EXCEPTIONS(transaction_type_exception, "Wrong transaction permissions format: '${data}'", ("data",transaction_perm_var));
+      } RSN_RETHROW_EXCEPTIONS(transaction_type_exception, "Wrong transaction permissions format: '${data}'", ("data",transaction_perm_var));
 
       auto accountPermissions = get_account_permissions(tx_permission);
       if (accountPermissions.empty()) {
          if (!proposer.empty()) {
             accountPermissions = vector<permission_level>{{name(proposer), config::active_name}};
          } else {
-            EOS_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <proposer> or -p)");
+            RSN_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <proposer> or -p)");
          }
       }
       if (proposer.empty()) {
@@ -3589,7 +3589,7 @@ int main( int argc, char** argv ) {
          if (!proposer.empty()) {
             accountPermissions = vector<permission_level>{{name(proposer), config::active_name}};
          } else {
-            EOS_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <proposer> or -p)");
+            RSN_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <proposer> or -p)");
          }
       }
       if (proposer.empty()) {
@@ -3621,14 +3621,14 @@ int main( int argc, char** argv ) {
                                  ("table_key", "")
                                  ("lower_bound", name(proposal_name).to_uint64_t())
                                  ("upper_bound", name(proposal_name).to_uint64_t() + 1)
-                                 // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                                 // Change to name(proposal_name).value when cleos no longer needs to support nodeos versions older than 1.5.0
+                                 // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                                 // Change to name(proposal_name).value when arisecli no longer needs to support aos versions older than 1.5.0
                                  ("limit", 1)
                            );
       //std::cout << fc::json::to_pretty_string(result) << std::endl;
 
       const auto& rows1 = result1.get_object()["rows"].get_array();
-      // Condition in if statement below can simply be rows.empty() when cleos no longer needs to support nodeos versions older than 1.5.0
+      // Condition in if statement below can simply be rows.empty() when arisecli no longer needs to support aos versions older than 1.5.0
       if( rows1.empty() || rows1[0].get_object()["proposal_name"] != proposal_name ) {
          std::cerr << "Proposal not found" << std::endl;
          return;
@@ -3657,8 +3657,8 @@ int main( int argc, char** argv ) {
                                        ("table_key", "")
                                        ("lower_bound", name(proposal_name).to_uint64_t())
                                        ("upper_bound", name(proposal_name).to_uint64_t() + 1)
-                                       // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                                       // Change to name(proposal_name).value when cleos no longer needs to support nodeos versions older than 1.5.0
+                                       // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                                       // Change to name(proposal_name).value when arisecli no longer needs to support aos versions older than 1.5.0
                                        ("limit", 1)
                                  );
             rows2 = result2.get_object()["rows"].get_array();
@@ -3689,8 +3689,8 @@ int main( int argc, char** argv ) {
                                        ("table_key", "")
                                        ("lower_bound", name(proposal_name).to_uint64_t())
                                        ("upper_bound", name(proposal_name).to_uint64_t() + 1)
-                                       // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                                       // Change to name(proposal_name).value when cleos no longer needs to support nodeos versions older than 1.5.0
+                                       // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                                       // Change to name(proposal_name).value when arisecli no longer needs to support aos versions older than 1.5.0
                                        ("limit", 1)
                                  );
             const auto& rows3 = result3.get_object()["rows"].get_array();
@@ -3722,8 +3722,8 @@ int main( int argc, char** argv ) {
                                           ("table_key", "")
                                           ("lower_bound", a.first.to_uint64_t())
                                           ("upper_bound", a.first.to_uint64_t() + 1)
-                                          // Less than ideal upper_bound usage preserved so cleos can still work with old buggy nodeos versions
-                                          // Change to name(proposal_name).value when cleos no longer needs to support nodeos versions older than 1.5.0
+                                          // Less than ideal upper_bound usage preserved so arisecli can still work with old buggy aos versions
+                                          // Change to name(proposal_name).value when arisecli no longer needs to support aos versions older than 1.5.0
                                           ("limit", 1)
                                     );
                const auto& rows4 = result4.get_object()["rows"].get_array();
@@ -3865,7 +3865,7 @@ int main( int argc, char** argv ) {
          if (!canceler.empty()) {
             accountPermissions = vector<permission_level>{{name(canceler), config::active_name}};
          } else {
-            EOS_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <canceler> or -p)");
+            RSN_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <canceler> or -p)");
          }
       }
       if (canceler.empty()) {
@@ -3893,7 +3893,7 @@ int main( int argc, char** argv ) {
          if (!executer.empty()) {
             accountPermissions = vector<permission_level>{{name(executer), config::active_name}};
          } else {
-            EOS_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <executer> or -p)");
+            RSN_THROW(missing_auth_exception, "Authority is not provided (either by multisig parameter <executer> or -p)");
          }
       }
       if (executer.empty()) {
@@ -3971,27 +3971,27 @@ int main( int argc, char** argv ) {
 
    auto cancelDelay = canceldelay_subcommand(system);
 
-   auto rex = system->add_subcommand("rex", localized("Actions related to REX (the resource exchange)"));
-   rex->require_subcommand();
-   auto deposit        = deposit_subcommand(rex);
-   auto withdraw       = withdraw_subcommand(rex);
-   auto buyrex         = buyrex_subcommand(rex);
-   auto lendrex        = lendrex_subcommand(rex);
-   auto unstaketorex   = unstaketorex_subcommand(rex);
-   auto sellrex        = sellrex_subcommand(rex);
-   auto cancelrexorder = cancelrexorder_subcommand(rex);
-   auto mvtosavings    = mvtosavings_subcommand(rex);
-   auto mvfromsavings  = mvfrsavings_subcommand(rex);
-   auto rentcpu        = rentcpu_subcommand(rex);
-   auto rentnet        = rentnet_subcommand(rex);
-   auto fundcpuloan    = fundcpuloan_subcommand(rex);
-   auto fundnetloan    = fundnetloan_subcommand(rex);
-   auto defcpuloan     = defcpuloan_subcommand(rex);
-   auto defnetloan     = defnetloan_subcommand(rex);
-   auto consolidate    = consolidate_subcommand(rex);
-   auto updaterex      = updaterex_subcommand(rex);
-   auto rexexec        = rexexec_subcommand(rex);
-   auto closerex       = closerex_subcommand(rex);
+   auto bex = system->add_subcommand("bex", localized("Actions related to BEX (the resource exchange)"));
+   bex->require_subcommand();
+   auto deposit        = deposit_subcommand(bex);
+   auto withdraw       = withdraw_subcommand(bex);
+   auto buyrex         = buyrex_subcommand(bex);
+   auto lendrex        = lendrex_subcommand(bex);
+   auto unstaketorex   = unstaketorex_subcommand(bex);
+   auto sellrex        = sellrex_subcommand(bex);
+   auto cancelrexorder = cancelrexorder_subcommand(bex);
+   auto mvtosavings    = mvtosavings_subcommand(bex);
+   auto mvfromsavings  = mvfrsavings_subcommand(bex);
+   auto rentcpu        = rentcpu_subcommand(bex);
+   auto rentnet        = rentnet_subcommand(bex);
+   auto fundcpuloan    = fundcpuloan_subcommand(bex);
+   auto fundnetloan    = fundnetloan_subcommand(bex);
+   auto defcpuloan     = defcpuloan_subcommand(bex);
+   auto defnetloan     = defnetloan_subcommand(bex);
+   auto consolidate    = consolidate_subcommand(bex);
+   auto updaterex      = updaterex_subcommand(bex);
+   auto rexexec        = rexexec_subcommand(bex);
+   auto closerex       = closerex_subcommand(bex);
 
 
    try {

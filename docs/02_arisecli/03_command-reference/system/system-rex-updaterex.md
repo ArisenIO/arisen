@@ -1,5 +1,5 @@
 ## Positionals
-- `owner` _TEXT_ - Account which owns the REX fund (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -18,5 +18,5 @@
 
 
 ```sh
-cleos system rex updaterex accountname1
+arisecli system bex updaterex accountname1
 ```

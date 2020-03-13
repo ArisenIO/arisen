@@ -4,7 +4,7 @@ Query infomation of a block
 
 ## Before you begin
 
-* Install the currently supported version of `cleos`
+* Install the currently supported version of `arisecli`
 
 * Understand the following:
   * What is a block
@@ -14,5 +14,5 @@ Query infomation of a block
 Execute the command below:
 
 ```sh
-cleos get block BLOCK_NUMBER
+arisecli get block BLOCK_NUMBER
 ```

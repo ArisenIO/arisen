@@ -16,7 +16,7 @@ import subprocess
 import shutil
 
 ###############################################################
-# nodeos_irreversible_mode_test
+# aos_irreversible_mode_test
 #
 # Many smaller tests centered around irreversible mode
 #
@@ -35,7 +35,7 @@ Utils.Debug = args.v
 killAll=args.clean_run
 dumpErrorDetails=args.dump_error_details
 dontKill=args.leave_running
-killEosInstances=not dontKill
+killRsnInstances=not dontKill
 killWallet=not dontKill
 keepLogs=args.keep_logs
 
@@ -159,7 +159,7 @@ try:
       pnodes=1,
       useBiosBootFile=False,
       topo="mesh",
-      specificExtraNodeosArgs={
+      specificExtraAosArgs={
          0:"--enable-stale-production",
          4:"--read-mode irreversible",
          6:"--read-mode irreversible",
@@ -393,7 +393,7 @@ try:
 
    testSuccessful = all(testResults)
 finally:
-   TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEosInstances, killWallet, keepLogs, killAll, dumpErrorDetails)
+   TestHelper.shutdown(cluster, walletMgr, testSuccessful, killRsnInstances, killWallet, keepLogs, killAll, dumpErrorDetails)
    # Print test result
    for msg in testResultMsgs: Print(msg)
 

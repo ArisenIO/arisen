@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# arisen-tn_roll is used to have all of the instances of the EOS daemon on a host brought down
+# arisen-tn_roll is used to have all of the instances of the RSN daemon on a host brought down
 # so that the underlying executable image file (the "text file") can be replaced. Then
 # all instances are restarted.
 # usage: arisen-tn_roll.sh [arglist]
@@ -39,7 +39,7 @@ fi
 
 prog=""
 RD=""
-for p in eosd arisend nodeos; do
+for p in rsnd arisend aos; do
     prog=$p
     RD=bin
     if [ -f $RD/$prog ]; then
@@ -55,11 +55,11 @@ for p in eosd arisend nodeos; do
 done
 
 if [ \( -z "$prog" \) -o \( -z "$RD" \) ]; then
-    echo unable to locate binary for eosd or arisend or nodeos
+    echo unable to locate binary for rsnd or arisend or aos
     exit 1
 fi
 
-SDIR=staging/eos
+SDIR=staging/rsn
 if [ ! -e $SDIR/$RD/$prog ]; then
     echo $SDIR/$RD/$prog does not exist
     exit 1

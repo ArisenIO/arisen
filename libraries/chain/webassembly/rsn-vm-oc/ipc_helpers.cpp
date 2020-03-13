@@ -1,22 +1,22 @@
-#include <arisen/chain/webassembly/eos-vm-oc/ipc_helpers.hpp>
+#include <arisen/chain/webassembly/rsn-vm-oc/ipc_helpers.hpp>
 #include <arisen/chain/exceptions.hpp>
 
-namespace arisen { namespace chain { namespace eosvmoc {
+namespace arisen { namespace chain { namespace rsnvmoc {
 
 static constexpr size_t max_message_size = 8192;
 static constexpr size_t max_num_fds = 4;
 
-std::tuple<bool, eosvmoc_message, std::vector<wrapped_fd>> read_message_with_fds(boost::asio::local::datagram_protocol::socket& s) {
+std::tuple<bool, rsnvmoc_message, std::vector<wrapped_fd>> read_message_with_fds(boost::asio::local::datagram_protocol::socket& s) {
    return read_message_with_fds(s.native_handle());
 }
 
-std::tuple<bool, eosvmoc_message, std::vector<wrapped_fd>> read_message_with_fds(int fd) {
+std::tuple<bool, rsnvmoc_message, std::vector<wrapped_fd>> read_message_with_fds(int fd) {
    char buff[max_message_size];
 
    struct msghdr msg = {};
    struct cmsghdr* cmsg;
 
-   eosvmoc_message message;
+   rsnvmoc_message message;
    std::vector<wrapped_fd> fds;
 
    struct iovec io = {
@@ -61,11 +61,11 @@ std::tuple<bool, eosvmoc_message, std::vector<wrapped_fd>> read_message_with_fds
    return {true, message, std::move(fds)};
 }
 
-bool write_message_with_fds(boost::asio::local::datagram_protocol::socket& s, const eosvmoc_message& message, const std::vector<wrapped_fd>& fds) {
+bool write_message_with_fds(boost::asio::local::datagram_protocol::socket& s, const rsnvmoc_message& message, const std::vector<wrapped_fd>& fds) {
    return write_message_with_fds(s.native_handle(), message, fds);
 }
 
-bool write_message_with_fds(int fd_to_send_to, const eosvmoc_message& message, const std::vector<wrapped_fd>& fds) {
+bool write_message_with_fds(int fd_to_send_to, const rsnvmoc_message& message, const std::vector<wrapped_fd>& fds) {
    struct msghdr msg = {};
    struct cmsghdr* cmsg;
 

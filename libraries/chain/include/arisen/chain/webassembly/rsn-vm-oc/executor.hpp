@@ -13,7 +13,7 @@ namespace arisen { namespace chain {
 
 class apply_context;
 
-namespace eosvmoc {
+namespace rsnvmoc {
 
 class code_cache_base;
 class memory;

@@ -105,7 +105,7 @@ auto smatch_to_variant(const std::smatch& smatch) {
 };
 
 const char* error_advice_name_type_exception = R"=====(Name should be less than 13 characters and only contains the following symbol .12345abcdefghijklmnopqrstuvwxyz)=====";
-const char* error_advice_public_key_type_exception = R"=====(Public key should be encoded in base58 and starts with EOS prefix)=====";
+const char* error_advice_public_key_type_exception = R"=====(Public key should be encoded in base58 and starts with RSN prefix)=====";
 const char* error_advice_private_key_type_exception = R"=====(Private key should be encoded in base58 WIF)=====";
 const char* error_advice_authority_type_exception = R"=====(Ensure that your authority JSON is valid follows the following format!
 {
@@ -113,7 +113,7 @@ const char* error_advice_authority_type_exception = R"=====(Ensure that your aut
   "keys": [         <keys must be alpha-numerically sorted by their string representations and unique>
     ...
     {
-      "key":        <STRING: EOS.IO compatible Public Key>,
+      "key":        <STRING: RSN.IO compatible Public Key>,
       "weight":     <INTEGER [1-2^16): a signature from this key contributes this to satisfying the threshold>
     }
     ...
@@ -268,7 +268,7 @@ const std::map<int64_t, std::string> error_advice = {
 namespace arisen { namespace client { namespace help {
 
 bool print_recognized_errors(const fc::exception& e, const bool verbose_errors) {
-   // eos recognized error code is from 3000000
+   // rsn recognized error code is from 3000000
    // refer to libraries/chain/include/arisen/chain/exceptions.hpp
    if (e.code() >= chain_exception::code_value) {
       std::string advice, explanation, stack_trace;

@@ -35,29 +35,29 @@ For each bash script we have, there should be a separate .sh file within `REPO_R
 echo "[Darwin]"
 ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh 
 echo "[Ubuntu 16]"
-docker run --rm -ti -v $HOME/BLOCKONE/eos.bats:/eos ubuntu:16.04 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker run --rm -ti -v $HOME/BLOCKONE/rsn.bats:/rsn ubuntu:16.04 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[Ubuntu 18]"
-docker run --rm -ti -v $HOME/BLOCKONE/eos.bats:/eos ubuntu:18.04 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker run --rm -ti -v $HOME/BLOCKONE/rsn.bats:/rsn ubuntu:18.04 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[AmazonLinux 2]"
-docker run --rm -ti -v $HOME/BLOCKONE/eos.bats:/eos amazonlinux:2 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker run --rm -ti -v $HOME/BLOCKONE/rsn.bats:/rsn amazonlinux:2 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[Centos 7]"
-docker run --rm -ti -v $HOME/BLOCKONE/eos.bats:/eos centos:7 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker run --rm -ti -v $HOME/BLOCKONE/rsn.bats:/rsn centos:7 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 ```
 
 ### **Faster testing:** Start docker first, then run (keeping installed packages + faster tests)
 ```
-docker run --name ubuntu16 -d -t -v $HOME/BLOCKONE/eos.bats:/eos ubuntu:16.04 /bin/bash
-docker run --name ubuntu18 -d -t -v $HOME/BLOCKONE/eos.bats:/eos ubuntu:18.04 /bin/bash
-docker run --name amazonlinux2 -d -t -v $HOME/BLOCKONE/eos.bats:/eos amazonlinux:2 /bin/bash
-docker run --name centos7 -d -t -v $HOME/BLOCKONE/eos.bats:/eos centos:7 /bin/bash
+docker run --name ubuntu16 -d -t -v $HOME/BLOCKONE/rsn.bats:/rsn ubuntu:16.04 /bin/bash
+docker run --name ubuntu18 -d -t -v $HOME/BLOCKONE/rsn.bats:/rsn ubuntu:18.04 /bin/bash
+docker run --name amazonlinux2 -d -t -v $HOME/BLOCKONE/rsn.bats:/rsn amazonlinux:2 /bin/bash
+docker run --name centos7 -d -t -v $HOME/BLOCKONE/rsn.bats:/rsn centos:7 /bin/bash
 echo "[Ubuntu 16]"
-docker exec -it ubuntu16 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker exec -it ubuntu16 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[Ubuntu 18]"
-docker exec -it ubuntu18 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker exec -it ubuntu18 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[AmazonLinux 2]"
-docker exec -it amazonlinux2 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker exec -it amazonlinux2 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 echo "[Centos 7]"
-docker exec -it centos7 bash -c "cd /eos && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
+docker exec -it centos7 bash -c "cd /rsn && ./tests/bash-bats/bats-core/bin/bats -t tests/bash-bats/*.sh"
 ```
 
-- You'll need to modify the volume path ($HOME/BLOCKONE/eos.bats) to indicate where you've got eos cloned locally.
+- You'll need to modify the volume path ($HOME/BLOCKONE/rsn.bats) to indicate where you've got rsn cloned locally.

@@ -60,7 +60,7 @@ datastream<ST>& history_serialize_container(datastream<ST>& ds, const chainbase:
                                             const std::vector<std::shared_ptr<T>>& v) {
    fc::raw::pack(ds, unsigned_int(v.size()));
    for (auto& x : v) {
-      EOS_ASSERT(!!x, arisen::chain::plugin_exception, "null inside container");
+      RSN_ASSERT(!!x, arisen::chain::plugin_exception, "null inside container");
       ds << make_history_serial_wrapper(db, *x);
    }
    return ds;
@@ -403,7 +403,7 @@ datastream<ST>& operator<<(datastream<ST>& ds, const history_serial_wrapper<aris
       if (!parent) {
          auto& undo = index.stack().back();
          auto  it   = undo.removed_values.find(obj.obj.parent);
-         EOS_ASSERT(it != undo.removed_values.end(), arisen::chain::plugin_exception,
+         RSN_ASSERT(it != undo.removed_values.end(), arisen::chain::plugin_exception,
                     "can not find parent of permission_object");
          parent = &it->second;
       }
@@ -430,7 +430,7 @@ datastream<ST>& operator<<(datastream<ST>&                                      
 template <typename ST>
 datastream<ST>& operator<<(datastream<ST>&                                                                      ds,
                            const history_serial_wrapper<arisen::chain::resource_limits::resource_limits_object>& obj) {
-   EOS_ASSERT(!obj.obj.pending, arisen::chain::plugin_exception,
+   RSN_ASSERT(!obj.obj.pending, arisen::chain::plugin_exception,
               "accepted_block sent while resource_limits_object in pending state");
    fc::raw::pack(ds, fc::unsigned_int(0));
    fc::raw::pack(ds, as_type<uint64_t>(obj.obj.owner.to_uint64_t()));

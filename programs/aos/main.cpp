@@ -82,13 +82,13 @@ enum return_codes {
 int main(int argc, char** argv)
 {
    try {
-      app().set_version(arisen::nodeos::config::version);
+      app().set_version(arisen::aos::config::version);
       app().set_version_string(arisen::version::version_client());
       app().set_full_version_string(arisen::version::version_full());
 
       auto root = fc::app_path();
-      app().set_default_data_dir(root / "arisen" / nodeos::config::node_executable_name / "data" );
-      app().set_default_config_dir(root / "arisen" / nodeos::config::node_executable_name / "config" );
+      app().set_default_data_dir(root / "arisen" / aos::config::node_executable_name / "data" );
+      app().set_default_config_dir(root / "arisen" / aos::config::node_executable_name / "config" );
       http_plugin::set_defaults({
          .default_unix_socket_path = "",
          .default_http_port = 8888
@@ -102,10 +102,10 @@ int main(int argc, char** argv)
       }
       initialize_logging();
       ilog( "${name} version ${ver} ${fv}",
-            ("name", nodeos::config::node_executable_name)("ver", app().version_string())
+            ("name", aos::config::node_executable_name)("ver", app().version_string())
             ("fv", app().version_string() == app().full_version_string() ? "" : app().full_version_string()) );
-      ilog("${name} using configuration file ${c}", ("name", nodeos::config::node_executable_name)("c", app().full_config_file_path().string()));
-      ilog("${name} data directory is ${d}", ("name", nodeos::config::node_executable_name)("d", app().data_dir().string()));
+      ilog("${name} using configuration file ${c}", ("name", aos::config::node_executable_name)("c", app().full_config_file_path().string()));
+      ilog("${name} data directory is ${d}", ("name", aos::config::node_executable_name)("d", app().data_dir().string()));
       app().startup();
       app().set_thread_priority_max();
       app().exec();
@@ -146,6 +146,6 @@ int main(int argc, char** argv)
       return OTHER_FAIL;
    }
 
-   ilog("${name} successfully exiting", ("name", nodeos::config::node_executable_name));
+   ilog("${name} successfully exiting", ("name", aos::config::node_executable_name));
    return SUCCESS;
 }

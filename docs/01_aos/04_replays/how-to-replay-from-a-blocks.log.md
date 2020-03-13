@@ -17,10 +17,10 @@ data/blocks/reversible  | shared_memory.meta | Remove
 You can use `blocks-dir = "blocks"` in the `config.ini` file, or use the `--blocks-dir` command line option, to specify where to find the `blocks.log` file to replay.
 
 ```sh
-nodeos --replay-blockchain \
+aos --replay-blockchain \
   -e -p arisen \
   --plugin arisen::producer_plugin  \
   --plugin arisen::chain_api_plugin \
   --plugin arisen::http_plugin      \
-  >> nodeos.log 2>&1 &
+  >> aos.log 2>&1 &
 ```

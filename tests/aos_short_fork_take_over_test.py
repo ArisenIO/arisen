@@ -15,9 +15,9 @@ import re
 import signal
 
 ###############################################################
-# nodeos_short_fork_take_over_test
+# aos_short_fork_take_over_test
 #
-# Similar scenario to nodeos_forked_chain_test, except that there are only 3 producers and, after the "bridge" node is
+# Similar scenario to aos_forked_chain_test, except that there are only 3 producers and, after the "bridge" node is
 # shutdown, the second producer node is also shutdown.  Then the "bridge" node is re-started followed by the producer
 # node being started.
 #
@@ -133,11 +133,11 @@ walletPort=args.wallet_port
 
 walletMgr=WalletMgr(True, port=walletPort)
 testSuccessful=False
-killEosInstances=not dontKill
+killRsnInstances=not dontKill
 killWallet=not dontKill
 
-WalletdName=Utils.EosWalletName
-ClientName="cleos"
+WalletdName=Utils.RsnWalletName
+ClientName="arisecli"
 
 try:
     TestHelper.printSystemInfo("BEGIN")
@@ -146,9 +146,9 @@ try:
     cluster.killall(allInstances=killAll)
     cluster.cleanup()
     Print("Stand up cluster")
-    specificExtraNodeosArgs={}
+    specificExtraAosArgs={}
     # producer nodes will be mapped to 0 through totalProducerNodes-1, so the number totalProducerNodes will be the non-producing node
-    specificExtraNodeosArgs[totalProducerNodes]="--plugin arisen::test_control_api_plugin"
+    specificExtraAosArgs[totalProducerNodes]="--plugin arisen::test_control_api_plugin"
 
 
     # ***   setup topogrophy   ***
@@ -157,9 +157,9 @@ try:
     # and the only connection between those 2 groups is through the bridge node
     if cluster.launch(prodCount=2, topo="bridge", pnodes=totalProducerNodes,
                       totalNodes=totalNodes, totalProducers=totalProducers,
-                      useBiosBootFile=False, specificExtraNodeosArgs=specificExtraNodeosArgs, onlySetProds=True) is False:
+                      useBiosBootFile=False, specificExtraAosArgs=specificExtraAosArgs, onlySetProds=True) is False:
         Utils.cmdError("launcher")
-        Utils.errorExit("Failed to stand up eos cluster.")
+        Utils.errorExit("Failed to stand up rsn cluster.")
     Print("Validating system accounts after bootstrap")
     cluster.validateAccounts(None)
 
@@ -407,7 +407,7 @@ try:
 
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, walletMgr, testSuccessful=testSuccessful, killEosInstances=killEosInstances, killWallet=killWallet, keepLogs=keepLogs, cleanRun=killAll, dumpErrorDetails=dumpErrorDetails)
+    TestHelper.shutdown(cluster, walletMgr, testSuccessful=testSuccessful, killRsnInstances=killRsnInstances, killWallet=killWallet, keepLogs=keepLogs, cleanRun=killAll, dumpErrorDetails=dumpErrorDetails)
 
     if not testSuccessful:
         Print(Utils.FileDivider)
