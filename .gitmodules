@@ -4,12 +4,6 @@
 [submodule "libraries/appbase"]
 	path = libraries/appbase
 	url = https://github.com/ArisenIO/appbase.git
-[submodule "arisen-wasm-spec-tests"]
-	path = arisen-wasm-spec-tests
-	url = https://github.com/ArisenIO/arisen-wasm-spec-tests.git
-[submodule "libraries/rsn-vm"]
-	path = libraries/rsn-vm
-	url = https://github.com/ArisenIO/rsn-vm.git
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/ArisenIO/fc.git
@@ -22,3 +16,9 @@
 [submodule "libraries/yubihsm"]
 	path = libraries/yubihsm
 	url = https://github.com/ArisenIO/yubihsm-shell.git
+[submodule "arisen-wasm-spec-tests"]
+	path = arisen-wasm-spec-tests
+	url = https://github.com/ArisenIO/arisen-wasm-spec-tests.git
+[submodule "libraries/rsn-vm"]
+	path = libraries/rsn-vm
+	url = https://github.com/ArisenIO/rsn-vm.git
