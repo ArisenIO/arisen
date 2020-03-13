@@ -1,20 +1,20 @@
 #include <algorithm>
-#include <eosio/chain/apply_context.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/transaction_context.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/wasm_interface.hpp>
-#include <eosio/chain/generated_transaction_object.hpp>
-#include <eosio/chain/authorization_manager.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/chain/account_object.hpp>
-#include <eosio/chain/code_object.hpp>
-#include <eosio/chain/global_property_object.hpp>
+#include <arisen/chain/apply_context.hpp>
+#include <arisen/chain/controller.hpp>
+#include <arisen/chain/transaction_context.hpp>
+#include <arisen/chain/exceptions.hpp>
+#include <arisen/chain/wasm_interface.hpp>
+#include <arisen/chain/generated_transaction_object.hpp>
+#include <arisen/chain/authorization_manager.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/chain/account_object.hpp>
+#include <arisen/chain/code_object.hpp>
+#include <arisen/chain/global_property_object.hpp>
 #include <boost/container/flat_set.hpp>
 
 using boost::container::flat_set;
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
 static inline void print_debug(account_name receiver, const action_trace& ar) {
    if (!ar.console.empty()) {
@@ -122,7 +122,7 @@ void apply_context::exec_one()
    // Note: It should not be possible for receiver_account to be invalidated because:
    //    * a pointer to an object in a chainbase index is not invalidated if other objects in that index are modified, removed, or added;
    //    * a pointer to an object in a chainbase index is not invalidated if the fields of that object are modified;
-   //    * and, the *receiver_account object itself cannot be removed because accounts cannot be deleted in EOSIO.
+   //    * and, the *receiver_account object itself cannot be removed because accounts cannot be deleted in ARISEN.
 
    r.global_sequence  = next_global_sequence();
    r.recv_sequence    = next_recv_sequence( *receiver_account );
@@ -294,7 +294,7 @@ void apply_context::execute_inline( action&& a ) {
          control.get_authorization_manager()
                 .check_authorization( {a},
                                       {},
-                                      {{receiver, config::eosio_code_name}},
+                                      {{receiver, config::arisen_code_name}},
                                       control.pending_block_time() - trx_context.published,
                                       std::bind(&transaction_context::checktime, &this->trx_context),
                                       false,
@@ -442,7 +442,7 @@ void apply_context::schedule_deferred_transaction( const uint128_t& sender_id, a
          control.get_authorization_manager()
                 .check_authorization( trx.actions,
                                       {},
-                                      {{receiver, config::eosio_code_name}},
+                                      {{receiver, config::arisen_code_name}},
                                       delay,
                                       std::bind(&transaction_context::checktime, &this->trx_context),
                                       false
@@ -887,4 +887,4 @@ action_name apply_context::get_sender() const {
    return action_name();
 }
 
-} } /// eosio::chain
+} } /// arisen::chain

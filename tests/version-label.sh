@@ -11,13 +11,13 @@ if [[ "$BUILDKITE_TAG" == '' || "$BUILDKITE" != 'true' ]]; then
 fi
 echo 'Tagged build detected, running test.'
 # orient ourselves
-[[ "$EOSIO_ROOT" == '' ]] && EOSIO_ROOT=$(echo $(pwd)/ | grep -ioe '.*/eos/')
-[[ "$EOSIO_ROOT" == '' ]] && EOSIO_ROOT=$(echo $(pwd)/ | grep -ioe '.*/EOSIO/eosio/')
-[[ "$EOSIO_ROOT" == '' ]] && EOSIO_ROOT=$(echo $(pwd)/ | grep -ioe '.*/build/' | sed 's,/build/,,')
-echo "Using EOSIO_ROOT=\"$EOSIO_ROOT\"."
+[[ "$ARISEN_ROOT" == '' ]] && ARISEN_ROOT=$(echo $(pwd)/ | grep -ioe '.*/eos/')
+[[ "$ARISEN_ROOT" == '' ]] && ARISEN_ROOT=$(echo $(pwd)/ | grep -ioe '.*/ARISEN/arisen/')
+[[ "$ARISEN_ROOT" == '' ]] && ARISEN_ROOT=$(echo $(pwd)/ | grep -ioe '.*/build/' | sed 's,/build/,,')
+echo "Using ARISEN_ROOT=\"$ARISEN_ROOT\"."
 # determine expected value
-CMAKE_CACHE="$EOSIO_ROOT/build/CMakeCache.txt"
-CMAKE_LISTS="$EOSIO_ROOT/CMakeLists.txt"
+CMAKE_CACHE="$ARISEN_ROOT/build/CMakeCache.txt"
+CMAKE_LISTS="$ARISEN_ROOT/CMakeLists.txt"
 if [[ -f "$CMAKE_CACHE" && $(cat "$CMAKE_CACHE" | grep -c 'DOXY_EOS_VERSION') > 0 ]]; then
     echo "Parsing \"$CMAKE_CACHE\"..."
     EXPECTED="v$(cat "$CMAKE_CACHE" | grep 'DOXY_EOS_VERSION' | cut -d '=' -f 2)"
@@ -40,7 +40,7 @@ fi
 if [[ "$EXPECTED" == '' ]]; then
     echo 'ERROR: Could not determine expected value for version label!'
     set +e
-    echo "EOSIO_ROOT=\"$EOSIO_ROOT\""
+    echo "ARISEN_ROOT=\"$ARISEN_ROOT\""
     echo "CMAKE_CACHE=\"$CMAKE_CACHE\""
     echo "CMAKE_LISTS=\"$CMAKE_LISTS\""
     echo ''
@@ -54,15 +54,15 @@ if [[ "$EXPECTED" == '' ]]; then
     cat "$CMAKE_CACHE" | grep "DOXY_EOS_VERSION"
     echo '$ pwd'
     pwd
-    echo '$ ls -la "$EOSIO_ROOT"'
-    ls -la "$EOSIO_ROOT"
-    echo '$ ls -la "$EOSIO_ROOT/build"'
-    ls -la "$EOSIO_ROOT/build"
+    echo '$ ls -la "$ARISEN_ROOT"'
+    ls -la "$ARISEN_ROOT"
+    echo '$ ls -la "$ARISEN_ROOT/build"'
+    ls -la "$ARISEN_ROOT/build"
     exit 1
 fi
 echo "Expecting \"$EXPECTED\"..."
 # get nodeos version
-ACTUAL=$($EOSIO_ROOT/build/bin/nodeos --version) || : # nodeos currently returns -1 for --version
+ACTUAL=$($ARISEN_ROOT/build/bin/nodeos --version) || : # nodeos currently returns -1 for --version
 # test
 if [[ "$EXPECTED" == "$ACTUAL" ]]; then
     echo 'Passed with \"$ACTUAL\".'

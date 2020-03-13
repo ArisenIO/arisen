@@ -1,8 +1,8 @@
-#include <eosio/chain/block_header_state.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/block_header_state.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <limits>
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
    namespace detail {
       bool is_builtin_activated( const protocol_feature_activation_set_ptr& pfa,
@@ -472,4 +472,4 @@ namespace eosio { namespace chain {
    }
 
 
-} } /// namespace eosio::chain
+} } /// namespace arisen::chain

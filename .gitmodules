@@ -1,37 +1,24 @@
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
-	url = https://github.com/ArisenIO/chainbase
-        ignore = dirty
+	url = https://github.com/ArisenIO/chainbase.git
 [submodule "libraries/appbase"]
 	path = libraries/appbase
-	url = https://github.com/ArisenIO/appbase
-        ignore = dirty
-[submodule "contracts/musl/upstream"]
-	path = contracts/musl/upstream
-	url = https://github.com/ArisenIO/musl.git
-	branch = arisen
-	update = merge
-[submodule "contracts/libc++/upstream"]
-	path = contracts/libc++/upstream
-	url = https://github.com/ArisenIO/libcxx.git
-	branch = arisen
-[submodule "externals/binaryen"]
-	path = externals/binaryen
-	url = https://github.com/ArisenIO/binaryen
-	branch = arisen
-	update = merge
-[submodule "libraries/softfloat"]
-	path = libraries/softfloat
-	url = https://github.com/ArisenIO/berkeley-softfloat-3
-[submodule "externals/magic_get"]
-	path = externals/magic_get
-	url = https://github.com/ArisenIO/magic_get
+	url = https://github.com/ArisenIO/appbase.git
+[submodule "arisen-wasm-spec-tests"]
+	path = arisen-wasm-spec-tests
+	url = https://github.com/ArisenIO/arisen-wasm-spec-tests.git
+[submodule "libraries/rsn-vm"]
+	path = libraries/rsn-vm
+	url = https://github.com/ArisenIO/rsn-vm.git
 [submodule "libraries/fc"]
 	path = libraries/fc
-	url = https://github.com/ArisenIO/fc
-	branch = master
-	update = merge
+	url = https://github.com/ArisenIO/fc.git
+[submodule "libraries/softfloat"]
+	path = libraries/softfloat
+	url = https://github.com/ArisenIO/berkeley-softfloat-3.git
 [submodule "libraries/wabt"]
 	path = libraries/wabt
-	url = http://github.com/ArisenIO/wabt
-	branch = arisen
+	url = https://github.com/ArisenIO/wabt.git
+[submodule "libraries/yubihsm"]
+	path = libraries/yubihsm
+	url = https://github.com/ArisenIO/yubihsm-shell.git

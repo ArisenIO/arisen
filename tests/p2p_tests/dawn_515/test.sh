@@ -41,10 +41,10 @@ EOF
 
 read -d '' configbios << EOF
 p2p-server-address = localhost:9876
-plugin = eosio::producer_plugin
-plugin = eosio::chain_api_plugin
-plugin = eosio::net_plugin
-plugin = eosio::history_api_plugin
+plugin = arisen::producer_plugin
+plugin = arisen::chain_api_plugin
+plugin = arisen::net_plugin
+plugin = arisen::history_api_plugin
 http-server-address = 127.0.0.1:8888
 blocks-dir = blocks
 p2p-listen-endpoint = 0.0.0.0:9876
@@ -54,7 +54,7 @@ send-whole-blocks = true
 readonly = 0
 p2p-max-nodes-per-host = 10
 enable-stale-production = true
-producer-name = eosio
+producer-name = arisen
 EOF
 
 read -d '' config00 << EOF
@@ -66,7 +66,7 @@ p2p-listen-endpoint = 0.0.0.0:9877
 p2p-server-address = localhost:9877
 allowed-connection = any
 p2p-peer-address = localhost:9876
-plugin = eosio::chain_api_plugin
+plugin = arisen::chain_api_plugin
 EOF
 
 read -d '' config01 << EOF
@@ -78,7 +78,7 @@ p2p-listen-endpoint = 0.0.0.0:9878
 p2p-server-address = localhost:9877
 allowed-connection = any
 p2p-peer-address = localhost:9876
-plugin = eosio::chain_api_plugin
+plugin = arisen::chain_api_plugin
 EOF
 
 read -d '' loggingbios << EOF
@@ -244,32 +244,32 @@ read -d '' logging01 << EOF
 EOF
 
 rm -rf staging
-rm -rf etc/eosio/node_*
+rm -rf etc/arisen/node_*
 rm -rf var/lib
 cName=config.ini
 lName=logging.json
 gName=genesis.json
 
-path=staging/etc/eosio/node_bios
+path=staging/etc/arisen/node_bios
 mkdir -p $path
 echo "$configbios" > $path/$cName
 echo "$loggingbios" > $path/$lName
 echo "$genesis" > $path/$gName
 
-path=staging/etc/eosio/node_00
+path=staging/etc/arisen/node_00
 mkdir -p $path
 echo "$config00" > $path/$cName
 echo "$logging00" > $path/$lName
 echo "$genesis" > $path/$gName
 
-path=staging/etc/eosio/node_01
+path=staging/etc/arisen/node_01
 mkdir -p $path
 echo "$config01" > $path/$cName
 echo "$logging01" > $path/$lName
 echo "$genesis" > $path/$gName
 
 
-programs/eosio-launcher/eosio-launcher -p $pnodes -n $total_nodes --nogen -d $delay
+programs/arisen-launcher/arisen-launcher -p $pnodes -n $total_nodes --nogen -d $delay
 
 sleep 5
 res=$(grep "reason = duplicate" var/lib/node_*/stderr.txt | wc -l)
@@ -298,8 +298,8 @@ if [ $ret  -eq 0 ]; then
     echo SUCCESS
 fi
 
-programs/eosio-launcher/eosio-launcher -k 15
+programs/arisen-launcher/arisen-launcher -k 15
 rm -rf staging
 rm -rf var/lib/node_*
-rm -rf etc/eosio/node_*
+rm -rf etc/arisen/node_*
 exit $ret

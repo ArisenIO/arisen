@@ -1,11 +1,11 @@
-#include <eosio/producer_plugin/producer_plugin.hpp>
-#include <eosio/chain/plugin_interface.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/generated_transaction_object.hpp>
-#include <eosio/chain/snapshot.hpp>
-#include <eosio/chain/transaction_object.hpp>
-#include <eosio/chain/thread_utils.hpp>
-#include <eosio/chain/unapplied_transaction_queue.hpp>
+#include <arisen/producer_plugin/producer_plugin.hpp>
+#include <arisen/chain/plugin_interface.hpp>
+#include <arisen/chain/global_property_object.hpp>
+#include <arisen/chain/generated_transaction_object.hpp>
+#include <arisen/chain/snapshot.hpp>
+#include <arisen/chain/transaction_object.hpp>
+#include <arisen/chain/thread_utils.hpp>
+#include <arisen/chain/unapplied_transaction_queue.hpp>
 
 #include <fc/io/json.hpp>
 #include <fc/log/logger_config.hpp>
@@ -70,12 +70,12 @@ fc::logger _log;
 const fc::string trx_trace_logger_name("transaction_tracing");
 fc::logger _trx_trace_log;
 
-namespace eosio {
+namespace arisen {
 
 static appbase::abstract_plugin& _producer_plugin = app().register_plugin<producer_plugin>();
 
-using namespace eosio::chain;
-using namespace eosio::chain::plugin_interface;
+using namespace arisen::chain;
+using namespace arisen::chain::plugin_interface;
 
 namespace {
    bool failure_is_subjective(const fc::exception& e, bool deadline_is_subjective) {
@@ -600,13 +600,13 @@ class producer_plugin_impl : public std::enable_shared_from_this<producer_plugin
 
 };
 
-void new_chain_banner(const eosio::chain::controller& db)
+void new_chain_banner(const arisen::chain::controller& db)
 {
    std::cerr << "\n"
       "*******************************\n"
       "*                             *\n"
       "*   ------ NEW CHAIN ------   *\n"
-      "*   -  Welcome to EOSIO!  -   *\n"
+      "*   -  Welcome to ARISEN!  -   *\n"
       "*   -----------------------   *\n"
       "*                             *\n"
       "*******************************\n"
@@ -653,10 +653,10 @@ void producer_plugin::set_program_options(
                 default_priv_key.get_public_key().to_string() + "=KEY:" + default_priv_key.to_string()),
           "Key=Value pairs in the form <public-key>=<provider-spec>\n"
           "Where:\n"
-          "   <public-key>    \tis a string form of a vaild EOSIO public key\n\n"
+          "   <public-key>    \tis a string form of a vaild ARISEN public key\n\n"
           "   <provider-spec> \tis a string in the form <provider-type>:<data>\n\n"
           "   <provider-type> \tis KEY, or KEOSD\n\n"
-          "   KEY:<data>      \tis a string form of a valid EOSIO private key which maps to the provided public key\n\n"
+          "   KEY:<data>      \tis a string form of a valid ARISEN private key which maps to the provided public key\n\n"
           "   KEOSD:<data>    \tis the URL where keosd is available and the approptiate wallet(s) are unlocked")
          ("keosd-provider-timeout", boost::program_options::value<int32_t>()->default_value(5),
           "Limits the maximum time (in milliseconds) that is allowed for sending blocks to a keosd provider for signing")
@@ -718,7 +718,7 @@ T dejsonify(const string& s) {
 if( options.count(op_name) ) { \
    const std::vector<std::string>& ops = options[op_name].as<std::vector<std::string>>(); \
    for( const auto& v : ops ) { \
-      container.emplace( eosio::chain::name( v ) ); \
+      container.emplace( arisen::chain::name( v ) ); \
    } \
 }
 
@@ -2053,4 +2053,4 @@ void producer_plugin_impl::produce_block() {
 
 }
 
-} // namespace eosio
+} // namespace arisen

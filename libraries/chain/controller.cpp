@@ -1,30 +1,30 @@
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/transaction_context.hpp>
+#include <arisen/chain/controller.hpp>
+#include <arisen/chain/transaction_context.hpp>
 
-#include <eosio/chain/block_log.hpp>
-#include <eosio/chain/fork_database.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/block_log.hpp>
+#include <arisen/chain/fork_database.hpp>
+#include <arisen/chain/exceptions.hpp>
 
-#include <eosio/chain/account_object.hpp>
-#include <eosio/chain/code_object.hpp>
-#include <eosio/chain/block_summary_object.hpp>
-#include <eosio/chain/eosio_contract.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/protocol_state_object.hpp>
-#include <eosio/chain/contract_table_objects.hpp>
-#include <eosio/chain/generated_transaction_object.hpp>
-#include <eosio/chain/transaction_object.hpp>
-#include <eosio/chain/reversible_block_object.hpp>
-#include <eosio/chain/genesis_intrinsics.hpp>
-#include <eosio/chain/whitelisted_intrinsics.hpp>
-#include <eosio/chain/database_header_object.hpp>
+#include <arisen/chain/account_object.hpp>
+#include <arisen/chain/code_object.hpp>
+#include <arisen/chain/block_summary_object.hpp>
+#include <arisen/chain/arisen_contract.hpp>
+#include <arisen/chain/global_property_object.hpp>
+#include <arisen/chain/protocol_state_object.hpp>
+#include <arisen/chain/contract_table_objects.hpp>
+#include <arisen/chain/generated_transaction_object.hpp>
+#include <arisen/chain/transaction_object.hpp>
+#include <arisen/chain/reversible_block_object.hpp>
+#include <arisen/chain/genesis_intrinsics.hpp>
+#include <arisen/chain/whitelisted_intrinsics.hpp>
+#include <arisen/chain/database_header_object.hpp>
 
-#include <eosio/chain/protocol_feature_manager.hpp>
-#include <eosio/chain/authorization_manager.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/chain/chain_snapshot.hpp>
-#include <eosio/chain/thread_utils.hpp>
-#include <eosio/chain/platform_timer.hpp>
+#include <arisen/chain/protocol_feature_manager.hpp>
+#include <arisen/chain/authorization_manager.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/chain/chain_snapshot.hpp>
+#include <arisen/chain/thread_utils.hpp>
+#include <arisen/chain/platform_timer.hpp>
 
 #include <chainbase/chainbase.hpp>
 #include <fc/io/json.hpp>
@@ -34,7 +34,7 @@
 
 #include <new>
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
 using resource_limits::resource_limits_manager;
 
@@ -245,7 +245,7 @@ struct controller_impl {
    uint32_t                       snapshot_head_block = 0;
    named_thread_pool              thread_pool;
    platform_timer                 timer;
-#if defined(EOSIO_EOS_VM_RUNTIME_ENABLED) || defined(EOSIO_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
    vm::wasm_allocator                 wasm_alloc;
 #endif
 
@@ -337,20 +337,20 @@ struct controller_impl {
    set_apply_handler( account_name(#receiver), account_name(#contract), action_name(#action), \
                       &BOOST_PP_CAT(apply_, BOOST_PP_CAT(contract, BOOST_PP_CAT(_,action) ) ) )
 
-   SET_APP_HANDLER( eosio, eosio, newaccount );
-   SET_APP_HANDLER( eosio, eosio, setcode );
-   SET_APP_HANDLER( eosio, eosio, setabi );
-   SET_APP_HANDLER( eosio, eosio, updateauth );
-   SET_APP_HANDLER( eosio, eosio, deleteauth );
-   SET_APP_HANDLER( eosio, eosio, linkauth );
-   SET_APP_HANDLER( eosio, eosio, unlinkauth );
+   SET_APP_HANDLER( arisen, arisen, newaccount );
+   SET_APP_HANDLER( arisen, arisen, setcode );
+   SET_APP_HANDLER( arisen, arisen, setabi );
+   SET_APP_HANDLER( arisen, arisen, updateauth );
+   SET_APP_HANDLER( arisen, arisen, deleteauth );
+   SET_APP_HANDLER( arisen, arisen, linkauth );
+   SET_APP_HANDLER( arisen, arisen, unlinkauth );
 /*
-   SET_APP_HANDLER( eosio, eosio, postrecovery );
-   SET_APP_HANDLER( eosio, eosio, passrecovery );
-   SET_APP_HANDLER( eosio, eosio, vetorecovery );
+   SET_APP_HANDLER( arisen, arisen, postrecovery );
+   SET_APP_HANDLER( arisen, arisen, passrecovery );
+   SET_APP_HANDLER( arisen, arisen, vetorecovery );
 */
 
-   SET_APP_HANDLER( eosio, eosio, canceldelay );
+   SET_APP_HANDLER( arisen, arisen, canceldelay );
    }
 
    /**
@@ -1002,10 +1002,10 @@ struct controller_impl {
          a.creation_date = initial_timestamp;
 
          if( name == config::system_account_name ) {
-            // The initial eosio ABI value affects consensus; see  https://github.com/EOSIO/eos/issues/7794
+            // The initial arisen ABI value affects consensus; see  https://github.com/ARISEN/eos/issues/7794
             // TODO: This doesn't charge RAM; a fix requires a consensus upgrade.
-            a.abi.resize(sizeof(eosio_abi_bin));
-            memcpy(a.abi.data(), eosio_abi_bin, sizeof(eosio_abi_bin));
+            a.abi.resize(sizeof(arisen_abi_bin));
+            memcpy(a.abi.data(), arisen_abi_bin, sizeof(arisen_abi_bin));
          }
       });
       db.create<account_metadata_object>([&](auto & a) {
@@ -3233,7 +3233,7 @@ bool controller::all_subjective_mitigations_disabled()const {
    return my->conf.disable_all_subjective_mitigations;
 }
 
-#if defined(EOSIO_EOS_VM_RUNTIME_ENABLED) || defined(EOSIO_EOS_VM_JIT_RUNTIME_ENABLED)
+#if defined(ARISEN_EOS_VM_RUNTIME_ENABLED) || defined(ARISEN_EOS_VM_JIT_RUNTIME_ENABLED)
 vm::wasm_allocator& controller::get_wasm_allocator() {
    return my->wasm_alloc;
 }
@@ -3343,4 +3343,4 @@ void controller_impl::on_activation<builtin_protocol_feature_t::wtmsig_block_sig
 
 /// End of protocol feature activation handlers
 
-} } /// eosio::chain
+} } /// arisen::chain

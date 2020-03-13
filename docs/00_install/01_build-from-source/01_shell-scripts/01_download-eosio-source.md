@@ -1,12 +1,12 @@
 ---
-content_title: Download EOSIO Source
+content_title: Download ARISEN Source
 ---
 
-To download the EOSIO source code, clone the `eos` repo and its submodules. It is adviced to create a home `eosio` folder first and download all the EOSIO related software there:
+To download the ARISEN source code, clone the `eos` repo and its submodules. It is adviced to create a home `arisen` folder first and download all the ARISEN related software there:
 
 ```sh
-mkdir -p ~/eosio && cd ~/eosio
-git clone --recursive https://github.com/EOSIO/eos
+mkdir -p ~/arisen && cd ~/arisen
+git clone --recursive https://github.com/ARISEN/eos
 ```
 
 ## Update Submodules
@@ -14,7 +14,7 @@ git clone --recursive https://github.com/EOSIO/eos
 If a repository is cloned without the `--recursive` flag, the submodules *must* be updated before starting the build process:
 
 ```sh
-cd ~/eosio/eos
+cd ~/arisen/eos
 git submodule update --init --recursive
 ```
 
@@ -28,4 +28,4 @@ git pull --recurse-submodules
 ```
 
 [[info | What's Next?]]
-| [Build EOSIO binaries](02_build-eosio-binaries.md)
+| [Build ARISEN binaries](02_build-arisen-binaries.md)

@@ -1,9 +1,9 @@
-#include <eosio/http_client_plugin/http_client_plugin.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/http_client_plugin/http_client_plugin.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 
-namespace eosio {
+namespace arisen {
 
 http_client_plugin::http_client_plugin():my(new http_client()){}
 http_client_plugin::~http_client_plugin(){}

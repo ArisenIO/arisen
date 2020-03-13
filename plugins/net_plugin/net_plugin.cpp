@@ -1,14 +1,14 @@
-#include <eosio/chain/types.hpp>
+#include <arisen/chain/types.hpp>
 
-#include <eosio/net_plugin/net_plugin.hpp>
-#include <eosio/net_plugin/protocol.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/block.hpp>
-#include <eosio/chain/plugin_interface.hpp>
-#include <eosio/chain/thread_utils.hpp>
-#include <eosio/producer_plugin/producer_plugin.hpp>
-#include <eosio/chain/contract_types.hpp>
+#include <arisen/net_plugin/net_plugin.hpp>
+#include <arisen/net_plugin/protocol.hpp>
+#include <arisen/chain/controller.hpp>
+#include <arisen/chain/exceptions.hpp>
+#include <arisen/chain/block.hpp>
+#include <arisen/chain/plugin_interface.hpp>
+#include <arisen/chain/thread_utils.hpp>
+#include <arisen/producer_plugin/producer_plugin.hpp>
+#include <arisen/chain/contract_types.hpp>
 
 #include <fc/network/message_buffer.hpp>
 #include <fc/network/ip.hpp>
@@ -27,9 +27,9 @@
 #include <atomic>
 #include <shared_mutex>
 
-using namespace eosio::chain::plugin_interface;
+using namespace arisen::chain::plugin_interface;
 
-namespace eosio {
+namespace arisen {
    static appbase::abstract_plugin& _net_plugin = app().register_plugin<net_plugin>();
 
    using std::vector;
@@ -41,8 +41,8 @@ namespace eosio {
 
    using fc::time_point;
    using fc::time_point_sec;
-   using eosio::chain::transaction_id_type;
-   using eosio::chain::sha256_less;
+   using arisen::chain::transaction_id_type;
+   using arisen::chain::sha256_less;
 
    class connection;
 
@@ -100,23 +100,23 @@ namespace eosio {
    struct by_block_id;
 
    typedef multi_index_container<
-      eosio::peer_block_state,
+      arisen::peer_block_state,
       indexed_by<
          ordered_unique< tag<by_id>,
                composite_key< peer_block_state,
-                     member<peer_block_state, uint32_t, &eosio::peer_block_state::connection_id>,
-                     member<peer_block_state, block_id_type, &eosio::peer_block_state::id>
+                     member<peer_block_state, uint32_t, &arisen::peer_block_state::connection_id>,
+                     member<peer_block_state, block_id_type, &arisen::peer_block_state::id>
                >,
                composite_key_compare< std::less<uint32_t>, sha256_less >
          >,
          ordered_non_unique< tag<by_block_id>,
                composite_key< peer_block_state,
-                     member<peer_block_state, block_id_type, &eosio::peer_block_state::id>,
-                     member<peer_block_state, bool, &eosio::peer_block_state::have_block>
+                     member<peer_block_state, block_id_type, &arisen::peer_block_state::id>,
+                     member<peer_block_state, bool, &arisen::peer_block_state::have_block>
                >,
                composite_key_compare< sha256_less, std::greater<bool> >
          >,
-         ordered_non_unique< tag<by_block_num>, member<eosio::peer_block_state, uint32_t, &eosio::peer_block_state::block_num > >
+         ordered_non_unique< tag<by_block_num>, member<arisen::peer_block_state, uint32_t, &arisen::peer_block_state::block_num > >
       >
       > peer_block_state_index;
 
@@ -245,7 +245,7 @@ namespace eosio {
       fc::sha256                            node_id;
       string                                user_agent_name;
 
-      eosio::db_read_mode                   db_read_mode = eosio::db_read_mode::SPECULATIVE;
+      arisen::db_read_mode                   db_read_mode = arisen::db_read_mode::SPECULATIVE;
       chain_plugin*                         chain_plug = nullptr;
       producer_plugin*                      producer_plug = nullptr;
       bool                                  use_socket_read_watermark = false;
@@ -270,7 +270,7 @@ namespace eosio {
       channels::irreversible_block::channel_type::handle       incoming_irreversible_block_subscription;
 
       uint16_t                                  thread_pool_size = 2;
-      optional<eosio::chain::named_thread_pool> thread_pool;
+      optional<arisen::chain::named_thread_pool> thread_pool;
 
    private:
       mutable std::mutex            chain_info_mtx; // protects chain_*

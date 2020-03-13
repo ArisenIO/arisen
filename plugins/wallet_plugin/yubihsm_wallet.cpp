@@ -1,7 +1,7 @@
 #include <appbase/application.hpp>
 
-#include <eosio/wallet_plugin/yubihsm_wallet.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/wallet_plugin/yubihsm_wallet.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <yubihsm.h>
 
 #include <fc/crypto/openssl.hpp>
@@ -11,7 +11,7 @@
 #include <boost/asio/posix/stream_descriptor.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
 
-namespace eosio { namespace wallet {
+namespace arisen { namespace wallet {
 
 using namespace fc::crypto::r1;
 

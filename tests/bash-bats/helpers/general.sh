@@ -6,7 +6,7 @@ export DRYRUN=true
 export VERBOSE=true
 export BATS_RUN=true
 export CURRENT_USER=$(whoami)
-export HOME="$BATS_TMPDIR/bats-eosio-user-home" # Ensure $HOME is available for all scripts
+export HOME="$BATS_TMPDIR/bats-arisen-user-home" # Ensure $HOME is available for all scripts
 export CURRENT_WORKING_DIR=$(pwd)
 load helpers/functions
 

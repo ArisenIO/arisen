@@ -1,9 +1,9 @@
 #include <sstream>
 
-#include <eosio/chain/block_log.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/snapshot.hpp>
-#include <eosio/testing/tester.hpp>
+#include <arisen/chain/block_log.hpp>
+#include <arisen/chain/global_property_object.hpp>
+#include <arisen/chain/snapshot.hpp>
+#include <arisen/testing/tester.hpp>
 
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>
@@ -11,7 +11,7 @@
 #include <contracts.hpp>
 #include <snapshots.hpp>
 
-using namespace eosio;
+using namespace arisen;
 using namespace testing;
 using namespace chain;
 

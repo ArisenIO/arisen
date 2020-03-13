@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/exceptions.hpp>
 
 #include <fc/log/logger.hpp>
 

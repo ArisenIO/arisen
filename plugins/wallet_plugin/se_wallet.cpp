@@ -1,6 +1,6 @@
-#include <eosio/wallet_plugin/se_wallet.hpp>
-#include <eosio/wallet_plugin/macos_user_auth.h>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/wallet_plugin/se_wallet.hpp>
+#include <arisen/wallet_plugin/macos_user_auth.h>
+#include <arisen/chain/exceptions.hpp>
 
 #include <fc/crypto/openssl.hpp>
 
@@ -11,7 +11,7 @@
 
 #include <future>
 
-namespace eosio { namespace wallet {
+namespace arisen { namespace wallet {
 
 using namespace fc::crypto::r1;
 
@@ -234,7 +234,7 @@ struct se_wallet_impl {
 
       promise<bool> prom;
       future<bool> fut = prom.get_future();
-      macos_user_auth(auth_callback, &prom, CFSTR("remove a key from your EOSIO wallet"));
+      macos_user_auth(auth_callback, &prom, CFSTR("remove a key from your ARISEN wallet"));
       if(!fut.get())
          FC_THROW_EXCEPTION(chain::wallet_invalid_password_exception, "Local user authentication failed");
 
@@ -332,7 +332,7 @@ void se_wallet::lock() {
 void se_wallet::unlock(string password) {
    promise<bool> prom;
    future<bool> fut = prom.get_future();
-   macos_user_auth(detail::auth_callback, &prom, CFSTR("unlock your EOSIO wallet"));
+   macos_user_auth(detail::auth_callback, &prom, CFSTR("unlock your ARISEN wallet"));
    if(!fut.get())
       FC_THROW_EXCEPTION(chain::wallet_invalid_password_exception, "Local user authentication failed");
    my->locked = false;

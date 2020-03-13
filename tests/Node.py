@@ -868,7 +868,7 @@ class Node(object):
     def getAccountEosBalanceStr(self, scope):
         """Returns SYS currency0000 account balance from cleos get table command. Returned balance is string following syntax "98.0311 SYS". """
         assert isinstance(scope, str)
-        amount=self.getTableAccountBalance("eosio.token", scope)
+        amount=self.getTableAccountBalance("arisen.token", scope)
         if Utils.Debug: Utils.Print("getNodeAccountEosBalance %s %s" % (scope, amount))
         assert isinstance(amount, str)
         return amount
@@ -1544,19 +1544,19 @@ class Node(object):
                     break
         return protocolFeatures
 
-    # Require PREACTIVATE_FEATURE to be activated and require eosio.bios with preactivate_feature
+    # Require PREACTIVATE_FEATURE to be activated and require arisen.bios with preactivate_feature
     def preactivateProtocolFeatures(self, featureDigests:list):
         for digest in featureDigests:
             Utils.Print("push activate action with digest {}".format(digest))
             data="{{\"feature_digest\":{}}}".format(digest)
-            opts="--permission eosio@active"
-            trans=self.pushMessage("eosio", "activate", data, opts)
+            opts="--permission arisen@active"
+            trans=self.pushMessage("arisen", "activate", data, opts)
             if trans is None or not trans[0]:
                 Utils.Print("ERROR: Failed to preactive digest {}".format(digest))
                 return None
         self.waitForHeadToAdvance()
 
-    # Require PREACTIVATE_FEATURE to be activated and require eosio.bios with preactivate_feature
+    # Require PREACTIVATE_FEATURE to be activated and require arisen.bios with preactivate_feature
     def preactivateAllBuiltinProtocolFeature(self):
         allBuiltinProtocolFeatureDigests = self.getAllBuiltinFeatureDigestsToPreactivate()
         self.preactivateProtocolFeatures(allBuiltinProtocolFeatureDigests)

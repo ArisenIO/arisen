@@ -1,9 +1,9 @@
 #pragma once
 
-#include <eosio/testing/tester.hpp>
+#include <arisen/testing/tester.hpp>
 
-using namespace eosio::chain;
-using namespace eosio::testing;
+using namespace arisen::chain;
+using namespace arisen::testing;
 
 private_key_type get_private_key( name keyname, string role );
 

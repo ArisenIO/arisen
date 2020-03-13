@@ -1,10 +1,10 @@
 #include <appbase/application.hpp>
-#include <eosio/wallet_plugin/wallet_manager.hpp>
-#include <eosio/wallet_plugin/wallet.hpp>
-#include <eosio/wallet_plugin/se_wallet.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/wallet_plugin/wallet_manager.hpp>
+#include <arisen/wallet_plugin/wallet.hpp>
+#include <arisen/wallet_plugin/se_wallet.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <boost/algorithm/string.hpp>
-namespace eosio {
+namespace arisen {
 namespace wallet {
 
 constexpr auto file_ext = ".wallet";
@@ -308,4 +308,4 @@ void wallet_manager::initialize_lock() {
 }
 
 } // namespace wallet
-} // namespace eosio
+} // namespace arisen

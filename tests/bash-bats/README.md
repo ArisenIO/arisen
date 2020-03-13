@@ -5,14 +5,14 @@ For each bash script we have, there should be a separate .sh file within `REPO_R
 ### Usage notes:
 
 - BATS requires that you install greadlink: `brew install coreutils`
-- DRYRUN=true is required for all tests and automatically enabled. You can use this when you're manually running eosio_build.sh (`DRYRUN=true VERBOSE=true ./scripts/eosio_build.sh`)
+- DRYRUN=true is required for all tests and automatically enabled. You can use this when you're manually running arisen_build.sh (`DRYRUN=true VERBOSE=true ./scripts/arisen_build.sh`)
 - execute-always gets around DRYRUN and runs stuff anyway (which installation uses this)
 - To run all tests: 
     ```
     $ ./tests/bash-bats/bats-core/bin/bats tests/bash-bats/*.sh
-      ✓ [eosio_build_darwin] > Testing -y/NONINTERACTIVE/PROCEED
-      ✓ [eosio_build_darwin] > Testing prompts
-      ✓ [eosio_build_darwin] > Testing executions
+      ✓ [arisen_build_darwin] > Testing -y/NONINTERACTIVE/PROCEED
+      ✓ [arisen_build_darwin] > Testing prompts
+      ✓ [arisen_build_darwin] > Testing executions
       ✓ [helpers] > execute > dryrun
       ✓ [helpers] > execute > verbose
       ✓ [uninstall] > Usage is visible with right interaction

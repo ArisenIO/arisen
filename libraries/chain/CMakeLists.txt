@@ -1,9 +1,9 @@
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/eosio/chain/core_symbol.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/eosio/chain/core_symbol.hpp)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/arisen/chain/core_symbol.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/arisen/chain/core_symbol.hpp)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/genesis_state_root_key.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/genesis_state_root_key.cpp)
 
-file(GLOB HEADERS "include/eosio/chain/*.hpp"
-                  "include/eosio/chain/webassembly/*.hpp"
-                  "${CMAKE_CURRENT_BINARY_DIR}/include/eosio/chain/core_symbol.hpp" )
+file(GLOB HEADERS "include/arisen/chain/*.hpp"
+                  "include/arisen/chain/webassembly/*.hpp"
+                  "${CMAKE_CURRENT_BINARY_DIR}/include/arisen/chain/core_symbol.hpp" )
 
 if(APPLE AND UNIX)
    set(PLATFORM_TIMER_IMPL platform_timer_macos.cpp)
@@ -16,7 +16,7 @@ else()
    endif()
 endif()
 
-if("eos-vm-oc" IN_LIST EOSIO_WASM_RUNTIMES)
+if("eos-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
    set(CHAIN_EOSVMOC_SOURCES webassembly/eos-vm-oc/code_cache.cpp
                              webassembly/eos-vm-oc/executor.cpp
                              webassembly/eos-vm-oc/memory.cpp
@@ -43,13 +43,13 @@ if("eos-vm-oc" IN_LIST EOSIO_WASM_RUNTIMES)
    option(EOSVMOC_ENABLE_DEVELOPER_OPTIONS "enable developer options for EOS VM OC" OFF)
 endif()
 
-if("eos-vm" IN_LIST EOSIO_WASM_RUNTIMES OR "eos-vm-jit" IN_LIST EOSIO_WASM_RUNTIMES)
+if("eos-vm" IN_LIST ARISEN_WASM_RUNTIMES OR "eos-vm-jit" IN_LIST ARISEN_WASM_RUNTIMES)
    set(CHAIN_EOSVM_SOURCES "webassembly/eos-vm.cpp")
    set(CHAIN_EOSVM_LIBRARIES eos-vm)
 endif()
 
 ## SORT .cpp by most likely to change / break compile
-add_library( eosio_chain
+add_library( arisen_chain
              merkle.cpp
              name.cpp
              transaction.cpp
@@ -63,9 +63,9 @@ add_library( eosio_chain
              resource_limits.cpp
              block_log.cpp
              transaction_context.cpp
-             eosio_contract.cpp
-             eosio_contract_abi.cpp
-             eosio_contract_abi_bin.cpp
+             arisen_contract.cpp
+             arisen_contract_abi.cpp
+             arisen_contract_abi_bin.cpp
              chain_config.cpp
              chain_id_type.cpp
              genesis_state.cpp
@@ -75,8 +75,8 @@ add_library( eosio_chain
 #             block_trace.cpp
               wast_to_wasm.cpp
               wasm_interface.cpp
-              wasm_eosio_validation.cpp
-              wasm_eosio_injection.cpp
+              wasm_arisen_validation.cpp
+              wasm_arisen_injection.cpp
               apply_context.cpp
               abi_serializer.cpp
               asset.cpp
@@ -104,10 +104,10 @@ add_library( eosio_chain
              ${HEADERS}
              )
 
-target_link_libraries( eosio_chain fc chainbase Logging IR WAST WASM Runtime
+target_link_libraries( arisen_chain fc chainbase Logging IR WAST WASM Runtime
                        softfloat builtins wabt ${CHAIN_EOSVM_LIBRARIES} ${LLVM_LIBS}
                      )
-target_include_directories( eosio_chain
+target_include_directories( arisen_chain
                             PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_BINARY_DIR}/include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/../wasm-jit/Include"
                                    "${CMAKE_CURRENT_SOURCE_DIR}/libraries/eos-vm/include"
@@ -115,31 +115,31 @@ target_include_directories( eosio_chain
                                    "${CMAKE_BINARY_DIR}/libraries/wabt"
                             )
 
-if("eos-vm-oc" IN_LIST EOSIO_WASM_RUNTIMES)
-   target_link_libraries(eosio_chain "-Wl,-wrap=main")
+if("eos-vm-oc" IN_LIST ARISEN_WASM_RUNTIMES)
+   target_link_libraries(arisen_chain "-Wl,-wrap=main")
 endif()
 
-foreach(RUNTIME ${EOSIO_WASM_RUNTIMES})
+foreach(RUNTIME ${ARISEN_WASM_RUNTIMES})
    string(TOUPPER "${RUNTIME}" RUNTIMEUC)
    string(REPLACE "-" "_" RUNTIMEUC ${RUNTIMEUC})
-   target_compile_definitions(eosio_chain PUBLIC "EOSIO_${RUNTIMEUC}_RUNTIME_ENABLED")
+   target_compile_definitions(arisen_chain PUBLIC "ARISEN_${RUNTIMEUC}_RUNTIME_ENABLED")
 endforeach()
 
 if(EOSVMOC_ENABLE_DEVELOPER_OPTIONS)
    message(WARNING "EOS VM OC Developer Options are enabled; these are NOT supported")
-   target_compile_definitions(eosio_chain PUBLIC EOSIO_EOS_VM_OC_DEVELOPER)
+   target_compile_definitions(arisen_chain PUBLIC ARISEN_EOS_VM_OC_DEVELOPER)
 endif()
 
-install( TARGETS eosio_chain
+install( TARGETS arisen_chain
    RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
    ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
 )
-install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/eosio/chain/
-      DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/eosio/chain
+install( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/arisen/chain/
+      DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/arisen/chain
       FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h" EXCLUDE
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/eosio/chain/core_symbol.hpp DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/eosio/chain)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/arisen/chain/core_symbol.hpp DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/arisen/chain)
 #if(MSVC)
 #  set_source_files_properties( db_init.cpp db_block.cpp database.cpp block_log.cpp PROPERTIES COMPILE_FLAGS "/bigobj" )
 #endif(MSVC)

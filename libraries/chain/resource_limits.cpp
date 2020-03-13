@@ -1,13 +1,13 @@
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/chain/resource_limits_private.hpp>
-#include <eosio/chain/transaction_metadata.hpp>
-#include <eosio/chain/transaction.hpp>
+#include <arisen/chain/exceptions.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/chain/resource_limits_private.hpp>
+#include <arisen/chain/transaction_metadata.hpp>
+#include <arisen/chain/transaction.hpp>
 #include <boost/tuple/tuple_io.hpp>
-#include <eosio/chain/database_utils.hpp>
+#include <arisen/chain/database_utils.hpp>
 #include <algorithm>
 
-namespace eosio { namespace chain { namespace resource_limits {
+namespace arisen { namespace chain { namespace resource_limits {
 
 using resource_index_set = index_set<
    resource_limits_index,
@@ -460,4 +460,4 @@ std::pair<account_resource_limit, bool> resource_limits_manager::get_account_net
    return {arl, greylisted};
 }
 
-} } } /// eosio::chain::resource_limits
+} } } /// arisen::chain::resource_limits
