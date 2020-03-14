@@ -1745,17 +1745,17 @@ struct withdraw_subcommand {
    }
 };
 
-struct buyrex_subcommand {
+struct buybex_subcommand {
    string from_str;
    string amount_str;
-   const name act_name{ N(buyrex) };
+   const name act_name{ N(buybex) };
 
-   buyrex_subcommand(CLI::App* actionRoot) {
-      auto buyrex = actionRoot->add_subcommand("buyrex", localized("Buy BEX using tokens in owner's BEX fund"));
-      buyrex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
-      buyrex->add_option("amount", amount_str, localized("Amount to be taken from BEX fund and used in buying BEX"))->required();
-      add_standard_transaction_options(buyrex, "from@active");
-      buyrex->set_callback([this] {
+   buybex_subcommand(CLI::App* actionRoot) {
+      auto buybex = actionRoot->add_subcommand("buybex", localized("Buy BEX using tokens in owner's BEX fund"));
+      buybex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
+      buybex->add_option("amount", amount_str, localized("Amount to be taken from BEX fund and used in buying BEX"))->required();
+      add_standard_transaction_options(buybex, "from@active");
+      buybex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("from",   from_str)
             ("amount", amount_str);
@@ -1765,18 +1765,18 @@ struct buyrex_subcommand {
    }
 };
 
-struct lendrex_subcommand {
+struct lendbex_subcommand {
    string from_str;
    string amount_str;
    const name act_name1{ N(deposit) };
-   const name act_name2{ N(buyrex) };
+   const name act_name2{ N(buybex) };
 
-   lendrex_subcommand(CLI::App* actionRoot) {
-      auto lendrex = actionRoot->add_subcommand("lendrex", localized("Deposit tokens to BEX fund and use the tokens to buy BEX"));
-      lendrex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
-      lendrex->add_option("amount", amount_str, localized("Amount of liquid tokens to be used in buying BEX"))->required();
-      add_standard_transaction_options(lendrex, "from@active");
-      lendrex->set_callback([this] {
+   lendbex_subcommand(CLI::App* actionRoot) {
+      auto lendbex = actionRoot->add_subcommand("lendbex", localized("Deposit tokens to BEX fund and use the tokens to buy BEX"));
+      lendbex->add_option("from",   from_str,   localized("Account buying BEX tokens"))->required();
+      lendbex->add_option("amount", amount_str, localized("Amount of liquid tokens to be used in buying BEX"))->required();
+      add_standard_transaction_options(lendbex, "from@active");
+      lendbex->set_callback([this] {
          fc::variant act_payload1 = fc::mutable_variant_object()
             ("owner",  from_str)
             ("amount", amount_str);
@@ -1790,21 +1790,21 @@ struct lendrex_subcommand {
    }
 };
 
-struct unstaketorex_subcommand {
+struct unstaketobex_subcommand {
    string owner_str;
    string receiver_str;
    string from_net_str;
    string from_cpu_str;
-   const name act_name{ N(unstaketorex) };
+   const name act_name{ N(unstaketobex) };
 
-   unstaketorex_subcommand(CLI::App* actionRoot) {
-      auto unstaketorex = actionRoot->add_subcommand("unstaketorex", localized("Buy BEX using staked tokens"));
-      unstaketorex->add_option("owner",    owner_str,    localized("Account buying BEX tokens"))->required();
-      unstaketorex->add_option("receiver", receiver_str, localized("Account that tokens have been staked to"))->required();
-      unstaketorex->add_option("from_net", from_net_str, localized("Amount to be unstaked from Net resources and used in BEX purchase"))->required();
-      unstaketorex->add_option("from_cpu", from_cpu_str, localized("Amount to be unstaked from CPU resources and used in BEX purchase"))->required();
-      add_standard_transaction_options(unstaketorex, "owner@active");
-      unstaketorex->set_callback([this] {
+   unstaketobex_subcommand(CLI::App* actionRoot) {
+      auto unstaketobex = actionRoot->add_subcommand("unstaketobex", localized("Buy BEX using staked tokens"));
+      unstaketobex->add_option("owner",    owner_str,    localized("Account buying BEX tokens"))->required();
+      unstaketobex->add_option("receiver", receiver_str, localized("Account that tokens have been staked to"))->required();
+      unstaketobex->add_option("from_net", from_net_str, localized("Amount to be unstaked from Net resources and used in BEX purchase"))->required();
+      unstaketobex->add_option("from_cpu", from_cpu_str, localized("Amount to be unstaked from CPU resources and used in BEX purchase"))->required();
+      add_standard_transaction_options(unstaketobex, "owner@active");
+      unstaketobex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("owner",    owner_str)
             ("receiver", receiver_str)
@@ -1816,35 +1816,35 @@ struct unstaketorex_subcommand {
    }
 };
 
-struct sellrex_subcommand {
+struct sellbex_subcommand {
    string from_str;
-   string rex_str;
-   const name act_name{ N(sellrex) };
+   string bex_str;
+   const name act_name{ N(sellbex) };
 
-   sellrex_subcommand(CLI::App* actionRoot) {
-      auto sellrex = actionRoot->add_subcommand("sellrex", localized("Sell BEX tokens"));
-      sellrex->add_option("from", from_str, localized("Account selling BEX tokens"))->required();
-      sellrex->add_option("bex",  rex_str,  localized("Amount of BEX tokens to be sold"))->required();
-      add_standard_transaction_options(sellrex, "from@active");
-      sellrex->set_callback([this] {
+   sellbex_subcommand(CLI::App* actionRoot) {
+      auto sellbex = actionRoot->add_subcommand("sellbex", localized("Sell BEX tokens"));
+      sellbex->add_option("from", from_str, localized("Account selling BEX tokens"))->required();
+      sellbex->add_option("bex",  bex_str,  localized("Amount of BEX tokens to be sold"))->required();
+      add_standard_transaction_options(sellbex, "from@active");
+      sellbex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("from", from_str)
-            ("bex",  rex_str);
+            ("bex",  bex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(from_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
    }
 };
 
-struct cancelrexorder_subcommand {
+struct cancelbexorder_subcommand {
    string owner_str;
-   const name act_name{ N(cnclrexorder) };
+   const name act_name{ N(cnclbexorder) };
 
-   cancelrexorder_subcommand(CLI::App* actionRoot) {
-      auto cancelrexorder = actionRoot->add_subcommand("cancelrexorder", localized("Cancel queued BEX sell order if one exists"));
-      cancelrexorder->add_option("owner", owner_str, localized("Owner account of sell order"))->required();
-      add_standard_transaction_options(cancelrexorder, "owner@active");
-      cancelrexorder->set_callback([this] {
+   cancelbexorder_subcommand(CLI::App* actionRoot) {
+      auto cancelbexorder = actionRoot->add_subcommand("cancelbexorder", localized("Cancel queued BEX sell order if one exists"));
+      cancelbexorder->add_option("owner", owner_str, localized("Owner account of sell order"))->required();
+      add_standard_transaction_options(cancelbexorder, "owner@active");
+      cancelbexorder->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
@@ -1998,18 +1998,18 @@ struct defnetloan_subcommand {
 
 struct mvtosavings_subcommand {
    string owner_str;
-   string rex_str;
+   string bex_str;
    const name act_name{ N(mvtosavings) };
 
    mvtosavings_subcommand(CLI::App* actionRoot) {
       auto mvtosavings = actionRoot->add_subcommand("mvtosavings", localized("Move BEX tokens to savings bucket"));
       mvtosavings->add_option("owner", owner_str, localized("BEX owner"))->required();
-      mvtosavings->add_option("bex",   rex_str,   localized("Amount of BEX to be moved to savings bucket"))->required();
+      mvtosavings->add_option("bex",   bex_str,   localized("Amount of BEX to be moved to savings bucket"))->required();
       add_standard_transaction_options(mvtosavings, "owner@active");
       mvtosavings->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("owner", owner_str)
-            ("bex",   rex_str);
+            ("bex",   bex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
@@ -2018,33 +2018,33 @@ struct mvtosavings_subcommand {
 
 struct mvfrsavings_subcommand {
    string owner_str;
-   string rex_str;
+   string bex_str;
    const name act_name{ N(mvfrsavings) };
 
    mvfrsavings_subcommand(CLI::App* actionRoot) {
       auto mvfrsavings = actionRoot->add_subcommand("mvfromsavings", localized("Move BEX tokens out of savings bucket"));
       mvfrsavings->add_option("owner", owner_str, localized("BEX owner"))->required();
-      mvfrsavings->add_option("bex",   rex_str,   localized("Amount of BEX to be moved out of savings bucket"))->required();
+      mvfrsavings->add_option("bex",   bex_str,   localized("Amount of BEX to be moved out of savings bucket"))->required();
       add_standard_transaction_options(mvfrsavings, "owner@active");
       mvfrsavings->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()
             ("owner", owner_str)
-            ("bex",   rex_str);
+            ("bex",   bex_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
       });
    }
 };
 
-struct updaterex_subcommand {
+struct updatebex_subcommand {
    string owner_str;
-   const name act_name{ N(updaterex) };
+   const name act_name{ N(updatebex) };
 
-   updaterex_subcommand(CLI::App* actionRoot) {
-      auto updaterex = actionRoot->add_subcommand("updaterex", localized("Update BEX owner vote stake and vote weight"));
-      updaterex->add_option("owner", owner_str, localized("BEX owner"))->required();
-      add_standard_transaction_options(updaterex, "owner@active");
-      updaterex->set_callback([this] {
+   updatebex_subcommand(CLI::App* actionRoot) {
+      auto updatebex = actionRoot->add_subcommand("updatebex", localized("Update BEX owner vote stake and vote weight"));
+      updatebex->add_option("owner", owner_str, localized("BEX owner"))->required();
+      add_standard_transaction_options(updatebex, "owner@active");
+      updatebex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
@@ -2068,17 +2068,17 @@ struct consolidate_subcommand {
    }
 };
 
-struct rexexec_subcommand {
+struct bexexec_subcommand {
    string user_str;
    string max_str;
-   const name act_name{ N(rexexec) };
+   const name act_name{ N(bexexec) };
 
-   rexexec_subcommand(CLI::App* actionRoot) {
-      auto rexexec = actionRoot->add_subcommand("rexexec", localized("Perform BEX maintenance by processing expired loans and unfilled sell orders"));
-      rexexec->add_option("user", user_str, localized("User executing the action"))->required();
-      rexexec->add_option("max",  max_str,  localized("Maximum number of CPU loans, Network loans, and sell orders to be processed"))->required();
-      add_standard_transaction_options(rexexec, "user@active");
-      rexexec->set_callback([this] {
+   bexexec_subcommand(CLI::App* actionRoot) {
+      auto bexexec = actionRoot->add_subcommand("bexexec", localized("Perform BEX maintenance by processing expired loans and unfilled sell orders"));
+      bexexec->add_option("user", user_str, localized("User executing the action"))->required();
+      bexexec->add_option("max",  max_str,  localized("Maximum number of CPU loans, Network loans, and sell orders to be processed"))->required();
+      add_standard_transaction_options(bexexec, "user@active");
+      bexexec->set_callback([this] {
             fc::variant act_payload = fc::mutable_variant_object()
                ("user", user_str)
                ("max",  max_str);
@@ -2088,15 +2088,15 @@ struct rexexec_subcommand {
    }
 };
 
-struct closerex_subcommand {
+struct closebex_subcommand {
    string owner_str;
-   const name act_name{ N(closerex) };
+   const name act_name{ N(closebex) };
 
-   closerex_subcommand(CLI::App* actionRoot) {
-      auto closerex = actionRoot->add_subcommand("closerex", localized("Delete unused BEX-related user table entries"));
-      closerex->add_option("owner", owner_str, localized("BEX owner"))->required();
-      add_standard_transaction_options(closerex, "owner@active");
-      closerex->set_callback([this] {
+   closebex_subcommand(CLI::App* actionRoot) {
+      auto closebex = actionRoot->add_subcommand("closebex", localized("Delete unused BEX-related user table entries"));
+      closebex->add_option("owner", owner_str, localized("BEX owner"))->required();
+      add_standard_transaction_options(closebex, "owner@active");
+      closebex->set_callback([this] {
          fc::variant act_payload = fc::mutable_variant_object()("owner", owner_str);
          auto accountPermissions = get_account_permissions(tx_permission, {name(owner_str), config::active_name});
          send_actions({create_action(accountPermissions, config::system_account_name, act_name, act_payload)});
@@ -2342,13 +2342,13 @@ void get_account( const string& accountName, const string& coresym, bool json_fo
          std::cout << std::endl;
       }
 
-      if( res.rex_info.is_object() ) {
-         auto& obj = res.rex_info.get_object();
+      if( res.bex_info.is_object() ) {
+         auto& obj = res.bex_info.get_object();
          asset vote_stake = asset::from_string( obj["vote_stake"].as_string() );
-         asset rex_balance = asset::from_string( obj["rex_balance"].as_string() );
-         std::cout << rex_balance.get_symbol().name() << " balances: " << std::endl;
+         asset bex_balance = asset::from_string( obj["bex_balance"].as_string() );
+         std::cout << bex_balance.get_symbol().name() << " balances: " << std::endl;
          std::cout << indent << std::left << std::setw(11)
-                   << "balance:" << std::right << std::setw(18) << rex_balance << std::endl;
+                   << "balance:" << std::right << std::setw(18) << bex_balance << std::endl;
          std::cout << indent << std::left << std::setw(11)
                    << "staked:" << std::right << std::setw(18) << vote_stake << std::endl;
          std::cout << std::endl;
@@ -3975,11 +3975,11 @@ int main( int argc, char** argv ) {
    bex->require_subcommand();
    auto deposit        = deposit_subcommand(bex);
    auto withdraw       = withdraw_subcommand(bex);
-   auto buyrex         = buyrex_subcommand(bex);
-   auto lendrex        = lendrex_subcommand(bex);
-   auto unstaketorex   = unstaketorex_subcommand(bex);
-   auto sellrex        = sellrex_subcommand(bex);
-   auto cancelrexorder = cancelrexorder_subcommand(bex);
+   auto buybex         = buybex_subcommand(bex);
+   auto lendbex        = lendbex_subcommand(bex);
+   auto unstaketobex   = unstaketobex_subcommand(bex);
+   auto sellbex        = sellbex_subcommand(bex);
+   auto cancelbexorder = cancelbexorder_subcommand(bex);
    auto mvtosavings    = mvtosavings_subcommand(bex);
    auto mvfromsavings  = mvfrsavings_subcommand(bex);
    auto rentcpu        = rentcpu_subcommand(bex);
@@ -3989,9 +3989,9 @@ int main( int argc, char** argv ) {
    auto defcpuloan     = defcpuloan_subcommand(bex);
    auto defnetloan     = defnetloan_subcommand(bex);
    auto consolidate    = consolidate_subcommand(bex);
-   auto updaterex      = updaterex_subcommand(bex);
-   auto rexexec        = rexexec_subcommand(bex);
-   auto closerex       = closerex_subcommand(bex);
+   auto updatebex      = updatebex_subcommand(bex);
+   auto bexexec        = bexexec_subcommand(bex);
+   auto closebex       = closebex_subcommand(bex);
 
 
    try {

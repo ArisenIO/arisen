@@ -2,7 +2,7 @@ namespace arisen { namespace chain {
 
 // Initial value for arisen ABI. This value affects consensus; if different
 // aos versions have different versions of the initial arisen ABI, then
-// they could potentially fork. See https://github.com/ARISENIO/rsn/issues/7794
+// they could potentially fork. See https://github.com/arisenio/arisen/issues/7794
 //
 // This is a capture of the ABI produced by versions 1.7 and 1.8.
 

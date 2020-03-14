@@ -233,7 +233,7 @@
             ]
         },
         {
-            "name": "buyrex",
+            "name": "buybex",
             "base": "",
             "fields": [
                 {
@@ -271,7 +271,7 @@
             ]
         },
         {
-            "name": "closerex",
+            "name": "closebex",
             "base": "",
             "fields": [
                 {
@@ -281,7 +281,7 @@
             ]
         },
         {
-            "name": "cnclrexorder",
+            "name": "cnclbexorder",
             "base": "",
             "fields": [
                 {
@@ -935,7 +935,7 @@
             ]
         },
         {
-            "name": "rex_balance",
+            "name": "bex_balance",
             "base": "",
             "fields": [
                 {
@@ -947,21 +947,21 @@
                     "type": "asset"
                 },
                 {
-                    "name": "rex_balance",
+                    "name": "bex_balance",
                     "type": "asset"
                 },
                 {
-                    "name": "matured_rex",
+                    "name": "matured_bex",
                     "type": "int64"
                 },
                 {
-                    "name": "rex_maturities",
+                    "name": "bex_maturities",
                     "type": "pair_time_point_sec_int64[]"
                 }
             ]
         },
         {
-            "name": "rex_fund",
+            "name": "bex_fund",
             "base": "",
             "fields": [
                 {
@@ -975,7 +975,7 @@
             ]
         },
         {
-            "name": "rex_loan",
+            "name": "bex_loan",
             "base": "",
             "fields": [
                 {
@@ -1009,7 +1009,7 @@
             ]
         },
         {
-            "name": "rex_order",
+            "name": "bex_order",
             "base": "",
             "fields": [
                 {
@@ -1017,7 +1017,7 @@
                     "type": "name"
                 },
                 {
-                    "name": "rex_requested",
+                    "name": "bex_requested",
                     "type": "asset"
                 },
                 {
@@ -1039,7 +1039,7 @@
             ]
         },
         {
-            "name": "rex_pool",
+            "name": "bex_pool",
             "base": "",
             "fields": [
                 {
@@ -1059,7 +1059,7 @@
                     "type": "asset"
                 },
                 {
-                    "name": "total_rex",
+                    "name": "total_bex",
                     "type": "asset"
                 },
                 {
@@ -1073,7 +1073,7 @@
             ]
         },
         {
-            "name": "rexexec",
+            "name": "bexexec",
             "base": "",
             "fields": [
                 {
@@ -1111,7 +1111,7 @@
             ]
         },
         {
-            "name": "sellrex",
+            "name": "sellbex",
             "base": "",
             "fields": [
                 {
@@ -1277,7 +1277,7 @@
             ]
         },
         {
-            "name": "unstaketorex",
+            "name": "unstaketobex",
             "base": "",
             "fields": [
                 {
@@ -1321,7 +1321,7 @@
             ]
         },
         {
-            "name": "updaterex",
+            "name": "updatebex",
             "base": "",
             "fields": [
                 {
@@ -1478,8 +1478,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "buyrex",
-            "type": "buyrex",
+            "name": "buybex",
+            "type": "buybex",
             "ricardian_contract": ""
         },
         {
@@ -1493,13 +1493,13 @@
             "ricardian_contract": ""
         },
         {
-            "name": "closerex",
-            "type": "closerex",
+            "name": "closebex",
+            "type": "closebex",
             "ricardian_contract": ""
         },
         {
-            "name": "cnclrexorder",
-            "type": "cnclrexorder",
+            "name": "cnclbexorder",
+            "type": "cnclbexorder",
             "ricardian_contract": ""
         },
         {
@@ -1593,8 +1593,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "rexexec",
-            "type": "rexexec",
+            "name": "bexexec",
+            "type": "bexexec",
             "ricardian_contract": ""
         },
         {
@@ -1608,8 +1608,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "sellrex",
-            "type": "sellrex",
+            "name": "sellbex",
+            "type": "sellbex",
             "ricardian_contract": ""
         },
         {
@@ -1663,8 +1663,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "unstaketorex",
-            "type": "unstaketorex",
+            "name": "unstaketobex",
+            "type": "unstaketobex",
             "ricardian_contract": ""
         },
         {
@@ -1673,8 +1673,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "updaterex",
-            "type": "updaterex",
+            "name": "updatebex",
+            "type": "updatebex",
             "ricardian_contract": ""
         },
         {
@@ -1710,7 +1710,7 @@
         },
         {
             "name": "cpuloan",
-            "type": "rex_loan",
+            "type": "bex_loan",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
@@ -1752,7 +1752,7 @@
         },
         {
             "name": "netloan",
-            "type": "rex_loan",
+            "type": "bex_loan",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
@@ -1786,29 +1786,29 @@
             "key_types": []
         },
         {
-            "name": "rexbal",
-            "type": "rex_balance",
+            "name": "bexbal",
+            "type": "bex_balance",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
         },
         {
-            "name": "rexfund",
-            "type": "rex_fund",
+            "name": "bexfund",
+            "type": "bex_fund",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
         },
         {
-            "name": "rexpool",
-            "type": "rex_pool",
+            "name": "bexpool",
+            "type": "bex_pool",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
         },
         {
-            "name": "rexqueue",
-            "type": "rex_order",
+            "name": "bexqueue",
+            "type": "bex_order",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

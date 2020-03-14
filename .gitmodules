@@ -1,12 +1,12 @@
 [submodule "contracts/musl/upstream"]
 	path = contracts/musl/upstream
-	url = https://github.com/ArisenIO/musl1.git
-	branch = master
+	url = https://github.com/ArisenIO/musl.git
+	branch = 1.0.0
 	update = merge
 [submodule "contracts/libc++/upstream"]
 	path = contracts/libc++/upstream
-	url = https://github.com/ArisenIO/libcxx1.git
-	branch = master
+	url = https://github.com/ArisenIO/libcxx.git
+	branch = 1.0.0
 [submodule "externals/binaryen"]
 	path = externals/binaryen
 	url = https://github.com/ArisenIO/binaryen

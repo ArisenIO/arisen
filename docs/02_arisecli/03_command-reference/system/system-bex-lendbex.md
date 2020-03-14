@@ -1,6 +1,6 @@
 ---
-title: "system bex buyrex"
-excerpt: "Buy BEX using tokens in owner's BEX fund"
+title: "system bex lendbex"
+excerpt: "Deposit tokens to BEX fund and use the tokens to buy BEX"
 ---
 ## Positionals
 - `from` _TEXT_ - Account buying BEX tokens (required)
@@ -23,5 +23,5 @@ excerpt: "Buy BEX using tokens in owner's BEX fund"
 
 
 ```sh
-arisecli system bex buyrex accountname1 "1 BEX"
+arisecli system bex lendbex accountname1 "1 BEX"
 ```

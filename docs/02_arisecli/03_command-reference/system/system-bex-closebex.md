@@ -1,10 +1,9 @@
 ---
-title: "system bex lendrex"
-excerpt: "Deposit tokens to BEX fund and use the tokens to buy BEX"
+title: "system bex closebex"
+excerpt: "Delete unused BEX-related user table entries"
 ---
 ## Positionals
-- `from` _TEXT_ - Account buying BEX tokens (required)
-- `amount` _TEXT_ - Amount to be taken from BEX fund and used in buying BEX (required)
+- `owner` _TEXT_ - Account which owns the BEX fund (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -23,5 +22,5 @@ excerpt: "Deposit tokens to BEX fund and use the tokens to buy BEX"
 
 
 ```sh
-arisecli system bex lendrex accountname1 "1 BEX"
+arisecli system bex closebex accountname1
 ```

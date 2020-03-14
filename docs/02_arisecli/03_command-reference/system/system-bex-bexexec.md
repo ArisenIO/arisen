@@ -1,9 +1,6 @@
----
-title: "system bex closerex"
-excerpt: "Delete unused BEX-related user table entries"
----
 ## Positionals
-- `owner` _TEXT_ - Account which owns the BEX fund (required)
+- `user` _TEXT_ - User executing the action (required)
+- `max` _TEXT_ - Maximum number of CPU loans, Network loans, and sell orders to be processed (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -22,5 +19,5 @@ excerpt: "Delete unused BEX-related user table entries"
 
 
 ```sh
-arisecli system bex closerex accountname1
+arisecli system bex bexexec accountname1 10
 ```

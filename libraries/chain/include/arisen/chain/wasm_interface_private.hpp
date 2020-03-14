@@ -8,7 +8,6 @@
 #else
 #define _REGISTER_RSNVMOC_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
 #endif
-#include <arisen/chain/webassembly/rsn-vm.hpp>
 #include <arisen/chain/webassembly/runtime_interface.hpp>
 #include <arisen/chain/wasm_arisen_injection.hpp>
 #include <arisen/chain/transaction_context.hpp>
@@ -23,7 +22,10 @@
 #include "IR/Validate.h"
 
 #if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
+#include <arisen/chain/webassembly/rsn-vm.hpp>
 #include <arisen/vm/allocator.hpp>
+#else
+#define _REGISTER_RSN_VM_INTRINSIC(CLS, MOD, METHOD, WASM_SIG, NAME, SIG)
 #endif
 
 using namespace fc;

@@ -20,5 +20,5 @@
 
 
 ```sh
-arisecli system bex unstaketorex accountname1 accountname2 "1 RSN" 0
+arisecli system bex unstaketobex accountname1 accountname2 "1 RSN" 0
 ```

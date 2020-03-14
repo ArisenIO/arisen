@@ -1,6 +1,10 @@
+---
+title: "system bex buybex"
+excerpt: "Buy BEX using tokens in owner's BEX fund"
+---
 ## Positionals
-- `user` _TEXT_ - User executing the action (required)
-- `max` _TEXT_ - Maximum number of CPU loans, Network loans, and sell orders to be processed (required)
+- `from` _TEXT_ - Account buying BEX tokens (required)
+- `amount` _TEXT_ - Amount to be taken from BEX fund and used in buying BEX (required)
 
 ## Options
 - `-h,--help` Print this help message and exit
@@ -19,5 +23,5 @@
 
 
 ```sh
-arisecli system bex rexexec accountname1 10
+arisecli system bex buybex accountname1 "1 BEX"
 ```

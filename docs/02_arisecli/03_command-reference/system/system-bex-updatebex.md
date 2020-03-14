@@ -18,5 +18,5 @@
 
 
 ```sh
-arisecli system bex updaterex accountname1
+arisecli system bex updatebex accountname1
 ```
