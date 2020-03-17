@@ -39,9 +39,9 @@ killAll=args.clean_run
 keepLogs=args.keep_logs
 
 killWallet=not dontKill
-killRsnInstances=not dontKill
+killEosInstances=not dontKill
 if nodesFile is not None:
-    killRsnInstances=False
+    killEosInstances=False
 
 Utils.Debug=debug
 testSuccessful=False
@@ -65,7 +65,7 @@ try:
         walletMgr.cleanup()
         print("Stand up walletd")
         if walletMgr.launch() is False:
-            errorExit("Failed to stand up awalletd.")
+            errorExit("Failed to stand up keosd.")
     else:
         cluster.killall(allInstances=killAll)
         cluster.cleanup()
@@ -75,7 +75,7 @@ try:
 
         Print("Stand up cluster")
         if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, topo=topo, delay=delay) is False:
-            errorExit("Failed to stand up rsn cluster.")
+            errorExit("Failed to stand up eos cluster.")
 
         Print ("Wait for Cluster stabilization")
         # wait for cluster to start producing blocks
@@ -87,7 +87,7 @@ try:
     Print("Creating wallet %s if one doesn't already exist." % walletName)
     walletAccounts=[cluster.defproduceraAccount,cluster.defproducerbAccount]
     if not dontLaunch:
-        walletAccounts.append(cluster.arisenAccount)
+        walletAccounts.append(cluster.eosioAccount)
     wallet=walletMgr.create(walletName, walletAccounts)
     if wallet is None:
         errorExit("Failed to create wallet %s" % (walletName))
@@ -98,10 +98,10 @@ try:
 
     defproduceraAccount=cluster.defproduceraAccount
     defproducerbAccount=cluster.defproducerbAccount
-    arisenAccount=cluster.arisenAccount
+    eosioAccount=cluster.eosioAccount
 
     Print("Create accounts.")
-    if not cluster.createAccounts(arisenAccount):
+    if not cluster.createAccounts(eosioAccount):
         errorExit("Accounts creation failed.")
 
     Print("Spread funds and validate")
@@ -119,6 +119,6 @@ try:
 
     testSuccessful=True
 finally:
-    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killRsnInstances, killWallet, keepLogs, killAll, dumpErrorDetails)
+    TestHelper.shutdown(cluster, walletMgr, testSuccessful, killEosInstances, killWallet, keepLogs, killAll, dumpErrorDetails)
 
 exit(0)

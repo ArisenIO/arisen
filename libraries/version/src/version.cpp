@@ -1,6 +1,6 @@
 #include "version_impl.hpp"
 
-namespace arisen { namespace version {
+namespace eosio { namespace version {
 
    const std::string& version_client() {
       static const std::string version{_version_client()};

@@ -1,10 +1,10 @@
-#include <arisen/chain/block.hpp>
-#include <arisen/chain/merkle.hpp>
+#include <eosio/chain/block.hpp>
+#include <eosio/chain/merkle.hpp>
 #include <fc/io/raw.hpp>
 #include <fc/bitutil.hpp>
 #include <algorithm>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
    digest_type block_header::digest()const
    {
       return digest_type::hash(*this);
@@ -35,7 +35,7 @@ namespace arisen { namespace chain {
          const auto& e = header_extensions[i];
          auto id = e.first;
 
-         RSN_ASSERT( id >= id_type_lower_bound, invalid_block_header_extension,
+         EOS_ASSERT( id >= id_type_lower_bound, invalid_block_header_extension,
                      "Block header extensions are not in the correct order (ascending id types required)"
          );
 
@@ -45,13 +45,13 @@ namespace arisen { namespace chain {
          );
 
          auto match = decompose_t::extract<block_header_extension>( id, e.second, iter->second );
-         RSN_ASSERT( match, invalid_block_header_extension,
+         EOS_ASSERT( match, invalid_block_header_extension,
                      "Block header extension with id type ${id} is not supported",
                      ("id", id)
          );
 
          if( match->enforce_unique ) {
-            RSN_ASSERT( i == 0 || id > id_type_lower_bound, invalid_block_header_extension,
+            EOS_ASSERT( i == 0 || id > id_type_lower_bound, invalid_block_header_extension,
                         "Block header extension with id type ${id} is not allowed to repeat",
                         ("id", id)
             );

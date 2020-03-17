@@ -1,5 +1,5 @@
-#include <arisen/chain/platform_timer.hpp>
-#include <arisen/chain/platform_timer_accuracy.hpp>
+#include <eosio/chain/platform_timer.hpp>
+#include <eosio/chain/platform_timer_accuracy.hpp>
 
 #include <fc/time.hpp>
 #include <fc/fwd_impl.hpp>
@@ -10,7 +10,7 @@
 #include <signal.h>
 #include <time.h>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
 static_assert(std::atomic_bool::is_always_lock_free, "Only lock-free atomics AS-safe.");
 

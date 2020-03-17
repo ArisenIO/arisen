@@ -1,5 +1,5 @@
 {
-    "rsn-multiversion-tests":
+    "eos-multiversion-tests":
     {
         "environment":
         {
@@ -10,14 +10,14 @@
             "170=v1.7.0"
         ]
     },
-    "arisen-docker-builds":
+    "eosio-docker-builds":
     {
         "environment":
         {
             "BUILDER_TAG": "v2.0.0"
         }
     },
-    "arisen-sync-tests":
+    "eosio-sync-tests":
     {
         "environment":
         {
@@ -26,7 +26,7 @@
             "SKIP_V200": "false"
         }
     },
-    "arisen-replay-tests":
+    "eosio-replay-tests":
     {
         "environment":
         {
@@ -35,7 +35,7 @@
             "SKIP_V200": "false"
         }
     },
-    "arisen-resume-from-state":
+    "eosio-resume-from-state":
     {
         "test":
         [

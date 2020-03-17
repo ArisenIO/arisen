@@ -1,14 +1,14 @@
 #pragma once
 
-#include <arisen/arisen.hpp>
+#include <eosio/eosio.hpp>
 
-class [[arisen::contract]] asserter : public arisen::contract {
+class [[eosio::contract]] asserter : public eosio::contract {
 public:
-   using arisen::contract::contract;
+   using eosio::contract::contract;
 
-   [[arisen::action]]
+   [[eosio::action]]
    void procassert( int8_t condition, std::string message );
 
-   [[arisen::action]]
+   [[eosio::action]]
    void provereset();
 };

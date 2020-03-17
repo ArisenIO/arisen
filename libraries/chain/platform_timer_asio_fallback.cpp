@@ -1,5 +1,5 @@
-#include <arisen/chain/platform_timer.hpp>
-#include <arisen/chain/platform_timer_accuracy.hpp>
+#include <eosio/chain/platform_timer.hpp>
+#include <eosio/chain/platform_timer_accuracy.hpp>
 
 #include <fc/fwd_impl.hpp>
 #include <fc/log/logger_config.hpp> //set_os_thread_name()
@@ -9,7 +9,7 @@
 #include <mutex>
 #include <thread>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
 //a thread is shared for all instances
 static std::mutex timer_ref_mutex;

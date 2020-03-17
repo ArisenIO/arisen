@@ -1,7 +1,7 @@
-#include <arisen/chain/merkle.hpp>
+#include <eosio/chain/merkle.hpp>
 #include <fc/io/raw.hpp>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
 /**
  * in order to keep proofs concise, before hashing we set the first bit
@@ -49,4 +49,4 @@ digest_type merkle(vector<digest_type> ids) {
    return ids.front();
 }
 
-} } // arisen::chain
+} } // eosio::chain

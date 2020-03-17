@@ -1,13 +1,13 @@
-#include <arisen/test_control_api_plugin/test_control_api_plugin.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/test_control_api_plugin/test_control_api_plugin.hpp>
+#include <eosio/chain/exceptions.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace arisen {
+namespace eosio {
 
 static appbase::abstract_plugin& _test_control_api_plugin = app().register_plugin<test_control_api_plugin>();
 
-using namespace arisen;
+using namespace eosio;
 
 class test_control_api_plugin_impl {
 public:

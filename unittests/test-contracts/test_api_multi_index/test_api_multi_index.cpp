@@ -1,13 +1,13 @@
 #include "test_api_multi_index.hpp"
 
-using namespace arisen;
+using namespace eosio;
 
 #include <cmath>
 #include <limits>
 
 namespace _test_multi_index {
 
-   using arisen::checksum256;
+   using eosio::checksum256;
 
    struct record_idx64 {
       uint64_t id;
@@ -16,7 +16,7 @@ namespace _test_multi_index {
       auto primary_key()const { return id; }
       uint64_t get_secondary()const { return sec; }
 
-      RSNLIB_SERIALIZE( record_idx64, (id)(sec) )
+      EOSLIB_SERIALIZE( record_idx64, (id)(sec) )
    };
 
    struct record_idx128 {
@@ -26,7 +26,7 @@ namespace _test_multi_index {
       auto primary_key()const { return id; }
       uint128_t get_secondary()const { return sec; }
 
-      RSNLIB_SERIALIZE( record_idx128, (id)(sec) )
+      EOSLIB_SERIALIZE( record_idx128, (id)(sec) )
    };
 
    struct record_idx256 {
@@ -36,7 +36,7 @@ namespace _test_multi_index {
       auto primary_key()const { return id; }
       const checksum256& get_secondary()const { return sec; }
 
-      RSNLIB_SERIALIZE( record_idx256, (id)(sec) )
+      EOSLIB_SERIALIZE( record_idx256, (id)(sec) )
    };
 
    struct record_idx_double {
@@ -46,7 +46,7 @@ namespace _test_multi_index {
       auto primary_key()const { return id; }
       double get_secondary()const { return sec; }
 
-      RSNLIB_SERIALIZE( record_idx_double, (id)(sec) )
+      EOSLIB_SERIALIZE( record_idx_double, (id)(sec) )
    };
 
    struct record_idx_long_double {
@@ -56,7 +56,7 @@ namespace _test_multi_index {
       auto primary_key()const { return id; }
       long double get_secondary()const { return sec; }
 
-      RSNLIB_SERIALIZE( record_idx_long_double, (id)(sec) )
+      EOSLIB_SERIALIZE( record_idx_long_double, (id)(sec) )
    };
 
    template<uint64_t TableName>

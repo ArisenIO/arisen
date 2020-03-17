@@ -1,4 +1,4 @@
-#include <arisenlib/arisen.hpp>
+#include <eosiolib/eosio.hpp>
 
 #include "test_api.hpp"
 
@@ -57,25 +57,25 @@ void test_print::test_printui128() {
 }
 
 void test_print::test_printn() {
-   printn(arisen::name{"1"}.value);
-   printn(arisen::name{"5"}.value);
-   printn(arisen::name{"a"}.value);
-   printn(arisen::name{"z"}.value);
+   printn(eosio::name{"1"}.value);
+   printn(eosio::name{"5"}.value);
+   printn(eosio::name{"a"}.value);
+   printn(eosio::name{"z"}.value);
 
-   printn(arisen::name{"abc"}.value);
-   printn(arisen::name{"123"}.value);
+   printn(eosio::name{"abc"}.value);
+   printn(eosio::name{"123"}.value);
 
-   printn(arisen::name{"abc.123"}.value);
-   printn(arisen::name{"123.abc"}.value);
+   printn(eosio::name{"abc.123"}.value);
+   printn(eosio::name{"123.abc"}.value);
 
-   printn(arisen::name{"12345abcdefgj"}.value);
-   printn(arisen::name{"ijklmnopqrstj"}.value);
-   printn(arisen::name{"vwxyz.12345aj"}.value);
+   printn(eosio::name{"12345abcdefgj"}.value);
+   printn(eosio::name{"ijklmnopqrstj"}.value);
+   printn(eosio::name{"vwxyz.12345aj"}.value);
 
-   printn(arisen::name{"111111111111j"}.value);
-   printn(arisen::name{"555555555555j"}.value);
-   printn(arisen::name{"aaaaaaaaaaaaj"}.value);
-   printn(arisen::name{"zzzzzzzzzzzzj"}.value);
+   printn(eosio::name{"111111111111j"}.value);
+   printn(eosio::name{"555555555555j"}.value);
+   printn(eosio::name{"aaaaaaaaaaaaj"}.value);
+   printn(eosio::name{"zzzzzzzzzzzzj"}.value);
 }
 
 
@@ -117,7 +117,7 @@ void test_print::test_printqf() {
 
 void test_print::test_print_simple() {
     const std::string cvalue = "cvalue";
-    arisen::print(cvalue);
+    eosio::print(cvalue);
     std::string value = "value";
-    arisen::print(std::move(value));
+    eosio::print(std::move(value));
 }

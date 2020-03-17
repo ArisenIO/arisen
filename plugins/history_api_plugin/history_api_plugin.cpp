@@ -1,11 +1,11 @@
-#include <arisen/history_api_plugin/history_api_plugin.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/history_api_plugin/history_api_plugin.hpp>
+#include <eosio/chain/exceptions.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace arisen {
+namespace eosio {
 
-using namespace arisen;
+using namespace eosio;
 
 static appbase::abstract_plugin& _history_api_plugin = app().register_plugin<history_api_plugin>();
 

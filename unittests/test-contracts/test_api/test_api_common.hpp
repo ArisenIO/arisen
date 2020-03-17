@@ -1,6 +1,6 @@
 #pragma once
 
-#include <arisenlib/serialize.hpp>
+#include <eosiolib/serialize.hpp>
 
 
 static constexpr unsigned int DJBH( const char* cp )
@@ -19,37 +19,37 @@ static constexpr unsigned long long WASM_TEST_ACTION( const char* cls, const cha
 #pragma pack(push, 1)
 struct dummy_action {
    static uint64_t get_name() {
-      return arisen::name{"dummy_action"}.value;
+      return eosio::name{"dummy_action"}.value;
    }
    static uint64_t get_account() {
-      return arisen::name{"testapi"}.value;
+      return eosio::name{"testapi"}.value;
    }
 
   char a; //1
   uint64_t b; //8
   int32_t  c; //4
 
-  RSNLIB_SERIALIZE( dummy_action, (a)(b)(c) )
+  EOSLIB_SERIALIZE( dummy_action, (a)(b)(c) )
 };
 
 struct u128_action {
   unsigned __int128  values[3]; //16*3
 
-  RSNLIB_SERIALIZE( u128_action, (values) )
+  EOSLIB_SERIALIZE( u128_action, (values) )
 };
 
 struct cf_action {
    static uint64_t get_name() {
-      return arisen::name{"cf_action"}.value;
+      return eosio::name{"cf_action"}.value;
    }
    static uint64_t get_account() {
-      return arisen::name{"testapi"}.value;
+      return eosio::name{"testapi"}.value;
    }
 
    uint32_t       payload = 100;
    uint32_t       cfd_idx = 0; // context free data index
 
-   RSNLIB_SERIALIZE( cf_action, (payload)(cfd_idx) )
+   EOSLIB_SERIALIZE( cf_action, (payload)(cfd_idx) )
 };
 
 // Deferred Transaction Trigger Action
@@ -67,7 +67,7 @@ struct dtt_action {
    uint64_t       permission_name = "active"_n.value;
    uint32_t       delay_sec = 2;
 
-   RSNLIB_SERIALIZE( dtt_action, (payer)(deferred_account)(deferred_action)(permission_name)(delay_sec) )
+   EOSLIB_SERIALIZE( dtt_action, (payer)(deferred_account)(deferred_action)(permission_name)(delay_sec) )
 };
 
 #pragma pack(pop)
@@ -85,5 +85,5 @@ struct invalid_access_action {
    uint32_t index;
    bool store;
 
-   RSNLIB_SERIALIZE( invalid_access_action, (code)(val)(index)(store) )
+   EOSLIB_SERIALIZE( invalid_access_action, (code)(val)(index)(store) )
 };

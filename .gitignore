@@ -5,11 +5,12 @@
 *.bc
 *.wast
 *.wast.hpp
-*.wasm
 *.s
 *.dot
 *.abi.hpp
 *.cmake
+!.cicd
+!CMakeModules/*.cmake
 *.ninja
 \#*
 \.#*
@@ -45,17 +46,17 @@ libraries/wasm-jit/Source/Programs/Disassemble
 libraries/wasm-jit/Source/Programs/Test
 libraries/wasm-jit/Source/Programs/wavm
 
-programs/arisecli/arisecli
+programs/cleos/cleos
 programs/js_operation_serializer/js_operation_serializer
 programs/data-dir
-programs/arisen-abigen/arisen-abigen
-programs/arisecli/config.hpp
-programs/arisen-applesedemo/arisen-applesedemo
-programs/arisen-launcher/config.hpp
-programs/arisen-launcher/arisen-launcher
-programs/akeyd/akeyd
-programs/aos/config.hpp
-programs/aos/aos
+programs/eosio-abigen/eosio-abigen
+programs/cleos/config.hpp
+programs/eosio-applesedemo/eosio-applesedemo
+programs/eosio-launcher/config.hpp
+programs/eosio-launcher/eosio-launcher
+programs/keosd/keosd
+programs/nodeos/config.hpp
+programs/nodeos/nodeos
 
 scripts/tn_init.sh
 
@@ -63,7 +64,7 @@ tests/plugin_test
 unittests/unit_test
 
 doxygen
-arisen.doxygen
+eos.doxygen
 
 wallet.json
 witness_node_data_dir
@@ -73,12 +74,16 @@ witness_node_data_dir
 *.pyc
 *.pyo
 
+Testing/*
+build.tar.gz
 build/*
 build-debug/*
 
-etc/arisen/node_*
+etc/eosio/node_*
 var/lib/node_*
 .vscode
 .idea/
 *.iws
 .DS_Store
+
+!*.swagger.*

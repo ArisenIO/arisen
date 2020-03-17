@@ -1,5 +1,5 @@
-#include <arisen/chain/fork_database.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/chain/fork_database.hpp>
+#include <eosio/chain/exceptions.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -10,7 +10,7 @@
 #include <fc/io/fstream.hpp>
 #include <fstream>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
    using boost::multi_index_container;
    using namespace boost::multi_index;
 
@@ -102,7 +102,7 @@ namespace arisen { namespace chain {
             // validate totem
             uint32_t totem = 0;
             fc::raw::unpack( ds, totem );
-            RSN_ASSERT( totem == magic_number, fork_database_exception,
+            EOS_ASSERT( totem == magic_number, fork_database_exception,
                         "Fork database file '${filename}' has unexpected magic number: ${actual_totem}. Expected ${expected_totem}",
                         ("filename", fork_db_dat.generic_string())
                         ("actual_totem", totem)
@@ -112,7 +112,7 @@ namespace arisen { namespace chain {
             // validate version
             uint32_t version = 0;
             fc::raw::unpack( ds, version );
-            RSN_ASSERT( version >= min_supported_version && version <= max_supported_version,
+            EOS_ASSERT( version >= min_supported_version && version <= max_supported_version,
                         fork_database_exception,
                        "Unsupported version of fork database file '${filename}'. "
                        "Fork database version is ${version} while code supports version(s) [${min},${max}]",
@@ -141,18 +141,18 @@ namespace arisen { namespace chain {
                my->head = my->root;
             } else {
                my->head = get_block( head_id );
-               RSN_ASSERT( my->head, fork_database_exception,
+               EOS_ASSERT( my->head, fork_database_exception,
                            "could not find head while reconstructing fork database from file; '${filename}' is likely corrupted",
                            ("filename", fork_db_dat.generic_string()) );
             }
 
             auto candidate = my->index.get<by_lib_block_num>().begin();
             if( candidate == my->index.get<by_lib_block_num>().end() || !(*candidate)->is_valid() ) {
-               RSN_ASSERT( my->head->id == my->root->id, fork_database_exception,
+               EOS_ASSERT( my->head->id == my->root->id, fork_database_exception,
                            "head not set to root despite no better option available; '${filename}' is likely corrupted",
                            ("filename", fork_db_dat.generic_string()) );
             } else {
-               RSN_ASSERT( !first_preferred( **candidate, *my->head ), fork_database_exception,
+               EOS_ASSERT( !first_preferred( **candidate, *my->head ), fork_database_exception,
                            "head not set to best available option available; '${filename}' is likely corrupted",
                            ("filename", fork_db_dat.generic_string()) );
             }
@@ -250,12 +250,12 @@ namespace arisen { namespace chain {
    }
 
    void fork_database::advance_root( const block_id_type& id ) {
-      RSN_ASSERT( my->root, fork_database_exception, "root not yet set" );
+      EOS_ASSERT( my->root, fork_database_exception, "root not yet set" );
 
       auto new_root = get_block( id );
-      RSN_ASSERT( new_root, fork_database_exception,
+      EOS_ASSERT( new_root, fork_database_exception,
                   "cannot advance root to a block that does not exist in the fork database" );
-      RSN_ASSERT( new_root->is_valid(), fork_database_exception,
+      EOS_ASSERT( new_root->is_valid(), fork_database_exception,
                   "cannot advance root to a block that has not yet been validated" );
 
 
@@ -263,7 +263,7 @@ namespace arisen { namespace chain {
       for( auto b = new_root; b; ) {
          blocks_to_remove.push_back( b->header.previous );
          b = get_block( blocks_to_remove.back() );
-         RSN_ASSERT( b || blocks_to_remove.back() == my->root->id, fork_database_exception, "invariant violation: orphaned branch was present in forked database" );
+         EOS_ASSERT( b || blocks_to_remove.back() == my->root->id, fork_database_exception, "invariant violation: orphaned branch was present in forked database" );
       }
 
       // The new root block should be erased from the fork database index individually rather than with the remove method,
@@ -302,12 +302,12 @@ namespace arisen { namespace chain {
                                                            const flat_set<digest_type>&,
                                                            const vector<digest_type>& )>& validator )
    {
-      RSN_ASSERT( root, fork_database_exception, "root not yet set" );
-      RSN_ASSERT( n, fork_database_exception, "attempt to add null block state" );
+      EOS_ASSERT( root, fork_database_exception, "root not yet set" );
+      EOS_ASSERT( n, fork_database_exception, "attempt to add null block state" );
 
       auto prev_bh = self.get_block_header( n->header.previous );
 
-      RSN_ASSERT( prev_bh, unlinkable_block_exception,
+      EOS_ASSERT( prev_bh, unlinkable_block_exception,
                   "unlinkable block", ("id", n->id)("previous", n->header.previous) );
 
       if( validate ) {
@@ -318,13 +318,13 @@ namespace arisen { namespace chain {
                const auto& new_protocol_features = exts.lower_bound(protocol_feature_activation::extension_id())->second.get<protocol_feature_activation>().protocol_features;
                validator( n->header.timestamp, prev_bh->activated_protocol_features->protocol_features, new_protocol_features );
             }
-         } RSN_RETHROW_EXCEPTIONS( fork_database_exception, "serialized fork database is incompatible with configured protocol features"  )
+         } EOS_RETHROW_EXCEPTIONS( fork_database_exception, "serialized fork database is incompatible with configured protocol features"  )
       }
 
       auto inserted = index.insert(n);
       if( !inserted.second ) {
          if( ignore_duplicate ) return;
-         RSN_THROW( fork_database_exception, "duplicate block added", ("id", n->id) );
+         EOS_THROW( fork_database_exception, "duplicate block added", ("id", n->id) );
       }
 
       auto candidate = index.get<by_lib_block_num>().begin();
@@ -387,15 +387,15 @@ namespace arisen { namespace chain {
       auto first_branch = (first == my->root->id) ? my->root : get_block(first);
       auto second_branch = (second == my->root->id) ? my->root : get_block(second);
 
-      RSN_ASSERT(first_branch, fork_db_block_not_found, "block ${id} does not exist", ("id", first));
-      RSN_ASSERT(second_branch, fork_db_block_not_found, "block ${id} does not exist", ("id", second));
+      EOS_ASSERT(first_branch, fork_db_block_not_found, "block ${id} does not exist", ("id", first));
+      EOS_ASSERT(second_branch, fork_db_block_not_found, "block ${id} does not exist", ("id", second));
 
       while( first_branch->block_num > second_branch->block_num )
       {
          result.first.push_back(first_branch);
          const auto& prev = first_branch->header.previous;
          first_branch = (prev == my->root->id) ? my->root : get_block( prev );
-         RSN_ASSERT( first_branch, fork_db_block_not_found,
+         EOS_ASSERT( first_branch, fork_db_block_not_found,
                      "block ${id} does not exist",
                      ("id", prev)
          );
@@ -406,7 +406,7 @@ namespace arisen { namespace chain {
          result.second.push_back( second_branch );
          const auto& prev = second_branch->header.previous;
          second_branch = (prev == my->root->id) ? my->root : get_block( prev );
-         RSN_ASSERT( second_branch, fork_db_block_not_found,
+         EOS_ASSERT( second_branch, fork_db_block_not_found,
                      "block ${id} does not exist",
                      ("id", prev)
          );
@@ -422,11 +422,11 @@ namespace arisen { namespace chain {
          first_branch = get_block( first_prev );
          const auto &second_prev = second_branch->header.previous;
          second_branch = get_block( second_prev );
-         RSN_ASSERT( first_branch, fork_db_block_not_found,
+         EOS_ASSERT( first_branch, fork_db_block_not_found,
                      "block ${id} does not exist",
                      ("id", first_prev)
          );
-         RSN_ASSERT( second_branch, fork_db_block_not_found,
+         EOS_ASSERT( second_branch, fork_db_block_not_found,
                      "block ${id} does not exist",
                      ("id", second_prev)
          );
@@ -447,7 +447,7 @@ namespace arisen { namespace chain {
       const auto head_id = my->head->id;
 
       for( uint32_t i = 0; i < remove_queue.size(); ++i ) {
-         RSN_ASSERT( remove_queue[i] != head_id, fork_database_exception,
+         EOS_ASSERT( remove_queue[i] != head_id, fork_database_exception,
                      "removing the block and its descendants would remove the current head block" );
 
          auto previtr = previdx.lower_bound( remove_queue[i] );
@@ -470,7 +470,7 @@ namespace arisen { namespace chain {
       auto& by_id_idx = my->index.get<by_block_id>();
 
       auto itr = by_id_idx.find( h->id );
-      RSN_ASSERT( itr != by_id_idx.end(), fork_database_exception,
+      EOS_ASSERT( itr != by_id_idx.end(), fork_database_exception,
                   "block state not in fork database; cannot mark as valid",
                   ("id", h->id) );
 
@@ -491,4 +491,4 @@ namespace arisen { namespace chain {
       return block_state_ptr();
    }
 
-} } /// arisen::chain
+} } /// eosio::chain

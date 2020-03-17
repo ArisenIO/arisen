@@ -1,5 +1,5 @@
-#include <arisenlib/arisen.hpp>
-#include <arisenlib/transaction.hpp>
+#include <eosiolib/eosio.hpp>
+#include <eosiolib/transaction.hpp>
 
 #include "test_api.hpp"
 
@@ -17,9 +17,9 @@ name global_receiver;
 
 extern "C" {
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-      if( code == "arisen"_n.value && action == "onerror"_n.value ) {
-         auto error = arisen::onerror::from_current_action();
-         arisen::print("onerror called\n");
+      if( code == "eosio"_n.value && action == "onerror"_n.value ) {
+         auto error = eosio::onerror::from_current_action();
+         eosio::print("onerror called\n");
          auto error_trx = error.unpack_sent_trx();
          auto error_action = error_trx.actions.at(0).name;
 
@@ -160,7 +160,7 @@ extern "C" {
       WASM_TEST_HANDLER_EX( test_permission, test_account_creation_time );
 
       //unhandled test call
-      arisen_assert( false, "Unknown Test" );
+      eosio_assert( false, "Unknown Test" );
 
    }
 }

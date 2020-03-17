@@ -1,30 +1,30 @@
 #pragma once
 
-#include <arisen/arisen.hpp>
+#include <eosio/eosio.hpp>
 
-class [[arisen::contract]] restrict_action_test : public arisen::contract {
+class [[eosio::contract]] restrict_action_test : public eosio::contract {
 public:
-   using arisen::contract::contract;
+   using eosio::contract::contract;
 
-   [[arisen::action]]
+   [[eosio::action]]
    void noop( );
 
-   [[arisen::action]]
-   void sendinline( arisen::name authorizer );
+   [[eosio::action]]
+   void sendinline( eosio::name authorizer );
 
-   [[arisen::action]]
-   void senddefer( arisen::name authorizer, uint32_t senderid );
+   [[eosio::action]]
+   void senddefer( eosio::name authorizer, uint32_t senderid );
 
 
-   [[arisen::action]]
-   void notifyinline( arisen::name acctonotify, arisen::name authorizer );
+   [[eosio::action]]
+   void notifyinline( eosio::name acctonotify, eosio::name authorizer );
 
-   [[arisen::action]]
-   void notifydefer( arisen::name acctonotify, arisen::name authorizer, uint32_t senderid );
+   [[eosio::action]]
+   void notifydefer( eosio::name acctonotify, eosio::name authorizer, uint32_t senderid );
 
-   [[arisen::on_notify("testacc::notifyinline")]]
-   void on_notify_inline( arisen::name acctonotify, arisen::name authorizer );
+   [[eosio::on_notify("testacc::notifyinline")]]
+   void on_notify_inline( eosio::name acctonotify, eosio::name authorizer );
 
-   [[arisen::on_notify("testacc::notifydefer")]]
-   void on_notify_defer( arisen::name acctonotify, arisen::name authorizer, uint32_t senderid );
+   [[eosio::on_notify("testacc::notifydefer")]]
+   void on_notify_defer( eosio::name acctonotify, eosio::name authorizer, uint32_t senderid );
 };

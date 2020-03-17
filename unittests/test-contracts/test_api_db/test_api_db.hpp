@@ -1,42 +1,42 @@
 #pragma once
 
-#include <arisen/arisen.hpp>
+#include <eosio/eosio.hpp>
 
-class [[arisen::contract]] test_api_db : public arisen::contract {
+class [[eosio::contract]] test_api_db : public eosio::contract {
 public:
-   using arisen::contract::contract;
+   using eosio::contract::contract;
 
-   [[arisen::action("pg")]]
+   [[eosio::action("pg")]]
    void primary_i64_general();
 
-   [[arisen::action("pl")]]
+   [[eosio::action("pl")]]
    void primary_i64_lowerbound();
 
-   [[arisen::action("pu")]]
+   [[eosio::action("pu")]]
    void primary_i64_upperbound();
 
-   [[arisen::action("s1g")]]
+   [[eosio::action("s1g")]]
    void idx64_general();
 
-   [[arisen::action("s1l")]]
+   [[eosio::action("s1l")]]
    void idx64_lowerbound();
 
-   [[arisen::action("s1u")]]
+   [[eosio::action("s1u")]]
    void idx64_upperbound();
 
-   [[arisen::action("tia")]]
-   void test_invalid_access( arisen::name code, uint64_t val, uint32_t index, bool store );
+   [[eosio::action("tia")]]
+   void test_invalid_access( eosio::name code, uint64_t val, uint32_t index, bool store );
 
-   [[arisen::action("sdnancreate")]]
+   [[eosio::action("sdnancreate")]]
    void idx_double_nan_create_fail();
 
-   [[arisen::action("sdnanmodify")]]
+   [[eosio::action("sdnanmodify")]]
    void idx_double_nan_modify_fail();
 
-   [[arisen::action("sdnanlookup")]]
+   [[eosio::action("sdnanlookup")]]
    void idx_double_nan_lookup_fail( uint32_t lookup_type );
 
-   [[arisen::action("sk32align")]]
+   [[eosio::action("sk32align")]]
    void misaligned_secondary_key256_tests();
 
 };

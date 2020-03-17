@@ -1,13 +1,13 @@
-#include <arisen/chain_api_plugin/chain_api_plugin.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/chain_api_plugin/chain_api_plugin.hpp>
+#include <eosio/chain/exceptions.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace arisen {
+namespace eosio {
 
 static appbase::abstract_plugin& _chain_api_plugin = app().register_plugin<chain_api_plugin>();
 
-using namespace arisen;
+using namespace eosio;
 
 class chain_api_plugin_impl {
 public:
@@ -79,7 +79,8 @@ void chain_api_plugin::plugin_startup() {
    ro_api.set_shorten_abi_errors( !_http_plugin.verbose_errors() );
 
    _http_plugin.add_api({
-      CHAIN_RO_CALL(get_info, 200l),
+      CHAIN_RO_CALL(get_info, 200)}, appbase::priority::medium);
+   _http_plugin.add_api({
       CHAIN_RO_CALL(get_activated_protocol_features, 200),
       CHAIN_RO_CALL(get_block, 200),
       CHAIN_RO_CALL(get_block_header_state, 200),

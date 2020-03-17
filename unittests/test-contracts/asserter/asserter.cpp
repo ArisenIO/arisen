@@ -1,6 +1,6 @@
 #include "asserter.hpp"
 
-using namespace arisen;
+using namespace eosio;
 
 static int global_variable = 45;
 

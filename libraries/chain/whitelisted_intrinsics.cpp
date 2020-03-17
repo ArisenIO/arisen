@@ -1,7 +1,7 @@
-#include <arisen/chain/whitelisted_intrinsics.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/chain/whitelisted_intrinsics.hpp>
+#include <eosio/chain/exceptions.hpp>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
    template<typename Iterator>
    bool find_intrinsic_helper( uint64_t h, const std::string& name, Iterator& itr, const Iterator& end ) {
@@ -52,7 +52,7 @@ namespace arisen { namespace chain {
    {
       uint64_t h = static_cast<uint64_t>( std::hash<std::string>{}( name ) );
       auto itr = find_intrinsic( whitelisted_intrinsics, h, name );
-      RSN_ASSERT( itr == whitelisted_intrinsics.end(), database_exception,
+      EOS_ASSERT( itr == whitelisted_intrinsics.end(), database_exception,
                   "cannot add intrinsic '${name}' since it already exists in the whitelist",
                   ("name", name)
       );
@@ -68,7 +68,7 @@ namespace arisen { namespace chain {
    {
       uint64_t h = static_cast<uint64_t>( std::hash<std::string>{}( name ) );
       auto itr = find_intrinsic( whitelisted_intrinsics, h, name );
-      RSN_ASSERT( itr != whitelisted_intrinsics.end(), database_exception,
+      EOS_ASSERT( itr != whitelisted_intrinsics.end(), database_exception,
                   "cannot remove intrinsic '${name}' since it does not exist in the whitelist",
                   ("name", name)
       );

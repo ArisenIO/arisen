@@ -93,18 +93,18 @@ readonly = 0
 send-whole-blocks = true
 shared-file-dir = blockchain
 shared-file-size = 8192
-http-server-address = 127.0.0.1:12518
+http-server-address = 127.0.0.1:8888
 p2p-listen-endpoint = 0.0.0.0:9876
 p2p-server-address = localhost:9876
 allowed-connection = any
 p2p-peer-address = localhost:9877
 required-participation = true
-private-key = ["RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = initu
-plugin = arisen::producer_plugin
-plugin = arisen::chain_api_plugin
-plugin = arisen::history_plugin
-plugin = arisen::history_api_plugin"""
+plugin = eosio::producer_plugin
+plugin = eosio::chain_api_plugin
+plugin = eosio::history_plugin
+plugin = eosio::history_api_plugin"""
 
 
 config01="""genesis-json = ./genesis.json
@@ -119,12 +119,12 @@ p2p-server-address = localhost:9877
 allowed-connection = any
 p2p-peer-address = localhost:9876
 required-participation = true
-private-key = ["RSN6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 producer-name = defproducerb
-plugin = arisen::producer_plugin
-plugin = arisen::chain_api_plugin
-plugin = arisen::history_plugin
-plugin = arisen::history_api_plugin"""
+plugin = eosio::producer_plugin
+plugin = eosio::chain_api_plugin
+plugin = eosio::history_plugin
+plugin = eosio::history_api_plugin"""
 
 
 producers="""producer-name = defproducerd
@@ -181,7 +181,7 @@ def stageScenario(stagedNodeInfos):
     os.makedirs(stagingDir)
     count=0
     for stagedNodeInfo in stagedNodeInfos:
-        configPath=os.path.join(stagingDir, "etc/arisen/node_%02d" % (count))
+        configPath=os.path.join(stagingDir, "etc/eosio/node_%02d" % (count))
         os.makedirs(configPath)
         with open(os.path.join(configPath, "config.ini"), "w") as textFile:
             print(stagedNodeInfo.config,file=textFile)
@@ -203,7 +203,7 @@ parser.add_argument("-t", "--tests", type=str, help="1|2|3 1=run no malicious pr
 parser.add_argument("-w", type=int, help="system wait time", default=testUtils.Utils.systemWaitTimeout)
 parser.add_argument("-v", help="verbose logging", action='store_true')
 parser.add_argument("--dump-error-details",
-                    help="Upon error print etc/arisen/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
+                    help="Upon error print etc/eosio/node_*/config.ini and var/lib/node_*/stderr.log to stdout",
                     action='store_true')
 parser.add_argument("--keep-logs", help="Don't delete var/lib/node_* folders upon test completion",
                     action='store_true')
@@ -217,7 +217,7 @@ waitTimeout=args.w
 dumpErrorDetails=args.dump-error-details
 keepLogs=args.keep-logs
 amINoon=not args.not_noon
-killRsnInstances= not args.dont-kill
+killEosInstances= not args.dont-kill
 killWallet= not args.dont-kill
 
 testUtils.Utils.Debug=debug
@@ -247,7 +247,7 @@ def myTest(transWillEnterBlock):
         delay=0
         Print("Stand up cluster")
         if cluster.launch(pnodes=pnodes, totalNodes=total_nodes, topo=topo, delay=delay) is False:
-            error("Failed to stand up rsn cluster.")
+            error("Failed to stand up eos cluster.")
             return False
 
         accounts=testUtils.Cluster.createAccountKeys(1)
@@ -358,7 +358,7 @@ def myTest(transWillEnterBlock):
             walletMgr.dumpErrorDetails()
             Print("== Errors see above ==")
 
-        if killRsnInstances:
+        if killEosInstances:
             Print("Shut down the cluster%s" % (" and cleanup." if (testSuccessful and not keepLogs) else "."))
             cluster.killall()
             walletMgr.killall()

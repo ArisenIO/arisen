@@ -3,15 +3,15 @@ content_title: Shell Scripts
 ---
 
 [[info | Did you know?]]
-| Shell scripts automate the process of building, installing, testing, and uninstalling the ARISEN software and dependencies.
+| Shell scripts automate the process of building, installing, testing, and uninstalling the EOSIO software and dependencies.
 
-To build ARISEN from the source code using shell scripts, visit the sections below:
+To build EOSIO from the source code using shell scripts, visit the sections below:
 
-1. [Download ARISEN Source](01_download-arisen-source.md)
-2. [Build ARISEN Binaries](02_build-arisen-binaries.md)
-3. [Install ARISEN Binaries](03_install-arisen-binaries.md)
-4. [Test ARISEN Binaries](04_test-arisen-binaries.md)
-5. [Uninstall ARISEN](05_uninstall-arisen.md)
+1. [Download EOSIO Source](01_download-eosio-source.md)
+2. [Build EOSIO Binaries](02_build-eosio-binaries.md)
+3. [Install EOSIO Binaries](03_install-eosio-binaries.md)
+4. [Test EOSIO Binaries](04_test-eosio-binaries.md)
+5. [Uninstall EOSIO](05_uninstall-eosio.md)
 
-[[info | Building ARISEN is for Advanced Developers]]
-| If you are new to ARISEN, it is recommended that you install the [ARISEN Prebuilt Binaries](../../00_install-prebuilt-binaries.md) instead of building from source.
+[[info | Building EOSIO is for Advanced Developers]]
+| If you are new to EOSIO, it is recommended that you install the [EOSIO Prebuilt Binaries](../../00_install-prebuilt-binaries.md) instead of building from source.

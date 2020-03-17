@@ -1,23 +1,23 @@
-#include <arisen/net_api_plugin/net_api_plugin.hpp>
-#include <arisen/chain/exceptions.hpp>
-#include <arisen/chain/transaction.hpp>
+#include <eosio/net_api_plugin/net_api_plugin.hpp>
+#include <eosio/chain/exceptions.hpp>
+#include <eosio/chain/transaction.hpp>
 
 #include <fc/variant.hpp>
 #include <fc/io/json.hpp>
 
 #include <chrono>
 
-namespace arisen { namespace detail {
+namespace eosio { namespace detail {
   struct net_api_plugin_empty {};
 }}
 
-FC_REFLECT(arisen::detail::net_api_plugin_empty, );
+FC_REFLECT(eosio::detail::net_api_plugin_empty, );
 
-namespace arisen {
+namespace eosio {
 
 static appbase::abstract_plugin& _net_api_plugin = app().register_plugin<net_api_plugin>();
 
-using namespace arisen;
+using namespace eosio;
 
 #define CALL(api_name, api_handle, call_name, INVOKE, http_response_code) \
 {std::string("/v1/" #api_name "/" #call_name), \
@@ -43,16 +43,16 @@ using namespace arisen;
 
 #define INVOKE_V_R(api_handle, call_name, in_param) \
      api_handle.call_name(fc::json::from_string(body).as<in_param>()); \
-     arisen::detail::net_api_plugin_empty result;
+     eosio::detail::net_api_plugin_empty result;
 
 #define INVOKE_V_R_R(api_handle, call_name, in_param0, in_param1) \
      const auto& vs = fc::json::json::from_string(body).as<fc::variants>(); \
      api_handle.call_name(vs.at(0).as<in_param0>(), vs.at(1).as<in_param1>()); \
-     arisen::detail::net_api_plugin_empty result;
+     eosio::detail::net_api_plugin_empty result;
 
 #define INVOKE_V_V(api_handle, call_name) \
      api_handle.call_name(); \
-     arisen::detail::net_api_plugin_empty result;
+     eosio::detail::net_api_plugin_empty result;
 
 
 void net_api_plugin::plugin_startup() {
@@ -75,7 +75,7 @@ void net_api_plugin::plugin_startup() {
             INVOKE_R_V(net_mgr, connections), 201),
     //   CALL(net, net_mgr, open,
     //        INVOKE_V_R(net_mgr, open, std::string), 200),
-   });
+   }, appbase::priority::medium);
 }
 
 void net_api_plugin::plugin_initialize(const variables_map& options) {

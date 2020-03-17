@@ -1,13 +1,13 @@
 #pragma once
 
-#include <arisen/arisen.hpp>
+#include <eosio/eosio.hpp>
 
-class [[arisen::contract]] noop : public arisen::contract {
+class [[eosio::contract]] noop : public eosio::contract {
 public:
-   using arisen::contract::contract;
+   using eosio::contract::contract;
 
-   [[arisen::action]]
-   void anyaction( arisen::name                       from,
-                   const arisen::ignore<std::string>& type,
-                   const arisen::ignore<std::string>& data );
+   [[eosio::action]]
+   void anyaction( eosio::name                       from,
+                   const eosio::ignore<std::string>& type,
+                   const eosio::ignore<std::string>& data );
 };

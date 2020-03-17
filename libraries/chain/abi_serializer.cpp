@@ -1,8 +1,8 @@
-#include <arisen/chain/abi_serializer.hpp>
-#include <arisen/chain/chain_config.hpp>
-#include <arisen/chain/transaction.hpp>
-#include <arisen/chain/asset.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/chain/abi_serializer.hpp>
+#include <eosio/chain/chain_config.hpp>
+#include <eosio/chain/transaction.hpp>
+#include <eosio/chain/asset.hpp>
+#include <eosio/chain/exceptions.hpp>
 #include <fc/io/raw.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <fc/io/varint.hpp>
@@ -10,7 +10,7 @@
 using namespace boost;
 
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
    const size_t abi_serializer::max_recursion_depth;
 
@@ -129,7 +129,7 @@ namespace arisen { namespace chain {
    void abi_serializer::set_abi(const abi_def& abi, const fc::microseconds& max_serialization_time) {
       impl::abi_traverse_context ctx(max_serialization_time);
 
-      RSN_ASSERT(starts_with(abi.version, "arisen::abi/1."), unsupported_abi_version_exception, "ABI has an unsupported version");
+      EOS_ASSERT(starts_with(abi.version, "eosio::abi/1."), unsupported_abi_version_exception, "ABI has an unsupported version");
 
       typedefs.clear();
       structs.clear();
@@ -142,7 +142,7 @@ namespace arisen { namespace chain {
          structs[st.name] = st;
 
       for( const auto& td : abi.types ) {
-         RSN_ASSERT(!_is_type(td.new_type_name, ctx), duplicate_abi_type_def_exception,
+         EOS_ASSERT(!_is_type(td.new_type_name, ctx), duplicate_abi_type_def_exception,
                     "type already exists", ("new_type_name",impl::limit_size(td.new_type_name)));
          typedefs[td.new_type_name] = td.type;
       }
@@ -163,12 +163,12 @@ namespace arisen { namespace chain {
        *  The ABI vector may contain duplicates which would make it
        *  an invalid ABI
        */
-      RSN_ASSERT( typedefs.size() == abi.types.size(), duplicate_abi_type_def_exception, "duplicate type definition detected" );
-      RSN_ASSERT( structs.size() == abi.structs.size(), duplicate_abi_struct_def_exception, "duplicate struct definition detected" );
-      RSN_ASSERT( actions.size() == abi.actions.size(), duplicate_abi_action_def_exception, "duplicate action definition detected" );
-      RSN_ASSERT( tables.size() == abi.tables.size(), duplicate_abi_table_def_exception, "duplicate table definition detected" );
-      RSN_ASSERT( error_messages.size() == abi.error_messages.size(), duplicate_abi_err_msg_def_exception, "duplicate error message definition detected" );
-      RSN_ASSERT( variants.size() == abi.variants.value.size(), duplicate_abi_variant_def_exception, "duplicate variant definition detected" );
+      EOS_ASSERT( typedefs.size() == abi.types.size(), duplicate_abi_type_def_exception, "duplicate type definition detected" );
+      EOS_ASSERT( structs.size() == abi.structs.size(), duplicate_abi_struct_def_exception, "duplicate struct definition detected" );
+      EOS_ASSERT( actions.size() == abi.actions.size(), duplicate_abi_action_def_exception, "duplicate action definition detected" );
+      EOS_ASSERT( tables.size() == abi.tables.size(), duplicate_abi_table_def_exception, "duplicate table definition detected" );
+      EOS_ASSERT( error_messages.size() == abi.error_messages.size(), duplicate_abi_err_msg_def_exception, "duplicate error message definition detected" );
+      EOS_ASSERT( variants.size() == abi.variants.value.size(), duplicate_abi_variant_def_exception, "duplicate variant definition detected" );
 
       validate(ctx);
    }
@@ -182,7 +182,7 @@ namespace arisen { namespace chain {
    }
 
    int abi_serializer::get_integer_size(const std::string_view& type) const {
-      RSN_ASSERT( is_integer(type), invalid_type_inside_abi, "${type} is not an integer type", ("type",impl::limit_size(type)));
+      EOS_ASSERT( is_integer(type), invalid_type_inside_abi, "${type} is not an integer type", ("type",impl::limit_size(type)));
       if( boost::starts_with(type, "uint") ) {
          return boost::lexical_cast<int>(type.substr(4));
       } else {
@@ -236,7 +236,7 @@ namespace arisen { namespace chain {
 
    const struct_def& abi_serializer::get_struct(const std::string_view& type)const {
       auto itr = structs.find(resolve_type(type) );
-      RSN_ASSERT( itr != structs.end(), invalid_type_inside_abi, "Unknown struct ${type}", ("type",impl::limit_size(type)) );
+      EOS_ASSERT( itr != structs.end(), invalid_type_inside_abi, "Unknown struct ${type}", ("type",impl::limit_size(type)) );
       return itr->second;
    }
 
@@ -246,14 +246,14 @@ namespace arisen { namespace chain {
          auto itr = typedefs.find(t.second);
          while( itr != typedefs.end() ) {
             ctx.check_deadline();
-            RSN_ASSERT( find(types_seen.begin(), types_seen.end(), itr->second) == types_seen.end(), abi_circular_def_exception,
+            EOS_ASSERT( find(types_seen.begin(), types_seen.end(), itr->second) == types_seen.end(), abi_circular_def_exception,
                         "Circular reference in type ${type}", ("type", impl::limit_size(t.first)) );
             types_seen.emplace_back(itr->second);
             itr = typedefs.find(itr->second);
          }
       } FC_CAPTURE_AND_RETHROW( (t) ) }
       for( const auto& t : typedefs ) { try {
-         RSN_ASSERT(_is_type(t.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(t.second)) );
+         EOS_ASSERT(_is_type(t.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(t.second)) );
       } FC_CAPTURE_AND_RETHROW( (t) ) }
       for( const auto& s : structs ) { try {
          if( s.second.base != type_name() ) {
@@ -262,7 +262,7 @@ namespace arisen { namespace chain {
             while( current->base != type_name() ) {
                ctx.check_deadline();
                const struct_def& base = get_struct(current->base); //<-- force struct to inherit from another struct
-               RSN_ASSERT( find(types_seen.begin(), types_seen.end(), base.name) == types_seen.end(), abi_circular_def_exception,
+               EOS_ASSERT( find(types_seen.begin(), types_seen.end(), base.name) == types_seen.end(), abi_circular_def_exception,
                            "Circular reference in struct ${type}", ("type",impl::limit_size(s.second.name)) );
                types_seen.emplace_back(base.name);
                current = &base;
@@ -270,24 +270,24 @@ namespace arisen { namespace chain {
          }
          for( const auto& field : s.second.fields ) { try {
             ctx.check_deadline();
-            RSN_ASSERT(_is_type(_remove_bin_extension(field.type), ctx), invalid_type_inside_abi,
+            EOS_ASSERT(_is_type(_remove_bin_extension(field.type), ctx), invalid_type_inside_abi,
                        "${type}", ("type",impl::limit_size(field.type)) );
          } FC_CAPTURE_AND_RETHROW( (field) ) }
       } FC_CAPTURE_AND_RETHROW( (s) ) }
       for( const auto& s : variants ) { try {
          for( const auto& type : s.second.types ) { try {
             ctx.check_deadline();
-            RSN_ASSERT(_is_type(type, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(type)) );
+            EOS_ASSERT(_is_type(type, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(type)) );
          } FC_CAPTURE_AND_RETHROW( (type) ) }
       } FC_CAPTURE_AND_RETHROW( (s) ) }
       for( const auto& a : actions ) { try {
         ctx.check_deadline();
-        RSN_ASSERT(_is_type(a.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(a.second)) );
+        EOS_ASSERT(_is_type(a.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(a.second)) );
       } FC_CAPTURE_AND_RETHROW( (a)  ) }
 
       for( const auto& t : tables ) { try {
         ctx.check_deadline();
-        RSN_ASSERT(_is_type(t.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(t.second)) );
+        EOS_ASSERT(_is_type(t.second, ctx), invalid_type_inside_abi, "${type}", ("type",impl::limit_size(t.second)) );
       } FC_CAPTURE_AND_RETHROW( (t)  ) }
    }
 
@@ -308,7 +308,7 @@ namespace arisen { namespace chain {
    {
       auto h = ctx.enter_scope();
       auto s_itr = structs.find(type);
-      RSN_ASSERT( s_itr != structs.end(), invalid_type_inside_abi, "Unknown type ${type}", ("type",ctx.maybe_shorten(type)) );
+      EOS_ASSERT( s_itr != structs.end(), invalid_type_inside_abi, "Unknown type ${type}", ("type",ctx.maybe_shorten(type)) );
       ctx.hint_struct_type_if_in_array( s_itr );
       const auto& st = s_itr->second;
       if( st.base != type_name() ) {
@@ -324,10 +324,10 @@ namespace arisen { namespace chain {
                continue;
             }
             if( encountered_extension ) {
-               RSN_THROW( abi_exception, "Encountered field '${f}' without binary extension designation while processing struct '${p}'",
+               EOS_THROW( abi_exception, "Encountered field '${f}' without binary extension designation while processing struct '${p}'",
                           ("f", ctx.maybe_shorten(field.name))("p", ctx.get_path_string()) );
             }
-            RSN_THROW( unpack_exception, "Stream unexpectedly ended; unable to unpack field '${f}' of struct '${p}'",
+            EOS_THROW( unpack_exception, "Stream unexpectedly ended; unable to unpack field '${f}' of struct '${p}'",
                        ("f", ctx.maybe_shorten(field.name))("p", ctx.get_path_string()) );
 
          }
@@ -346,7 +346,7 @@ namespace arisen { namespace chain {
       if( btype != built_in_types.end() ) {
          try {
             return btype->second.first(stream, is_array(rtype), is_optional(rtype), ctx.get_deadline());
-         } RSN_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack ${class} type '${type}' while processing '${p}'",
+         } EOS_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack ${class} type '${type}' while processing '${p}'",
                                    ("class", is_array(rtype) ? "array of built-in" : is_optional(rtype) ? "optional of built-in" : "built-in")
                                    ("type", impl::limit_size(ftype))("p", ctx.get_path_string()) )
       }
@@ -355,7 +355,7 @@ namespace arisen { namespace chain {
          fc::unsigned_int size;
          try {
             fc::raw::unpack(stream, size);
-         } RSN_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack size of array '${p}'", ("p", ctx.get_path_string()) )
+         } EOS_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack size of array '${p}'", ("p", ctx.get_path_string()) )
          vector<fc::variant> vars;
          auto h1 = ctx.push_to_path( impl::array_index_path_item{} );
          for( decltype(size.value) i = 0; i < size; ++i ) {
@@ -364,11 +364,11 @@ namespace arisen { namespace chain {
             // QUESTION: Is it actually desired behavior to require the returned variant to not be null?
             //           This would disallow arrays of optionals in general (though if all optionals in the array were present it would be allowed).
             //           Is there any scenario in which the returned variant would be null other than in the case of an empty optional?
-            RSN_ASSERT( !v.is_null(), unpack_exception, "Invalid packed array '${p}'", ("p", ctx.get_path_string()) );
+            EOS_ASSERT( !v.is_null(), unpack_exception, "Invalid packed array '${p}'", ("p", ctx.get_path_string()) );
             vars.emplace_back(std::move(v));
          }
          // QUESTION: Why would the assert below ever fail?
-         RSN_ASSERT( vars.size() == size.value,
+         EOS_ASSERT( vars.size() == size.value,
                      unpack_exception,
                      "packed size does not match unpacked array size, packed size ${p} actual size ${a}",
                      ("p", size)("a", vars.size()) );
@@ -377,7 +377,7 @@ namespace arisen { namespace chain {
          char flag;
          try {
             fc::raw::unpack(stream, flag);
-         } RSN_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack presence flag of optional '${p}'", ("p", ctx.get_path_string()) )
+         } EOS_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack presence flag of optional '${p}'", ("p", ctx.get_path_string()) )
          return flag ? _binary_to_variant(ftype, stream, ctx) : fc::variant();
       } else {
          auto v_itr = variants.find(rtype);
@@ -386,8 +386,8 @@ namespace arisen { namespace chain {
             fc::unsigned_int select;
             try {
                fc::raw::unpack(stream, select);
-            } RSN_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack tag of variant '${p}'", ("p", ctx.get_path_string()) )
-            RSN_ASSERT( (size_t)select < v_itr->second.types.size(), unpack_exception,
+            } EOS_RETHROW_EXCEPTIONS( unpack_exception, "Unable to unpack tag of variant '${p}'", ("p", ctx.get_path_string()) )
+            EOS_ASSERT( (size_t)select < v_itr->second.types.size(), unpack_exception,
                         "Unpacked invalid tag (${select}) for variant '${p}'", ("select", select.value)("p",ctx.get_path_string()) );
             auto h1 = ctx.push_to_path( impl::variant_path_item{ .variant_itr = v_itr, .variant_ordinal = static_cast<uint32_t>(select) } );
             return vector<fc::variant>{v_itr->second.types[select], _binary_to_variant(v_itr->second.types[select], stream, ctx)};
@@ -397,7 +397,7 @@ namespace arisen { namespace chain {
       fc::mutable_variant_object mvo;
       _binary_to_variant(rtype, stream, mvo, ctx);
       // QUESTION: Is this assert actually desired? It disallows unpacking empty structs from datastream.
-      RSN_ASSERT( mvo.size() > 0, unpack_exception, "Unable to unpack '${p}' from stream", ("p", ctx.get_path_string()) );
+      EOS_ASSERT( mvo.size() > 0, unpack_exception, "Unable to unpack '${p}' from stream", ("p", ctx.get_path_string()) );
       return fc::variant( std::move(mvo) );
    }
 
@@ -454,13 +454,13 @@ namespace arisen { namespace chain {
       } else if( (v_itr = variants.find(rtype)) != variants.end() ) {
          ctx.hint_variant_type_if_in_array( v_itr );
          auto& v = v_itr->second;
-         RSN_ASSERT( var.is_array() && var.size() == 2, pack_exception,
+         EOS_ASSERT( var.is_array() && var.size() == 2, pack_exception,
                     "Expected input to be an array of two items while processing variant '${p}'", ("p", ctx.get_path_string()) );
-         RSN_ASSERT( var[size_t(0)].is_string(), pack_exception,
+         EOS_ASSERT( var[size_t(0)].is_string(), pack_exception,
                     "Encountered non-string as first item of input array while processing variant '${p}'", ("p", ctx.get_path_string()) );
          auto variant_type_str = var[size_t(0)].get_string();
          auto it = find(v.types.begin(), v.types.end(), variant_type_str);
-         RSN_ASSERT( it != v.types.end(), pack_exception,
+         EOS_ASSERT( it != v.types.end(), pack_exception,
                      "Specified type '${t}' in input array is not valid within the variant '${p}'",
                      ("t", ctx.maybe_shorten(variant_type_str))("p", ctx.get_path_string()) );
          fc::raw::pack(ds, fc::unsigned_int(it - v.types.begin()));
@@ -482,7 +482,7 @@ namespace arisen { namespace chain {
                const auto& field = st.fields[i];
                if( vo.contains( string(field.name).c_str() ) ) {
                   if( disallow_additional_fields )
-                     RSN_THROW( pack_exception, "Unexpected field '${f}' found in input object while processing struct '${p}'",
+                     EOS_THROW( pack_exception, "Unexpected field '${f}' found in input object while processing struct '${p}'",
                                 ("f", ctx.maybe_shorten(field.name))("p", ctx.get_path_string()) );
                   {
                      auto h1 = ctx.push_to_path( impl::field_path_item{ .parent_struct_itr = s_itr, .field_ordinal = i } );
@@ -492,16 +492,16 @@ namespace arisen { namespace chain {
                } else if( ends_with(field.type, "$") && ctx.extensions_allowed() ) {
                   disallow_additional_fields = true;
                } else if( disallow_additional_fields ) {
-                  RSN_THROW( abi_exception, "Encountered field '${f}' without binary extension designation while processing struct '${p}'",
+                  EOS_THROW( abi_exception, "Encountered field '${f}' without binary extension designation while processing struct '${p}'",
                              ("f", ctx.maybe_shorten(field.name))("p", ctx.get_path_string()) );
                } else {
-                  RSN_THROW( pack_exception, "Missing field '${f}' in input object while processing struct '${p}'",
+                  EOS_THROW( pack_exception, "Missing field '${f}' in input object while processing struct '${p}'",
                              ("f", ctx.maybe_shorten(field.name))("p", ctx.get_path_string()) );
                }
             }
          } else if( var.is_array() ) {
             const auto& va = var.get_array();
-            RSN_ASSERT( st.base == type_name(), invalid_type_inside_abi,
+            EOS_ASSERT( st.base == type_name(), invalid_type_inside_abi,
                         "Using input array to specify the fields of the derived struct '${p}'; input arrays are currently only allowed for structs without a base",
                         ("p",ctx.get_path_string()) );
             for( uint32_t i = 0; i < st.fields.size(); ++i ) {
@@ -513,15 +513,15 @@ namespace arisen { namespace chain {
                } else if( ends_with(field.type, "$") && ctx.extensions_allowed() ) {
                   break;
                } else {
-                  RSN_THROW( pack_exception, "Early end to input array specifying the fields of struct '${p}'; require input for field '${f}'",
+                  EOS_THROW( pack_exception, "Early end to input array specifying the fields of struct '${p}'; require input for field '${f}'",
                              ("p", ctx.get_path_string())("f", ctx.maybe_shorten(field.name)) );
                }
             }
          } else {
-            RSN_THROW( pack_exception, "Unexpected input encountered while processing struct '${p}'", ("p",ctx.get_path_string()) );
+            EOS_THROW( pack_exception, "Unexpected input encountered while processing struct '${p}'", ("p",ctx.get_path_string()) );
          }
       } else {
-         RSN_THROW( invalid_type_inside_abi, "Unknown type ${type}", ("type",ctx.maybe_shorten(type)) );
+         EOS_THROW( invalid_type_inside_abi, "Unknown type ${type}", ("type",ctx.maybe_shorten(type)) );
       }
    } FC_CAPTURE_AND_RETHROW() }
 
@@ -573,7 +573,7 @@ namespace arisen { namespace chain {
    namespace impl {
 
       void abi_traverse_context::check_deadline()const {
-         RSN_ASSERT( fc::time_point::now() < deadline, abi_serialization_deadline_exception,
+         EOS_ASSERT( fc::time_point::now() < deadline, abi_serialization_deadline_exception,
                      "serialization time limit ${t}us exceeded", ("t", max_serialization_time) );
       }
 
@@ -583,7 +583,7 @@ namespace arisen { namespace chain {
          };
 
          ++recursion_depth;
-         RSN_ASSERT( recursion_depth < abi_serializer::max_recursion_depth, abi_recursion_depth_exception,
+         EOS_ASSERT( recursion_depth < abi_serializer::max_recursion_depth, abi_recursion_depth_exception,
                      "recursive definition, max_recursion_depth ${r} ", ("r", abi_serializer::max_recursion_depth) );
 
          check_deadline();
@@ -611,7 +611,7 @@ namespace arisen { namespace chain {
 
       fc::scoped_exit<std::function<void()>> abi_traverse_context_with_path::push_to_path( const path_item& item ) {
          std::function<void()> callback = [this](){
-            RSN_ASSERT( path.size() > 0, abi_exception,
+            EOS_ASSERT( path.size() > 0, abi_exception,
                         "invariant failure in variant_to_binary_context: path is empty on scope exit" );
             path.pop_back();
          };
@@ -622,11 +622,11 @@ namespace arisen { namespace chain {
       }
 
       void abi_traverse_context_with_path::set_array_index_of_path_back( uint32_t i ) {
-         RSN_ASSERT( path.size() > 0, abi_exception, "path is empty" );
+         EOS_ASSERT( path.size() > 0, abi_exception, "path is empty" );
 
          auto& b = path.back();
 
-         RSN_ASSERT( b.contains<array_index_path_item>(), abi_exception, "trying to set array index without first pushing new array index item" );
+         EOS_ASSERT( b.contains<array_index_path_item>(), abi_exception, "trying to set array index without first pushing new array index item" );
 
          b.get<array_index_path_item>().array_index = i;
       }

@@ -1,21 +1,21 @@
 ---
-content_title: ARISEN Manual Build
+content_title: EOSIO Manual Build
 ---
 
 [[info | Manual Builds are for Advanced Developers]]
-| These manual instructions are intended for advanced developers. The [Shell Scripts](../01_shell-scripts/index.md) should be the preferred method to build ARISEN from source. If the script fails or your platform is not supported, continue with the instructions below.
+| These manual instructions are intended for advanced developers. The [Shell Scripts](../01_shell-scripts/index.md) should be the preferred method to build EOSIO from source. If the script fails or your platform is not supported, continue with the instructions below.
 
-## ARISEN Dependencies
+## EOSIO Dependencies
 
-When performing a manual build, it is necessary to install specific software packages that the ARISEN software depends on. To learn more about these dependencies, visit the [ARISEN Software Dependencies](00_arisen-dependencies.md) section.
+When performing a manual build, it is necessary to install specific software packages that the EOSIO software depends on. To learn more about these dependencies, visit the [EOSIO Software Dependencies](00_eosio-dependencies.md) section.
 
 ## Platforms
 
-Shell commands are available to manually download, build, install, test, and uninstall the ARISEN software and dependencies for these [platforms](03_platforms/index.md).
+Shell commands are available to manually download, build, install, test, and uninstall the EOSIO software and dependencies for these [platforms](03_platforms/index.md).
 
 ## Out-of-source Builds
 
-While building dependencies and ARISEN binaries, out-of-source builds are also supported. Refer to the `cmake` help for more information.
+While building dependencies and EOSIO binaries, out-of-source builds are also supported. Refer to the `cmake` help for more information.
 
 ## Other Compilers
 

@@ -1,11 +1,11 @@
-#include <arisen/chain/apply_context.hpp>
-#include <arisen/chain/transaction_context.hpp>
-#include <arisen/chain/authorization_manager.hpp>
-#include <arisen/chain/exceptions.hpp>
-#include <arisen/chain/resource_limits.hpp>
-#include <arisen/chain/generated_transaction_object.hpp>
-#include <arisen/chain/transaction_object.hpp>
-#include <arisen/chain/global_property_object.hpp>
+#include <eosio/chain/apply_context.hpp>
+#include <eosio/chain/transaction_context.hpp>
+#include <eosio/chain/authorization_manager.hpp>
+#include <eosio/chain/exceptions.hpp>
+#include <eosio/chain/resource_limits.hpp>
+#include <eosio/chain/generated_transaction_object.hpp>
+#include <eosio/chain/transaction_object.hpp>
+#include <eosio/chain/global_property_object.hpp>
 
 #pragma push_macro("N")
 #undef N
@@ -19,7 +19,7 @@
 
 #include <chrono>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
    transaction_checktime_timer::transaction_checktime_timer(platform_timer& timer)
          : expired(timer.expired), _timer(timer) {
@@ -70,15 +70,15 @@ namespace arisen { namespace chain {
 
    void transaction_context::disallow_transaction_extensions( const char* error_msg )const {
       if( control.is_producing_block() ) {
-         RSN_THROW( subjective_block_production_exception, error_msg );
+         EOS_THROW( subjective_block_production_exception, error_msg );
       } else {
-         RSN_THROW( disallowed_transaction_extensions_bad_block_exception, error_msg );
+         EOS_THROW( disallowed_transaction_extensions_bad_block_exception, error_msg );
       }
    }
 
    void transaction_context::init(uint64_t initial_net_usage)
    {
-      RSN_ASSERT( !is_initialized, transaction_exception, "cannot initialize twice" );
+      EOS_ASSERT( !is_initialized, transaction_exception, "cannot initialize twice" );
       const static int64_t large_number_no_overflow = std::numeric_limits<int64_t>::max()/2;
 
       const auto& cfg = control.get_global_properties().configuration;
@@ -261,7 +261,7 @@ namespace arisen { namespace chain {
    }
 
    void transaction_context::exec() {
-      RSN_ASSERT( is_initialized, transaction_exception, "must first initialize" );
+      EOS_ASSERT( is_initialized, transaction_exception, "must first initialize" );
 
       if( apply_context_free ) {
          for( const auto& act : trx.context_free_actions ) {
@@ -287,7 +287,7 @@ namespace arisen { namespace chain {
    }
 
    void transaction_context::finalize() {
-      RSN_ASSERT( is_initialized, transaction_exception, "must first initialize" );
+      EOS_ASSERT( is_initialized, transaction_exception, "must first initialize" );
 
       if( is_input ) {
          auto& am = control.get_mutable_authorization_manager();
@@ -353,15 +353,15 @@ namespace arisen { namespace chain {
       if (!control.skip_trx_checks()) {
          if( BOOST_UNLIKELY(net_usage > eager_net_limit) ) {
             if ( net_limit_due_to_block ) {
-               RSN_THROW( block_net_usage_exceeded,
+               EOS_THROW( block_net_usage_exceeded,
                           "not enough space left in block: ${net_usage} > ${net_limit}",
                           ("net_usage", net_usage)("net_limit", eager_net_limit) );
             }  else if (net_limit_due_to_greylist) {
-               RSN_THROW( greylist_net_usage_exceeded,
+               EOS_THROW( greylist_net_usage_exceeded,
                           "greylisted transaction net usage is too high: ${net_usage} > ${net_limit}",
                           ("net_usage", net_usage)("net_limit", eager_net_limit) );
             } else {
-               RSN_THROW( tx_net_usage_exceeded,
+               EOS_THROW( tx_net_usage_exceeded,
                           "transaction net usage is too high: ${net_usage} > ${net_limit}",
                           ("net_usage", net_usage)("net_limit", eager_net_limit) );
             }
@@ -375,29 +375,29 @@ namespace arisen { namespace chain {
 
       auto now = fc::time_point::now();
       if( explicit_billed_cpu_time || deadline_exception_code == deadline_exception::code_value ) {
-         RSN_THROW( deadline_exception, "deadline exceeded ${billing_timer}us",
+         EOS_THROW( deadline_exception, "deadline exceeded ${billing_timer}us",
                      ("billing_timer", now - pseudo_start)("now", now)("deadline", _deadline)("start", start) );
       } else if( deadline_exception_code == block_cpu_usage_exceeded::code_value ) {
-         RSN_THROW( block_cpu_usage_exceeded,
+         EOS_THROW( block_cpu_usage_exceeded,
                      "not enough time left in block to complete executing transaction ${billing_timer}us",
                      ("now", now)("deadline", _deadline)("start", start)("billing_timer", now - pseudo_start) );
       } else if( deadline_exception_code == tx_cpu_usage_exceeded::code_value ) {
          if (cpu_limit_due_to_greylist) {
-            RSN_THROW( greylist_cpu_usage_exceeded,
+            EOS_THROW( greylist_cpu_usage_exceeded,
                      "greylisted transaction was executing for too long ${billing_timer}us",
                      ("now", now)("deadline", _deadline)("start", start)("billing_timer", now - pseudo_start) );
          } else {
-            RSN_THROW( tx_cpu_usage_exceeded,
+            EOS_THROW( tx_cpu_usage_exceeded,
                      "transaction was executing for too long ${billing_timer}us",
                      ("now", now)("deadline", _deadline)("start", start)("billing_timer", now - pseudo_start) );
          }
       } else if( deadline_exception_code == leeway_deadline_exception::code_value ) {
-         RSN_THROW( leeway_deadline_exception,
+         EOS_THROW( leeway_deadline_exception,
                      "the transaction was unable to complete by deadline, "
                      "but it is possible it could have succeeded if it were allowed to run to completion ${billing_timer}",
                      ("now", now)("deadline", _deadline)("start", start)("billing_timer", now - pseudo_start) );
       }
-      RSN_ASSERT( false,  transaction_exception, "unexpected deadline exception code ${code}", ("code", deadline_exception_code) );
+      EOS_ASSERT( false,  transaction_exception, "unexpected deadline exception code ${code}", ("code", deadline_exception_code) );
    }
 
    void transaction_context::pause_billing_timer() {
@@ -429,7 +429,7 @@ namespace arisen { namespace chain {
       if (!control.skip_trx_checks()) {
          if( check_minimum ) {
             const auto& cfg = control.get_global_properties().configuration;
-            RSN_ASSERT( billed_us >= cfg.min_transaction_cpu_usage, transaction_exception,
+            EOS_ASSERT( billed_us >= cfg.min_transaction_cpu_usage, transaction_exception,
                         "cannot bill CPU time less than the minimum of ${min_billable} us",
                         ("min_billable", cfg.min_transaction_cpu_usage)("billed_cpu_time_us", billed_us)
                       );
@@ -444,14 +444,14 @@ namespace arisen { namespace chain {
          const bool cpu_limited_by_account = (account_cpu_limit <= objective_duration_limit.count());
 
          if( !cpu_limited_by_account && (billing_timer_exception_code == block_cpu_usage_exceeded::code_value) ) {
-            RSN_ASSERT( billed_us <= objective_duration_limit.count(),
+            EOS_ASSERT( billed_us <= objective_duration_limit.count(),
                         block_cpu_usage_exceeded,
                         "${desc} CPU time (${billed} us) is greater than the billable CPU time left in the block (${billable} us)",
                         ("desc", (estimate ? "estimated" : "billed"))("billed", billed_us)( "billable", objective_duration_limit.count() )
             );
          } else {
             if( cpu_limit_due_to_greylist && cpu_limited_by_account ) {
-               RSN_ASSERT( billed_us <= account_cpu_limit,
+               EOS_ASSERT( billed_us <= account_cpu_limit,
                            greylist_cpu_usage_exceeded,
                            "${desc} CPU time (${billed} us) is greater than the maximum greylisted billable CPU time for the transaction (${billable} us)",
                            ("desc", (estimate ? "estimated" : "billed"))("billed", billed_us)( "billable", account_cpu_limit )
@@ -459,7 +459,7 @@ namespace arisen { namespace chain {
             } else {
                // exceeds trx.max_cpu_usage_ms or cfg.max_transaction_cpu_usage if objective_duration_limit is greater
                const int64_t cpu_limit = (cpu_limited_by_account ? account_cpu_limit : objective_duration_limit.count());
-               RSN_ASSERT( billed_us <= cpu_limit,
+               EOS_ASSERT( billed_us <= cpu_limit,
                            tx_cpu_usage_exceeded,
                            "${desc} CPU time (${billed} us) is greater than the maximum billable CPU time for the transaction (${billable} us)",
                            ("desc", (estimate ? "estimated" : "billed"))("billed", billed_us)( "billable", cpu_limit )
@@ -519,14 +519,14 @@ namespace arisen { namespace chain {
          }
       }
 
-      RSN_ASSERT( (!force_elastic_limits && control.is_producing_block()) || (!greylisted_cpu && !greylisted_net),
+      EOS_ASSERT( (!force_elastic_limits && control.is_producing_block()) || (!greylisted_cpu && !greylisted_net),
                   transaction_exception, "greylisted when not producing block" );
 
       return std::make_tuple(account_net_limit, account_cpu_limit, greylisted_net, greylisted_cpu);
    }
 
    action_trace& transaction_context::get_action_trace( uint32_t action_ordinal ) {
-      RSN_ASSERT( 0 < action_ordinal && action_ordinal <= trace->action_traces.size() ,
+      EOS_ASSERT( 0 < action_ordinal && action_ordinal <= trace->action_traces.size() ,
                   transaction_exception,
                   "action_ordinal ${ordinal} is outside allowed range [1,${max}]",
                   ("ordinal", action_ordinal)("max", trace->action_traces.size())
@@ -535,7 +535,7 @@ namespace arisen { namespace chain {
    }
 
    const action_trace& transaction_context::get_action_trace( uint32_t action_ordinal )const {
-      RSN_ASSERT( 0 < action_ordinal && action_ordinal <= trace->action_traces.size() ,
+      EOS_ASSERT( 0 < action_ordinal && action_ordinal <= trace->action_traces.size() ,
                   transaction_exception,
                   "action_ordinal ${ordinal} is outside allowed range [1,${max}]",
                   ("ordinal", action_ordinal)("max", trace->action_traces.size())
@@ -631,7 +631,7 @@ namespace arisen { namespace chain {
       } catch( const boost::interprocess::bad_alloc& ) {
          throw;
       } catch ( ... ) {
-          RSN_ASSERT( false, tx_duplicate,
+          EOS_ASSERT( false, tx_duplicate,
                      "duplicate transaction ${id}", ("id", id ) );
       }
    } /// record_transaction
@@ -642,9 +642,9 @@ namespace arisen { namespace chain {
 
       for( const auto& a : trx.context_free_actions ) {
          auto* code = db.find<account_object, by_name>(a.account);
-         RSN_ASSERT( code != nullptr, transaction_exception,
+         EOS_ASSERT( code != nullptr, transaction_exception,
                      "action's code account '${account}' does not exist", ("account", a.account) );
-         RSN_ASSERT( a.authorization.size() == 0, transaction_exception,
+         EOS_ASSERT( a.authorization.size() == 0, transaction_exception,
                      "context-free actions cannot have authorizations" );
       }
 
@@ -653,21 +653,21 @@ namespace arisen { namespace chain {
       bool one_auth = false;
       for( const auto& a : trx.actions ) {
          auto* code = db.find<account_object, by_name>(a.account);
-         RSN_ASSERT( code != nullptr, transaction_exception,
+         EOS_ASSERT( code != nullptr, transaction_exception,
                      "action's code account '${account}' does not exist", ("account", a.account) );
          for( const auto& auth : a.authorization ) {
             one_auth = true;
             auto* actor = db.find<account_object, by_name>(auth.actor);
-            RSN_ASSERT( actor  != nullptr, transaction_exception,
+            EOS_ASSERT( actor  != nullptr, transaction_exception,
                         "action's authorizing actor '${account}' does not exist", ("account", auth.actor) );
-            RSN_ASSERT( auth_manager.find_permission(auth) != nullptr, transaction_exception,
+            EOS_ASSERT( auth_manager.find_permission(auth) != nullptr, transaction_exception,
                         "action's authorizations include a non-existent permission: ${permission}",
                         ("permission", auth) );
             if( enforce_actor_whitelist_blacklist )
                actors.insert( auth.actor );
          }
       }
-      RSN_ASSERT( one_auth, tx_no_auths, "transaction must have at least one authorization" );
+      EOS_ASSERT( one_auth, tx_no_auths, "transaction must have at least one authorization" );
 
       if( enforce_actor_whitelist_blacklist ) {
          control.check_actor_list( actors );
@@ -675,4 +675,4 @@ namespace arisen { namespace chain {
    }
 
 
-} } /// arisen::chain
+} } /// eosio::chain

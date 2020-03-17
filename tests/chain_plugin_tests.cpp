@@ -1,13 +1,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <arisen/testing/tester.hpp>
-#include <arisen/chain/abi_serializer.hpp>
-#include <arisen/chain/wasm_arisen_constraints.hpp>
-#include <arisen/chain/resource_limits.hpp>
-#include <arisen/chain/exceptions.hpp>
-#include <arisen/chain/wast_to_wasm.hpp>
-#include <arisen/chain_plugin/chain_plugin.hpp>
+#include <eosio/testing/tester.hpp>
+#include <eosio/chain/abi_serializer.hpp>
+#include <eosio/chain/wasm_eosio_constraints.hpp>
+#include <eosio/chain/resource_limits.hpp>
+#include <eosio/chain/exceptions.hpp>
+#include <eosio/chain/wast_to_wasm.hpp>
+#include <eosio/chain_plugin/chain_plugin.hpp>
 
 #include <contracts.hpp>
 
@@ -27,9 +27,9 @@
 #define TESTER validating_tester
 #endif
 
-using namespace arisen;
-using namespace arisen::chain;
-using namespace arisen::testing;
+using namespace eosio;
+using namespace eosio::chain;
+using namespace eosio::testing;
 using namespace fc;
 
 BOOST_AUTO_TEST_SUITE(chain_plugin_tests)

@@ -2,14 +2,14 @@
 #include <vector>
 #include <string>
 
-#include <arisenlib/arisen.hpp>
+#include <eosiolib/eosio.hpp>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsign-conversion"
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wsign-compare"
 
-using namespace arisen;
+using namespace eosio;
 
 CONTRACT test_ram_limit : public contract {
    public:
@@ -19,7 +19,7 @@ CONTRACT test_ram_limit : public contract {
 
       ACTION setentry( name payer, uint64_t from, uint64_t to, uint64_t size ) {
          const auto self = get_self();
-         arisen::print("test_ram_limit::setentry ", arisen::name{self}, "\n");
+         eosio::print("test_ram_limit::setentry ", eosio::name{self}, "\n");
          test_table table( self, self.value );
          for ( int key = from; key <=to; ++key ) {
             auto itr = table.find(key);
@@ -38,24 +38,24 @@ CONTRACT test_ram_limit : public contract {
 
       ACTION rmentry( uint64_t from, uint64_t to ) {
          const auto self = get_self();
-         arisen::print("test_ram_limit::rmentry ", arisen::name{self}, "\n");
+         eosio::print("test_ram_limit::rmentry ", eosio::name{self}, "\n");
          test_table table( self, self.value );
          for ( int key = from; key <=to; ++key ) {
             auto itr = table.find(key);
-            arisen_assert ( itr != table.end(), "could not find test_table entry" );
+            eosio_assert ( itr != table.end(), "could not find test_table entry" );
             table.erase(itr);
          }
       }
 
       ACTION printentry( uint64_t from, uint64_t to ) {
          const auto self = get_self();
-         arisen::print("test_ram_limit::printout ", arisen::name{self}, ":");
+         eosio::print("test_ram_limit::printout ", eosio::name{self}, ":");
          test_table table( self, self.value );
          for ( int key = from; key <= to; ++key ) {
             auto itr = table.find(key);
-            arisen::print("\nkey=", key);
-            arisen_assert ( itr != table.end(), "could not find test_table entry" );
-            arisen::print(" size=", itr->data.size());
+            eosio::print("\nkey=", key);
+            eosio_assert ( itr != table.end(), "could not find test_table entry" );
+            eosio::print(" size=", itr->data.size());
          }
       }
 
@@ -66,11 +66,11 @@ CONTRACT test_ram_limit : public contract {
 
          uint64_t primary_key()const { return key; }
 
-         RSNLIB_SERIALIZE( test, (key)(data) )
+         EOSLIB_SERIALIZE( test, (key)(data) )
       };
-      typedef arisen::multi_index< "test.table"_n, test> test_table;
+      typedef eosio::multi_index< "test.table"_n, test> test_table;
 };
 
 #pragma clang diagnostic pop
 
-ARISEN_DISPATCH( test_ram_limit, (setentry)(rmentry)(printentry) )
+EOSIO_DISPATCH( test_ram_limit, (setentry)(rmentry)(printentry) )

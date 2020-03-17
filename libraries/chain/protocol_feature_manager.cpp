@@ -1,13 +1,13 @@
-#include <arisen/chain/protocol_feature_manager.hpp>
-#include <arisen/chain/protocol_state_object.hpp>
-#include <arisen/chain/exceptions.hpp>
+#include <eosio/chain/protocol_feature_manager.hpp>
+#include <eosio/chain/protocol_state_object.hpp>
+#include <eosio/chain/exceptions.hpp>
 
 #include <fc/scoped_exit.hpp>
 
 #include <algorithm>
 #include <boost/assign/list_of.hpp>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
    const std::unordered_map<builtin_protocol_feature_t, builtin_protocol_feature_spec, enum_hash<builtin_protocol_feature_t>>
    builtin_protocol_feature_codenames =
@@ -68,7 +68,7 @@ Also allows a contract to send a deferred transaction in a manner that enables t
 /*
 Builtin protocol feature: FIX_LINKAUTH_RESTRICTION
 
-Removes the restriction on arisen::linkauth for non-native actions named one of the five special action names:
+Removes the restriction on eosio::linkauth for non-native actions named one of the five special action names:
 updateauth, deleteauth, linkauth, unlinkauth, or canceldelay.
 */
             {}
@@ -115,7 +115,7 @@ Adds CPU and network bandwidth usage to only the first authorizer of a transacti
 /*
 Builtin protocol feature: FORWARD_SETCODE
 
-Forward arisen::setcode actions to the WebAssembly code deployed on the arisen account.
+Forward eosio::setcode actions to the WebAssembly code deployed on the eosio account.
 */
             {}
          } )
@@ -191,7 +191,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
 
    const char* builtin_protocol_feature_codename( builtin_protocol_feature_t codename ) {
       auto itr = builtin_protocol_feature_codenames.find( codename );
-      RSN_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
+      EOS_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
                   "Unsupported builtin_protocol_feature_t passed to builtin_protocol_feature_codename: ${codename}",
                   ("codename", static_cast<uint32_t>(codename)) );
 
@@ -213,7 +213,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
          break;
          default:
          {
-            RSN_THROW( protocol_feature_validation_exception,
+            EOS_THROW( protocol_feature_validation_exception,
                        "Unsupported protocol_feature_t passed to constructor: ${type}",
                        ("type", static_cast<uint32_t>(feature_type)) );
          }
@@ -228,7 +228,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
       if( protocol_feature_type == builtin_protocol_feature::feature_type_string ) {
          _type = protocol_feature_t::builtin;
       } else {
-         RSN_THROW( protocol_feature_validation_exception,
+         EOS_THROW( protocol_feature_validation_exception,
                     "Unsupported protocol feature type: ${type}", ("type", protocol_feature_type) );
       }
    }
@@ -243,7 +243,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    ,_codename(codename)
    {
       auto itr = builtin_protocol_feature_codenames.find( codename );
-      RSN_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
+      EOS_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
                   "Unsupported builtin_protocol_feature_t passed to constructor: ${codename}",
                   ("codename", static_cast<uint32_t>(codename)) );
 
@@ -260,7 +260,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
          }
       }
 
-      RSN_THROW( protocol_feature_validation_exception,
+      EOS_THROW( protocol_feature_validation_exception,
                  "Unsupported builtin protocol feature codename: ${codename}",
                  ("codename", builtin_feature_codename) );
    }
@@ -279,7 +279,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    fc::variant protocol_feature::to_variant( bool include_subjective_restrictions,
                                              fc::mutable_variant_object* additional_fields )const
    {
-      RSN_ASSERT( builtin_feature, protocol_feature_exception, "not a builtin protocol feature" );
+      EOS_ASSERT( builtin_feature, protocol_feature_exception, "not a builtin protocol feature" );
 
       fc::mutable_variant_object mvo;
 
@@ -359,7 +359,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    const protocol_feature& protocol_feature_set::get_protocol_feature( const digest_type& feature_digest )const {
       auto itr = _recognized_protocol_features.find( feature_digest );
 
-      RSN_ASSERT( itr != _recognized_protocol_features.end(), protocol_feature_exception,
+      EOS_ASSERT( itr != _recognized_protocol_features.end(), protocol_feature_exception,
                   "unrecognized protocol feature with digest: ${digest}",
                   ("digest", feature_digest)
       );
@@ -389,7 +389,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    ) {
       auto itr = builtin_protocol_feature_codenames.find( codename );
 
-      RSN_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
+      EOS_ASSERT( itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
                   "Unsupported builtin_protocol_feature_t: ${codename}",
                   ("codename", static_cast<uint32_t>(codename)) );
 
@@ -405,14 +405,14 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
 
    const protocol_feature& protocol_feature_set::add_feature( const builtin_protocol_feature& f ) {
       auto builtin_itr = builtin_protocol_feature_codenames.find( f._codename );
-      RSN_ASSERT( builtin_itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
+      EOS_ASSERT( builtin_itr != builtin_protocol_feature_codenames.end(), protocol_feature_validation_exception,
                   "Builtin protocol feature has unsupported builtin_protocol_feature_t: ${codename}",
                   ("codename", static_cast<uint32_t>( f._codename )) );
 
       uint32_t indx = static_cast<uint32_t>( f._codename );
 
       if( indx < _recognized_builtin_protocol_features.size() ) {
-         RSN_ASSERT( _recognized_builtin_protocol_features[indx] == _recognized_protocol_features.end(),
+         EOS_ASSERT( _recognized_builtin_protocol_features[indx] == _recognized_protocol_features.end(),
                      protocol_feature_exception,
                      "builtin protocol feature with codename '${codename}' already added",
                      ("codename", f.builtin_feature_codename) );
@@ -426,7 +426,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
 
       for( const auto& d : f.dependencies ) {
          auto itr = _recognized_protocol_features.find( d );
-         RSN_ASSERT( itr != _recognized_protocol_features.end(), protocol_feature_exception,
+         EOS_ASSERT( itr != _recognized_protocol_features.end(), protocol_feature_exception,
             "builtin protocol feature with codename '${codename}' and digest of ${digest} has a dependency on a protocol feature with digest ${dependency_digest} that is not recognized",
             ("codename", f.builtin_feature_codename)
             ("digest",  feature_digest)
@@ -453,14 +453,14 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
          missing_builtins_with_names.reserve( missing_builtins.size() );
          for( const auto& builtin_codename : missing_builtins ) {
             auto itr = builtin_protocol_feature_codenames.find( builtin_codename );
-            RSN_ASSERT( itr != builtin_protocol_feature_codenames.end(),
+            EOS_ASSERT( itr != builtin_protocol_feature_codenames.end(),
                         protocol_feature_exception,
                         "Unexpected error"
             );
             missing_builtins_with_names.emplace_back( itr->second.codename );
          }
 
-         RSN_THROW(  protocol_feature_validation_exception,
+         EOS_THROW(  protocol_feature_validation_exception,
                      "Not all the builtin dependencies of the builtin protocol feature with codename '${codename}' and digest of ${digest} were satisfied.",
                      ("missing_dependencies", missing_builtins_with_names)
          );
@@ -476,7 +476,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
          f._codename
       } );
 
-      RSN_ASSERT( res.second, protocol_feature_exception,
+      EOS_ASSERT( res.second, protocol_feature_exception,
                   "builtin protocol feature with codename '${codename}' has a digest of ${digest} but another protocol feature with the same digest has already been added",
                   ("codename", f.builtin_feature_codename)("digest", feature_digest) );
 
@@ -499,7 +499,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    void protocol_feature_manager::init( chainbase::database& db ) {
-      RSN_ASSERT( !is_initialized(), protocol_feature_exception, "cannot initialize protocol_feature_manager twice" );
+      EOS_ASSERT( !is_initialized(), protocol_feature_exception, "cannot initialize protocol_feature_manager twice" );
 
 
       auto reset_initialized = fc::make_scoped_exit( [this]() { _initialized = false; } );
@@ -513,17 +513,17 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    const protocol_feature* protocol_feature_manager::const_iterator::get_pointer()const {
-      //RSN_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot dereference singular iterator" );
-      //RSN_ASSERT( _index != end_index, protocol_feature_iterator_exception, "cannot dereference end iterator" );
+      //EOS_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot dereference singular iterator" );
+      //EOS_ASSERT( _index != end_index, protocol_feature_iterator_exception, "cannot dereference end iterator" );
       return &*(_pfm->_activated_protocol_features[_index].iterator_to_protocol_feature);
    }
 
    uint32_t protocol_feature_manager::const_iterator::activation_ordinal()const {
-      RSN_ASSERT( _pfm,
+      EOS_ASSERT( _pfm,
                    protocol_feature_iterator_exception,
                   "called activation_ordinal() on singular iterator"
       );
-      RSN_ASSERT( _index != end_index,
+      EOS_ASSERT( _index != end_index,
                    protocol_feature_iterator_exception,
                   "called activation_ordinal() on end iterator"
       );
@@ -532,11 +532,11 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    uint32_t protocol_feature_manager::const_iterator::activation_block_num()const {
-      RSN_ASSERT( _pfm,
+      EOS_ASSERT( _pfm,
                    protocol_feature_iterator_exception,
                   "called activation_block_num() on singular iterator"
       );
-      RSN_ASSERT( _index != end_index,
+      EOS_ASSERT( _index != end_index,
                    protocol_feature_iterator_exception,
                   "called activation_block_num() on end iterator"
       );
@@ -545,8 +545,8 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    protocol_feature_manager::const_iterator& protocol_feature_manager::const_iterator::operator++() {
-      RSN_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot increment singular iterator" );
-      RSN_ASSERT( _index != end_index, protocol_feature_iterator_exception, "cannot increment end iterator" );
+      EOS_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot increment singular iterator" );
+      EOS_ASSERT( _index != end_index, protocol_feature_iterator_exception, "cannot increment end iterator" );
 
       ++_index;
       if( _index >= _pfm->_activated_protocol_features.size() ) {
@@ -557,15 +557,15 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    protocol_feature_manager::const_iterator& protocol_feature_manager::const_iterator::operator--() {
-      RSN_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot decrement singular iterator" );
+      EOS_ASSERT( _pfm, protocol_feature_iterator_exception, "cannot decrement singular iterator" );
       if( _index == end_index ) {
-         RSN_ASSERT( _pfm->_activated_protocol_features.size() > 0,
+         EOS_ASSERT( _pfm->_activated_protocol_features.size() > 0,
                      protocol_feature_iterator_exception,
                      "cannot decrement end iterator when no protocol features have been activated"
          );
          _index = _pfm->_activated_protocol_features.size() - 1;
       } else {
-         RSN_ASSERT( _index > 0,
+         EOS_ASSERT( _index > 0,
                      protocol_feature_iterator_exception,
                      "cannot decrement iterator at the beginning of protocol feature activation list" )
          ;
@@ -634,16 +634,16 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    void protocol_feature_manager::activate_feature( const digest_type& feature_digest,
                                                     uint32_t current_block_num )
    {
-      RSN_ASSERT( is_initialized(), protocol_feature_exception, "protocol_feature_manager is not yet initialized" );
+      EOS_ASSERT( is_initialized(), protocol_feature_exception, "protocol_feature_manager is not yet initialized" );
 
       auto itr = _protocol_feature_set.find( feature_digest );
 
-      RSN_ASSERT( itr != _protocol_feature_set.end(), protocol_feature_exception,
+      EOS_ASSERT( itr != _protocol_feature_set.end(), protocol_feature_exception,
                   "unrecognized protocol feature digest: ${digest}", ("digest", feature_digest) );
 
       if( _activated_protocol_features.size() > 0 ) {
          const auto& last = _activated_protocol_features.back();
-         RSN_ASSERT( last.activation_block_num <= current_block_num,
+         EOS_ASSERT( last.activation_block_num <= current_block_num,
                      protocol_feature_exception,
                      "last protocol feature activation block num is ${last_activation_block_num} yet "
                      "attempting to activate protocol feature with a current block num of ${current_block_num}"
@@ -653,21 +653,21 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
          );
       }
 
-      RSN_ASSERT( itr->builtin_feature,
+      EOS_ASSERT( itr->builtin_feature,
                   protocol_feature_exception,
                   "invariant failure: encountered non-builtin protocol feature which is not yet supported"
       );
 
       uint32_t indx = static_cast<uint32_t>( *itr->builtin_feature );
 
-      RSN_ASSERT( indx < _builtin_protocol_features.size(), protocol_feature_exception,
+      EOS_ASSERT( indx < _builtin_protocol_features.size(), protocol_feature_exception,
                   "invariant failure while trying to activate feature with digest '${digest}': "
                   "unsupported builtin_protocol_feature_t ${codename}",
                   ("digest", feature_digest)
                   ("codename", indx)
       );
 
-      RSN_ASSERT( _builtin_protocol_features[indx].activation_block_num == builtin_protocol_feature_entry::not_active,
+      EOS_ASSERT( _builtin_protocol_features[indx].activation_block_num == builtin_protocol_feature_entry::not_active,
                   protocol_feature_exception,
                   "cannot activate already activated builtin feature with digest: ${digest}",
                   ("digest", feature_digest)
@@ -680,7 +680,7 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
    }
 
    void protocol_feature_manager::popped_blocks_to( uint32_t block_num ) {
-      RSN_ASSERT( is_initialized(), protocol_feature_exception, "protocol_feature_manager is not yet initialized" );
+      EOS_ASSERT( is_initialized(), protocol_feature_exception, "protocol_feature_manager is not yet initialized" );
 
       while( _head_of_builtin_activation_list != builtin_protocol_feature_entry::no_previous ) {
          auto& e = _builtin_protocol_features[_head_of_builtin_activation_list];
@@ -698,4 +698,4 @@ may use a new `set_proposed_producers_ex` intrinsic to access extended features.
       }
    }
 
-} }  // arisen::chain
+} }  // eosio::chain

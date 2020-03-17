@@ -1,20 +1,20 @@
 /**
  *  @file
- *  @copyright defined in rsn/LICENSE
+ *  @copyright defined in eos/LICENSE
  */
 #pragma once
 
-#include <arisen/arisen.hpp>
-#include <arisen/crypto.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/crypto.hpp>
 
-using namespace arisen;
+using namespace eosio;
 
-class [[arisen::contract]] get_table_test : public arisen::contract {
+class [[eosio::contract]] get_table_test : public eosio::contract {
     public:
-    using arisen::contract::contract;
+    using eosio::contract::contract;
 
     // Number object
-    struct [[arisen::table]] numobj {
+    struct [[eosio::table]] numobj {
         uint64_t        key;
         uint64_t        sec64;
         uint128_t       sec128;
@@ -29,7 +29,7 @@ class [[arisen::contract]] get_table_test : public arisen::contract {
     };
 
     // Hash object
-    struct [[arisen::table]] hashobj {
+    struct [[eosio::table]] hashobj {
         uint64_t        key;
         std::string     hash_input;
         checksum256     sec256;
@@ -40,23 +40,23 @@ class [[arisen::contract]] get_table_test : public arisen::contract {
         checksum256 sec160_key() const { return checksum256(sec160.get_array()); }
     };
 
-    typedef arisen::multi_index< "numobjs"_n, numobj, 
+    typedef eosio::multi_index< "numobjs"_n, numobj, 
                                 indexed_by<"bysec1"_n, const_mem_fun<numobj, uint64_t, &numobj::sec64_key>>,
                                 indexed_by<"bysec2"_n, const_mem_fun<numobj, uint128_t, &numobj::sec128_key>>,
                                 indexed_by<"bysec3"_n, const_mem_fun<numobj, double, &numobj::secdouble_key>>,
                                 indexed_by<"bysec4"_n, const_mem_fun<numobj, long double, &numobj::secldouble_key>>
                                 > numobjs;
 
-    typedef arisen::multi_index< "hashobjs"_n, hashobj, 
+    typedef eosio::multi_index< "hashobjs"_n, hashobj, 
                             indexed_by<"bysec1"_n, const_mem_fun<hashobj, checksum256, &hashobj::sec256_key>>,
                             indexed_by<"bysec2"_n, const_mem_fun<hashobj, checksum256, &hashobj::sec160_key>>
                             > hashobjs;
 
-   [[arisen::action]]
+   [[eosio::action]]
    void addnumobj(uint64_t input);
 
 
-   [[arisen::action]]
+   [[eosio::action]]
    void addhashobj(std::string hashinput);
 
 

@@ -1,18 +1,18 @@
-#include <arisen/chain/authorization_manager.hpp>
-#include <arisen/chain/exceptions.hpp>
-#include <arisen/chain/permission_object.hpp>
-#include <arisen/chain/permission_link_object.hpp>
-#include <arisen/chain/authority_checker.hpp>
-#include <arisen/chain/controller.hpp>
-#include <arisen/chain/global_property_object.hpp>
-#include <arisen/chain/contract_types.hpp>
-#include <arisen/chain/generated_transaction_object.hpp>
+#include <eosio/chain/authorization_manager.hpp>
+#include <eosio/chain/exceptions.hpp>
+#include <eosio/chain/permission_object.hpp>
+#include <eosio/chain/permission_link_object.hpp>
+#include <eosio/chain/authority_checker.hpp>
+#include <eosio/chain/controller.hpp>
+#include <eosio/chain/global_property_object.hpp>
+#include <eosio/chain/contract_types.hpp>
+#include <eosio/chain/generated_transaction_object.hpp>
 #include <boost/tuple/tuple_io.hpp>
-#include <arisen/chain/database_utils.hpp>
-#include <arisen/chain/protocol_state_object.hpp>
+#include <eosio/chain/database_utils.hpp>
+#include <eosio/chain/protocol_state_object.hpp>
 
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
    using authorization_index_set = index_set<
       permission_index,
@@ -63,19 +63,19 @@ namespace arisen { namespace chain {
 
             value.parent = 0;
             if (value.id == 0) {
-               RSN_ASSERT(row.parent == permission_name(), snapshot_exception, "Unexpected parent name on reserved permission 0");
-               RSN_ASSERT(row.name == permission_name(), snapshot_exception, "Unexpected permission name on reserved permission 0");
-               RSN_ASSERT(row.owner == name(), snapshot_exception, "Unexpected owner name on reserved permission 0");
-               RSN_ASSERT(row.auth.accounts.size() == 0,  snapshot_exception, "Unexpected auth accounts on reserved permission 0");
-               RSN_ASSERT(row.auth.keys.size() == 0,  snapshot_exception, "Unexpected auth keys on reserved permission 0");
-               RSN_ASSERT(row.auth.waits.size() == 0,  snapshot_exception, "Unexpected auth waits on reserved permission 0");
-               RSN_ASSERT(row.auth.threshold == 0,  snapshot_exception, "Unexpected auth threshold on reserved permission 0");
-               RSN_ASSERT(row.last_updated == time_point(),  snapshot_exception, "Unexpected auth last updated on reserved permission 0");
+               EOS_ASSERT(row.parent == permission_name(), snapshot_exception, "Unexpected parent name on reserved permission 0");
+               EOS_ASSERT(row.name == permission_name(), snapshot_exception, "Unexpected permission name on reserved permission 0");
+               EOS_ASSERT(row.owner == name(), snapshot_exception, "Unexpected owner name on reserved permission 0");
+               EOS_ASSERT(row.auth.accounts.size() == 0,  snapshot_exception, "Unexpected auth accounts on reserved permission 0");
+               EOS_ASSERT(row.auth.keys.size() == 0,  snapshot_exception, "Unexpected auth keys on reserved permission 0");
+               EOS_ASSERT(row.auth.waits.size() == 0,  snapshot_exception, "Unexpected auth waits on reserved permission 0");
+               EOS_ASSERT(row.auth.threshold == 0,  snapshot_exception, "Unexpected auth threshold on reserved permission 0");
+               EOS_ASSERT(row.last_updated == time_point(),  snapshot_exception, "Unexpected auth last updated on reserved permission 0");
                value.parent = 0;
             } else if ( row.parent != permission_name()){
                const auto& parent = db.get<permission_object, by_owner>(boost::make_tuple(row.owner, row.parent));
 
-               RSN_ASSERT(parent.id != 0, snapshot_exception, "Unexpected mapping to reserved permission 0");
+               EOS_ASSERT(parent.id != 0, snapshot_exception, "Unexpected mapping to reserved permission 0");
                value.parent = parent.id;
             }
 
@@ -137,7 +137,7 @@ namespace arisen { namespace chain {
                                                                     )
    {
       for(const key_weight& k: auth.keys)
-         RSN_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
+         EOS_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
            "Unactivated key type used when creating permission");
 
       auto creation_time = initial_creation_time;
@@ -168,7 +168,7 @@ namespace arisen { namespace chain {
                                                                     )
    {
       for(const key_weight& k: auth.keys)
-         RSN_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
+         EOS_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
            "Unactivated key type used when creating permission");
 
       auto creation_time = initial_creation_time;
@@ -193,7 +193,7 @@ namespace arisen { namespace chain {
 
    void authorization_manager::modify_permission( const permission_object& permission, const authority& auth ) {
       for(const key_weight& k: auth.keys)
-         RSN_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
+         EOS_ASSERT(k.key.which() < _db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
            "Unactivated key type used when modifying permission");
 
       _db.modify( permission, [&](permission_object& po) {
@@ -205,7 +205,7 @@ namespace arisen { namespace chain {
    void authorization_manager::remove_permission( const permission_object& permission ) {
       const auto& index = _db.template get_index<permission_index, by_parent>();
       auto range = index.equal_range(permission.id);
-      RSN_ASSERT( range.first == range.second, action_validate_exception,
+      EOS_ASSERT( range.first == range.second, action_validate_exception,
                   "Cannot remove a permission which has children. Remove the children first.");
 
       _db.get_mutable_index<permission_usage_index>().remove_object( permission.usage_id._id );
@@ -225,15 +225,15 @@ namespace arisen { namespace chain {
 
    const permission_object*  authorization_manager::find_permission( const permission_level& level )const
    { try {
-      RSN_ASSERT( !level.actor.empty() && !level.permission.empty(), invalid_permission, "Invalid permission" );
+      EOS_ASSERT( !level.actor.empty() && !level.permission.empty(), invalid_permission, "Invalid permission" );
       return _db.find<permission_object, by_owner>( boost::make_tuple(level.actor,level.permission) );
-   } RSN_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
+   } EOS_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
 
    const permission_object&  authorization_manager::get_permission( const permission_level& level )const
    { try {
-      RSN_ASSERT( !level.actor.empty() && !level.permission.empty(), invalid_permission, "Invalid permission" );
+      EOS_ASSERT( !level.actor.empty() && !level.permission.empty(), invalid_permission, "Invalid permission" );
       return _db.get<permission_object, by_owner>( boost::make_tuple(level.actor,level.permission) );
-   } RSN_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
+   } EOS_RETHROW_EXCEPTIONS( chain::permission_query_exception, "Failed to retrieve permission: ${level}", ("level", level) ) }
 
    optional<permission_name> authorization_manager::lookup_linked_permission( account_name authorizer_account,
                                                                               account_name scope,
@@ -267,7 +267,7 @@ namespace arisen { namespace chain {
    {
       // Special case native actions cannot be linked to a minimum permission, so there is no need to check.
       if( scope == config::system_account_name ) {
-          RSN_ASSERT( act_name != updateauth::get_name() &&
+          EOS_ASSERT( act_name != updateauth::get_name() &&
                      act_name != deleteauth::get_name() &&
                      act_name != linkauth::get_name() &&
                      act_name != unlinkauth::get_name() &&
@@ -281,7 +281,7 @@ namespace arisen { namespace chain {
          if( !linked_permission )
             return config::active_name;
 
-         if( *linked_permission == config::arisen_any_name )
+         if( *linked_permission == config::eosio_any_name )
             return optional<permission_name>();
 
          return linked_permission;
@@ -292,10 +292,10 @@ namespace arisen { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      RSN_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "updateauth action should only have one declared authorization" );
       const auto& auth = auths[0];
-      RSN_ASSERT( auth.actor == update.account, irrelevant_auth_exception,
+      EOS_ASSERT( auth.actor == update.account, irrelevant_auth_exception,
                   "the owner of the affected permission needs to be the actor of the declared authorization" );
 
       const auto* min_permission = find_permission({update.account, update.permission});
@@ -303,7 +303,7 @@ namespace arisen { namespace chain {
          min_permission = &get_permission({update.account, update.parent});
       }
 
-      RSN_ASSERT( get_permission(auth).satisfies( *min_permission,
+      EOS_ASSERT( get_permission(auth).satisfies( *min_permission,
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "updateauth action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -314,15 +314,15 @@ namespace arisen { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      RSN_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "deleteauth action should only have one declared authorization" );
       const auto& auth = auths[0];
-      RSN_ASSERT( auth.actor == del.account, irrelevant_auth_exception,
+      EOS_ASSERT( auth.actor == del.account, irrelevant_auth_exception,
                   "the owner of the permission to delete needs to be the actor of the declared authorization" );
 
       const auto& min_permission = get_permission({del.account, del.permission});
 
-      RSN_ASSERT( get_permission(auth).satisfies( min_permission,
+      EOS_ASSERT( get_permission(auth).satisfies( min_permission,
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "updateauth action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -333,33 +333,33 @@ namespace arisen { namespace chain {
                                                              const vector<permission_level>& auths
                                                            )const
    {
-      RSN_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "link action should only have one declared authorization" );
       const auto& auth = auths[0];
-      RSN_ASSERT( auth.actor == link.account, irrelevant_auth_exception,
+      EOS_ASSERT( auth.actor == link.account, irrelevant_auth_exception,
                   "the owner of the linked permission needs to be the actor of the declared authorization" );
 
       if( link.code == config::system_account_name
             || !_control.is_builtin_activated( builtin_protocol_feature_t::fix_linkauth_restriction ) ) 
       {
-         RSN_ASSERT( link.type != updateauth::get_name(),  action_validate_exception,
-                     "Cannot link arisen::updateauth to a minimum permission" );
-         RSN_ASSERT( link.type != deleteauth::get_name(),  action_validate_exception,
-                     "Cannot link arisen::deleteauth to a minimum permission" );
-         RSN_ASSERT( link.type != linkauth::get_name(),    action_validate_exception,
-                     "Cannot link arisen::linkauth to a minimum permission" );
-         RSN_ASSERT( link.type != unlinkauth::get_name(),  action_validate_exception,
-                     "Cannot link arisen::unlinkauth to a minimum permission" );
-         RSN_ASSERT( link.type != canceldelay::get_name(), action_validate_exception,
-                     "Cannot link arisen::canceldelay to a minimum permission" );
+         EOS_ASSERT( link.type != updateauth::get_name(),  action_validate_exception,
+                     "Cannot link eosio::updateauth to a minimum permission" );
+         EOS_ASSERT( link.type != deleteauth::get_name(),  action_validate_exception,
+                     "Cannot link eosio::deleteauth to a minimum permission" );
+         EOS_ASSERT( link.type != linkauth::get_name(),    action_validate_exception,
+                     "Cannot link eosio::linkauth to a minimum permission" );
+         EOS_ASSERT( link.type != unlinkauth::get_name(),  action_validate_exception,
+                     "Cannot link eosio::unlinkauth to a minimum permission" );
+         EOS_ASSERT( link.type != canceldelay::get_name(), action_validate_exception,
+                     "Cannot link eosio::canceldelay to a minimum permission" );
       }
 
       const auto linked_permission_name = lookup_minimum_permission(link.account, link.code, link.type);
 
-      if( !linked_permission_name ) // if action is linked to arisen.any permission
+      if( !linked_permission_name ) // if action is linked to eosio.any permission
          return;
 
-      RSN_ASSERT( get_permission(auth).satisfies( get_permission({link.account, *linked_permission_name}),
+      EOS_ASSERT( get_permission(auth).satisfies( get_permission({link.account, *linked_permission_name}),
                                                   _db.get_index<permission_index>().indices()              ),
                   irrelevant_auth_exception,
                   "link action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -370,21 +370,21 @@ namespace arisen { namespace chain {
                                                                const vector<permission_level>& auths
                                                              )const
    {
-      RSN_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "unlink action should only have one declared authorization" );
       const auto& auth = auths[0];
-      RSN_ASSERT( auth.actor == unlink.account, irrelevant_auth_exception,
+      EOS_ASSERT( auth.actor == unlink.account, irrelevant_auth_exception,
                   "the owner of the linked permission needs to be the actor of the declared authorization" );
 
       const auto unlinked_permission_name = lookup_linked_permission(unlink.account, unlink.code, unlink.type);
-      RSN_ASSERT( unlinked_permission_name.valid(), transaction_exception,
+      EOS_ASSERT( unlinked_permission_name.valid(), transaction_exception,
                   "cannot unlink non-existent permission link of account '${account}' for actions matching '${code}::${action}'",
                   ("account", unlink.account)("code", unlink.code)("action", unlink.type) );
 
-      if( *unlinked_permission_name == config::arisen_any_name )
+      if( *unlinked_permission_name == config::eosio_any_name )
          return;
 
-      RSN_ASSERT( get_permission(auth).satisfies( get_permission({unlink.account, *unlinked_permission_name}),
+      EOS_ASSERT( get_permission(auth).satisfies( get_permission({unlink.account, *unlinked_permission_name}),
                                                   _db.get_index<permission_index>().indices()                  ),
                   irrelevant_auth_exception,
                   "unlink action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -395,11 +395,11 @@ namespace arisen { namespace chain {
                                                                             const vector<permission_level>& auths
                                                                           )const
    {
-      RSN_ASSERT( auths.size() == 1, irrelevant_auth_exception,
+      EOS_ASSERT( auths.size() == 1, irrelevant_auth_exception,
                   "canceldelay action should only have one declared authorization" );
       const auto& auth = auths[0];
 
-      RSN_ASSERT( get_permission(auth).satisfies( get_permission(cancel.canceling_auth),
+      EOS_ASSERT( get_permission(auth).satisfies( get_permission(cancel.canceling_auth),
                                                   _db.get_index<permission_index>().indices() ),
                   irrelevant_auth_exception,
                   "canceldelay action declares irrelevant authority '${auth}'; specified authority to satisfy is ${min}",
@@ -410,7 +410,7 @@ namespace arisen { namespace chain {
       const auto& generated_transaction_idx = _control.db().get_index<generated_transaction_multi_index>();
       const auto& generated_index = generated_transaction_idx.indices().get<by_trx_id>();
       const auto& itr = generated_index.lower_bound(trx_id);
-      RSN_ASSERT( itr != generated_index.end() && itr->sender == account_name() && itr->trx_id == trx_id,
+      EOS_ASSERT( itr != generated_index.end() && itr->sender == account_name() && itr->trx_id == trx_id,
                   tx_not_found,
                  "cannot cancel trx_id=${tid}, there is no deferred transaction with that transaction id",
                  ("tid", trx_id) );
@@ -427,7 +427,7 @@ namespace arisen { namespace chain {
          if( found ) break;
       }
 
-      RSN_ASSERT( found, action_validate_exception,
+      EOS_ASSERT( found, action_validate_exception,
                   "canceling_auth in canceldelay action was not found as authorization in the original delayed transaction" );
 
       return (itr->delay_until - itr->published);
@@ -491,9 +491,9 @@ namespace arisen { namespace chain {
 
             if( !special_case ) {
                auto min_permission_name = lookup_minimum_permission(declared_auth.actor, act.account, act.name);
-               if( min_permission_name ) { // since special cases were already handled, it should only be false if the permission is arisen.any
+               if( min_permission_name ) { // since special cases were already handled, it should only be false if the permission is eosio.any
                   const auto& min_permission = get_permission({declared_auth.actor, *min_permission_name});
-                  RSN_ASSERT( get_permission(declared_auth).satisfies( min_permission,
+                  EOS_ASSERT( get_permission(declared_auth).satisfies( min_permission,
                                                                        _db.get_index<permission_index>().indices() ),
                               irrelevant_auth_exception,
                               "action declares irrelevant authority '${auth}'; minimum authority is ${min}",
@@ -519,7 +519,7 @@ namespace arisen { namespace chain {
       // ascending order of the actor name with ties broken by ascending order of the permission name.
       for( const auto& p : permissions_to_satisfy ) {
          checktime(); // TODO: this should eventually move into authority_checker instead
-         RSN_ASSERT( checker.satisfied( p.first, p.second ), unsatisfied_authorization,
+         EOS_ASSERT( checker.satisfied( p.first, p.second ), unsatisfied_authorization,
                      "transaction declares authority '${auth}', "
                      "but does not have signatures for it under a provided delay of ${provided_delay} ms, "
                      "provided permissions ${provided_permissions}, provided keys ${provided_keys}, "
@@ -534,7 +534,7 @@ namespace arisen { namespace chain {
       }
 
       if( !allow_unused_keys ) {
-         RSN_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
+         EOS_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
                      "transaction bears irrelevant signatures from these keys: ${keys}",
                      ("keys", checker.unused_keys()) );
       }
@@ -562,7 +562,7 @@ namespace arisen { namespace chain {
                                         checktime
                                       );
 
-      RSN_ASSERT( checker.satisfied({account, permission}), unsatisfied_authorization,
+      EOS_ASSERT( checker.satisfied({account, permission}), unsatisfied_authorization,
                   "permission '${auth}' was not satisfied under a provided delay of ${provided_delay} ms, "
                   "provided permissions ${provided_permissions}, provided keys ${provided_keys}, "
                   "and a delay max limit of ${delay_max_limit_ms} ms",
@@ -574,7 +574,7 @@ namespace arisen { namespace chain {
                 );
 
       if( !allow_unused_keys ) {
-         RSN_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
+         EOS_ASSERT( checker.all_keys_used(), tx_irrelevant_sig,
                      "irrelevant keys provided: ${keys}",
                      ("keys", checker.unused_keys()) );
       }
@@ -595,7 +595,7 @@ namespace arisen { namespace chain {
 
       for (const auto& act : trx.actions ) {
          for (const auto& declared_auth : act.authorization) {
-            RSN_ASSERT( checker.satisfied(declared_auth), unsatisfied_authorization,
+            EOS_ASSERT( checker.satisfied(declared_auth), unsatisfied_authorization,
                         "transaction declares authority '${auth}', but does not have signatures for it.",
                         ("auth", declared_auth) );
          }
@@ -604,4 +604,4 @@ namespace arisen { namespace chain {
       return checker.used_keys();
    }
 
-} } /// namespace arisen::chain
+} } /// namespace eosio::chain

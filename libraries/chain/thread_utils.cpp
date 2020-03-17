@@ -1,7 +1,7 @@
-#include <arisen/chain/thread_utils.hpp>
+#include <eosio/chain/thread_utils.hpp>
 #include <fc/log/logger_config.hpp>
 
-namespace arisen { namespace chain {
+namespace eosio { namespace chain {
 
 
 //
@@ -33,4 +33,4 @@ void named_thread_pool::stop() {
 }
 
 
-} } // arisen::chain
+} } // eosio::chain
