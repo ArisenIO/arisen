@@ -7,9 +7,6 @@
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
 	url = https://github.com/ArisenIO/chainbase.git
-[submodule "libraries/fc"]
-	path = libraries/fc
-	url = https://github.com/ArisenIO/fc.git
 [submodule "libraries/rsn-vm"]
 	path = libraries/rsn-vm
 	url = https://github.com/ArisenIO/rsn-vm.git
@@ -22,3 +19,6 @@
 [submodule "libraries/yubihsm"]
 	path = libraries/yubihsm
 	url = https://github.com/ArisenIO/yubihsm-shell.git
+[submodule "libraries/fc"]
+	path = libraries/fc
+	url = https://github.com/ArisenIO/fc.git
