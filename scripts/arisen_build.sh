@@ -3,7 +3,7 @@ set -eo pipefail
 SCRIPT_VERSION=3.1 # Build script version (change this to re-build the CICD image)
 ##########################################################################
 # This is the ARISEN automated install script for Linux and Mac OS.
-# This file was downloaded from https://github.com/arisenio/arisen
+# This file was downloaded from https://github.com/ARISENIO/arisen
 #
 # Copyright (c) 2017, Respective Authors all rights reserved.
 #
@@ -29,14 +29,14 @@ SCRIPT_VERSION=3.1 # Build script version (change this to re-build the CICD imag
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# https://github.com/arisenio/arisen/blob/master/LICENSE
+# https://github.com/ARISENIO/arisen/blob/master/LICENSE
 ##########################################################################
 
 function usage() {
    printf "Usage: $0 OPTION...
   -P          Build with pinned clang and libcxx
   -o TYPE     Build <Debug|Release|RelWithDebInfo|MinSizeRel> (default: Release)
-  -s NAME     Core Symbol Name <1-7 characters> (default: RSN)
+  -s NAME     Core Symbol Name <1-7 characters> (default: SYS)
   -b DIR      Use pre-built boost in DIR
   -i DIR      Directory to use for installing dependencies & ARISEN (default: $HOME)
   -y          Noninteractive mode (answers yes to every prompt)
@@ -180,7 +180,7 @@ if [[ $ARCH == "Linux" ]]; then
 fi
 
 if [ "$ARCH" == "Darwin" ]; then
-   # opt/gettext: arisecli requires Intl, which requires gettext; it's keg only though and we don't want to force linking: https://github.com/arisenio/arisen/issues/2240#issuecomment-396309884
+   # opt/gettext: arisecli requires Intl, which requires gettext; it's keg only though and we don't want to force linking: https://github.com/ARISENIO/arisen/issues/2240#issuecomment-396309884
    # ARISEN_INSTALL_DIR/lib/cmake: mongo_db_plugin.cpp:25:10: fatal error: 'bsoncxx/builder/basic/kvp.hpp' file not found
    CMAKE_PREFIX_PATHS="/usr/local/opt/gettext;${ARISEN_INSTALL_DIR}"
    FILE="${SCRIPT_DIR}/arisen_build_darwin.sh"

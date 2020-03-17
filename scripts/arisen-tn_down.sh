@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # arisen-tn_down.sh is used by the arisen-tn_bounce.sh and arisen-tn_roll.sh scripts.
-# It is intended to terminate specific RSN.IO daemon processes.
+# It is intended to terminate specific ARISEN.IO daemon processes.
 #
 
 
