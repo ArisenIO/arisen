@@ -1,9 +1,9 @@
 #include "deferred_test.hpp"
-#include <eosio/transaction.hpp>
-#include <eosio/datastream.hpp>
-#include <eosio/crypto.hpp>
+#include <arisen/transaction.hpp>
+#include <arisen/datastream.hpp>
+#include <arisen/crypto.hpp>
 
-using namespace eosio;
+using namespace arisen;
 
 void deferred_test::defercall( name payer, uint64_t sender_id, name contract, uint64_t payload ) {
    print( "defercall called on ", get_self(), "\n" );

@@ -2,7 +2,7 @@
 
 #include <string> // std::string
 
-namespace eosio { namespace version {
+namespace arisen { namespace version {
 
    ///< Helper function for `version_client()`
    std::string _version_client();

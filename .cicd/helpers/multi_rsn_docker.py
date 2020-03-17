@@ -16,7 +16,7 @@ def is_tag(ref):
 
 def get_commit_for_branch(branch):
     commit = None
-    r = requests.get('https://api.github.com/repos/EOSIO/eos/git/refs/heads/{}'.format(branch))
+    r = requests.get('https://api.github.com/repos/ARISEN/rsn/git/refs/heads/{}'.format(branch))
     if r.status_code == 200:
         commit = r.json().get('object').get('sha')
 
@@ -24,7 +24,7 @@ def get_commit_for_branch(branch):
 
 def get_commit_for_tag(tag):
     commit = None
-    r = requests.get('https://api.github.com/repos/EOSIO/eos/git/refs/tags/{}'.format(tag))
+    r = requests.get('https://api.github.com/repos/ARISEN/rsn/git/refs/tags/{}'.format(tag))
     if r.status_code == 200:
         commit = r.json().get('object').get('sha')
 
@@ -54,7 +54,7 @@ os.mkdir('builds')
 existing_build_found = False
 if CURRENT_COMMIT:
     print 'Attempting to get build directory for this branch ({})...'.format(CURRENT_COMMIT)
-    r = requests.get('https://api.buildkite.com/v2/organizations/EOSIO/pipelines/eosio/builds?commit={}'.format(CURRENT_COMMIT), headers=headers)
+    r = requests.get('https://api.buildkite.com/v2/organizations/ARISEN/pipelines/arisen/builds?commit={}'.format(CURRENT_COMMIT), headers=headers)
     if r.status_code == 200:
         resp = r.json()
         if resp:
@@ -82,7 +82,7 @@ if not os.path.exists('../tests/multiversion.conf'):
 commits = {}
 config = configparser.ConfigParser()
 config.read('../tests/multiversion.conf')
-for item in config.items('eosio'):
+for item in config.items('arisen'):
     label = sanitize_label(item[0])
     if is_tag(item[1]):
         commits[label] = get_commit_for_tag(item[1])
@@ -97,14 +97,14 @@ if existing_build_found:
     config_path = '{0}/builds/current/build/tests/multiversion_paths.conf'.format(PWD)
 
 with open(config_path, 'w') as fp:
-    fp.write('[eosio]\n')
+    fp.write('[arisen]\n')
     for label in commits.keys():
         fp.write('{}={}/builds/{}/build\n'.format(label, PWD, label))
 
 print 'Getting build data...'
 artifact_urls = {}
 for label, commit in commits.items():
-    r = requests.get('https://api.buildkite.com/v2/organizations/EOSIO/pipelines/eosio/builds?commit={}'.format(commit), headers=headers)
+    r = requests.get('https://api.buildkite.com/v2/organizations/ARISEN/pipelines/arisen/builds?commit={}'.format(commit), headers=headers)
     if r.status_code == 200:
         resp = r.json()
         if resp:

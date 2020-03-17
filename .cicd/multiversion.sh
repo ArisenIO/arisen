@@ -6,10 +6,10 @@ cd $GIT_ROOT
 echo "+++ $([[ "$BUILDKITE" == 'true' ]] && echo ':evergreen_tree: ')Configuring Environment"
 [[ "$PIPELINE_CONFIG" == '' ]] && export PIPELINE_CONFIG='pipeline.json'
 [[ "$RAW_PIPELINE_CONFIG" == '' ]] && export RAW_PIPELINE_CONFIG='pipeline.jsonc'
-[[ ! -d $GIT_ROOT/eos_multiversion_builder ]] && mkdir $GIT_ROOT/eos_multiversion_builder
+[[ ! -d $GIT_ROOT/rsn_multiversion_builder ]] && mkdir $GIT_ROOT/rsn_multiversion_builder
 # pipeline config
 echo 'Reading pipeline configuration file...'
-[[ -f "$RAW_PIPELINE_CONFIG" ]] && cat "$RAW_PIPELINE_CONFIG" | grep -Po '^[^"/]*("((?<=\\).|[^"])*"[^"/]*)*' | jq -c .\"eos-multiversion-tests\" > "$PIPELINE_CONFIG"
+[[ -f "$RAW_PIPELINE_CONFIG" ]] && cat "$RAW_PIPELINE_CONFIG" | grep -Po '^[^"/]*("((?<=\\).|[^"])*"[^"/]*)*' | jq -c .\"rsn-multiversion-tests\" > "$PIPELINE_CONFIG"
 if [[ -f "$PIPELINE_CONFIG" ]]; then
     [[ "$DEBUG" == 'true' ]] && cat "$PIPELINE_CONFIG" | jq .
     # export environment
@@ -21,7 +21,7 @@ if [[ -f "$PIPELINE_CONFIG" ]]; then
         done
     fi
     # export multiversion.conf
-    echo '[eosio]' > multiversion.conf
+    echo '[arisen]' > multiversion.conf
     for OBJECT in $(cat "$PIPELINE_CONFIG" | jq -r '.configuration | .[] | @base64'); do
         echo "$(echo $OBJECT | base64 --decode)" >> multiversion.conf # outer echo adds '\n'
     done
@@ -37,9 +37,9 @@ elif [[ "$DEBUG" == 'true' ]]; then
     echo 'Skipping that step...'
 fi
 # multiversion
-cd $GIT_ROOT/eos_multiversion_builder
-echo 'Downloading other versions of nodeos...'
-python2.7 $GIT_ROOT/.cicd/helpers/multi_eos_docker.py
+cd $GIT_ROOT/rsn_multiversion_builder
+echo 'Downloading other versions of aos...'
+python2.7 $GIT_ROOT/.cicd/helpers/multi_rsn_docker.py
 cd $GIT_ROOT
 cp $GIT_ROOT/tests/multiversion_paths.conf $GIT_ROOT/build/tests
 cd $GIT_ROOT/build

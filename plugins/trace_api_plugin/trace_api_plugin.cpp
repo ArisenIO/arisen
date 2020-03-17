@@ -1,16 +1,16 @@
-#include <eosio/trace_api/trace_api_plugin.hpp>
+#include <arisen/trace_api/trace_api_plugin.hpp>
 
-#include <eosio/trace_api/abi_data_handler.hpp>
-#include <eosio/trace_api/request_handler.hpp>
-#include <eosio/trace_api/chain_extraction.hpp>
-#include <eosio/trace_api/store_provider.hpp>
+#include <arisen/trace_api/abi_data_handler.hpp>
+#include <arisen/trace_api/request_handler.hpp>
+#include <arisen/trace_api/chain_extraction.hpp>
+#include <arisen/trace_api/store_provider.hpp>
 
-#include <eosio/trace_api/configuration_utils.hpp>
+#include <arisen/trace_api/configuration_utils.hpp>
 
 #include <boost/signals2/connection.hpp>
 
-using namespace eosio::trace_api;
-using namespace eosio::trace_api::configuration_utils;
+using namespace arisen::trace_api;
+using namespace arisen::trace_api::configuration_utils;
 using boost::signals2::scoped_connection;
 
 namespace {
@@ -62,7 +62,7 @@ namespace {
       try {
          f();
       } catch (const yield_exception& ) {
-         EOS_THROW(chain::controller_emit_signal_exception, "Trace API encountered an Error which it cannot recover from.  Please resolve the error and relaunch the process")
+         RSN_THROW(chain::controller_emit_signal_exception, "Trace API encountered an Error which it cannot recover from.  Please resolve the error and relaunch the process")
       }
    }
 
@@ -88,7 +88,7 @@ namespace {
    };
 }
 
-namespace eosio {
+namespace arisen {
 
 /**
  * A common source for information shared between the extraction process and the RPC process
@@ -115,7 +115,7 @@ struct trace_api_common_impl {
       slice_stride = options.at("trace-slice-stride").as<uint32_t>();
 
       const int32_t blocks = options.at("trace-minimum-irreversible-history-blocks").as<int32_t>();
-      EOS_ASSERT(blocks >= -1, chain::plugin_config_exception,
+      RSN_ASSERT(blocks >= -1, chain::plugin_config_exception,
                  "\"trace-minimum-irreversible-history-blocks\" must be greater to or equal to -1.");
       if (blocks > manual_slice_file_value) {
          minimum_irreversible_history_blocks = blocks;
@@ -165,7 +165,7 @@ struct trace_api_rpc_plugin_impl : public std::enable_shared_from_this<trace_api
       });
 
       if( options.count("trace-rpc-abi") ) {
-         EOS_ASSERT(options.count("trace-no-abis") == 0, chain::plugin_config_exception,
+         RSN_ASSERT(options.count("trace-no-abis") == 0, chain::plugin_config_exception,
                     "Trace API is configured with ABIs however trace-no-abis is set");
          const std::vector<std::string> key_value_pairs = options["trace-rpc-abi"].as<std::vector<std::string>>();
          for (const auto& entry : key_value_pairs) {
@@ -180,7 +180,7 @@ struct trace_api_rpc_plugin_impl : public std::enable_shared_from_this<trace_api
             }
          }
       } else {
-         EOS_ASSERT(options.count("trace-no-abis") != 0, chain::plugin_config_exception,
+         RSN_ASSERT(options.count("trace-no-abis") != 0, chain::plugin_config_exception,
                     "Trace API is not configured with ABIs and trace-no-abis is not set");
       }
 

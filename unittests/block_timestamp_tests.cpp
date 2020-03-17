@@ -1,11 +1,11 @@
-#include <eosio/chain/block_timestamp.hpp>
+#include <arisen/chain/block_timestamp.hpp>
 
 #include <boost/test/unit_test.hpp>
 
 #include <fc/time.hpp>
 #include <fc/exception/exception.hpp>
 
-using namespace eosio;
+using namespace arisen;
 using namespace chain;
 
 BOOST_AUTO_TEST_SUITE(block_timestamp_tests)

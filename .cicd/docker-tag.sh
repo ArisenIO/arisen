@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 echo '+++ :evergreen_tree: Configuring Environment'
-REPO='eosio/ci-contracts-builder'
+REPO='arisen/ci-contracts-builder'
 PREFIX='base-ubuntu-18.04'
 IMAGE="$REPO:$PREFIX-$BUILDKITE_COMMIT-$PLATFORM_TYPE"
 SANITIZED_BRANCH=$(echo "$BUILDKITE_BRANCH" | tr '/' '_')

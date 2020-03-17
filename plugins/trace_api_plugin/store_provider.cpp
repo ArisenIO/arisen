@@ -1,4 +1,4 @@
-#include <eosio/trace_api/store_provider.hpp>
+#include <arisen/trace_api/store_provider.hpp>
 
 #include <fc/variant_object.hpp>
 
@@ -10,7 +10,7 @@ namespace {
       static constexpr uint _max_filename_size = std::char_traits<char>::length(_trace_index_prefix) + 10 + 1 + 10 + std::char_traits<char>::length(_trace_ext) + 1; // "trace_index_" + 10-digits + '-' + 10-digits + ".log" + null-char
 }
 
-namespace eosio::trace_api {
+namespace arisen::trace_api {
    namespace bfs = boost::filesystem;
    store_provider::store_provider(const bfs::path& slice_dir, uint32_t stride_width, std::optional<uint32_t> minimum_irreversible_history_blocks)
    : _slice_directory(slice_dir, stride_width, minimum_irreversible_history_blocks) {

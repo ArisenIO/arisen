@@ -1,7 +1,7 @@
 #include <appbase/application.hpp>
 
-#include <eosio/wallet_plugin/yubihsm_wallet.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/wallet_plugin/yubihsm_wallet.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <yubihsm.h>
 
 #include <fc/crypto/openssl.hpp>
@@ -11,7 +11,7 @@
 #include <boost/asio/posix/stream_descriptor.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
 
-namespace eosio { namespace wallet {
+namespace arisen { namespace wallet {
 
 using namespace fc::crypto::r1;
 
@@ -182,7 +182,7 @@ struct yubihsm_wallet_impl {
          FC_THROW_EXCEPTION(chain::wallet_exception, "Cannot create caps mask");
 
       try {
-         if((rc = yh_util_generate_ec_key(session, &new_key_id, "keosd created key", authkey_domains, &creation_caps, YH_ALGO_EC_P256)))
+         if((rc = yh_util_generate_ec_key(session, &new_key_id, "awalletd created key", authkey_domains, &creation_caps, YH_ALGO_EC_P256)))
             FC_THROW_EXCEPTION(chain::wallet_exception, "yh_util_generate_ec_key failed: ${m}", ("m", yh_strerror(rc)));
          return populate_key_map_with_keyid(new_key_id)->first;
       }
@@ -251,7 +251,7 @@ bool yubihsm_wallet::import_key(string wif_key) {
 }
 
 string yubihsm_wallet::create_key(string key_type) {
-   EOS_ASSERT(key_type.empty() || key_type == "R1", chain::unsupported_key_type_exception, "YubiHSM wallet only supports R1 keys");
+   RSN_ASSERT(key_type.empty() || key_type == "R1", chain::unsupported_key_type_exception, "YubiHSM wallet only supports R1 keys");
    return my->create().to_string();
 }
 

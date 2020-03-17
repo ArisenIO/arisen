@@ -1,14 +1,14 @@
 #include <algorithm>
 
-#include <eosio/chain/config.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/testing/chainbase_fixture.hpp>
+#include <arisen/chain/config.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/testing/chainbase_fixture.hpp>
 
 #include <boost/test/unit_test.hpp>
 
-using namespace eosio::chain::resource_limits;
-using namespace eosio::testing;
-using namespace eosio::chain;
+using namespace arisen::chain::resource_limits;
+using namespace arisen::testing;
+using namespace arisen::chain;
 
 class resource_limits_fixture: private chainbase_fixture<1024*1024>, public resource_limits_manager
 {
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_SUITE(resource_limits_test)
       // this is enough iterations for the average to reach/exceed the target (triggering congestion handling) and then the iterations to contract down to the min
       // subtracting 1 for the iteration that pulls double duty as reaching/exceeding the target and starting congestion handling
       const uint64_t expected_contract_iterations =
-              expected_exponential_average_iterations(0, EOS_PERCENT(config::default_max_block_cpu_usage, config::default_target_block_cpu_usage_pct), config::default_max_block_cpu_usage, config::block_cpu_usage_average_window_ms / config::block_interval_ms ) +
+              expected_exponential_average_iterations(0, RSN_PERCENT(config::default_max_block_cpu_usage, config::default_target_block_cpu_usage_pct), config::default_max_block_cpu_usage, config::block_cpu_usage_average_window_ms / config::block_interval_ms ) +
               expected_elastic_iterations( desired_virtual_limit, config::default_max_block_cpu_usage, 99, 100 ) - 1;
 
       const account_name account(1);
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_SUITE(resource_limits_test)
       // this is enough iterations for the average to reach/exceed the target (triggering congestion handling) and then the iterations to contract down to the min
       // subtracting 1 for the iteration that pulls double duty as reaching/exceeding the target and starting congestion handling
       const uint64_t expected_contract_iterations =
-              expected_exponential_average_iterations(0, EOS_PERCENT(config::default_max_block_net_usage, config::default_target_block_net_usage_pct), config::default_max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms ) +
+              expected_exponential_average_iterations(0, RSN_PERCENT(config::default_max_block_net_usage, config::default_target_block_net_usage_pct), config::default_max_block_net_usage, config::block_size_average_window_ms / config::block_interval_ms ) +
               expected_elastic_iterations( desired_virtual_limit, config::default_max_block_net_usage, 99, 100 ) - 1;
 
       const account_name account(1);

@@ -1,7 +1,7 @@
-#include <eosio/chain/block_state.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/block_state.hpp>
+#include <arisen/chain/exceptions.hpp>
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
    namespace {
       constexpr auto additional_sigs_eid = additional_block_signatures_extension::extension_id();
@@ -58,7 +58,7 @@ namespace eosio { namespace chain {
          if (!result.additional_signatures.empty()) {
             bool wtmsig_enabled = detail::is_builtin_activated(pfa, pfs, builtin_protocol_feature_t::wtmsig_block_signatures);
 
-            EOS_ASSERT(wtmsig_enabled, block_validate_exception,
+            RSN_ASSERT(wtmsig_enabled, block_validate_exception,
                        "Block has multiple signatures before activation of WTMsig Block Signatures");
 
             // as an optimization we don't copy this out into the legitimate extension structure as it serializes
@@ -101,4 +101,4 @@ namespace eosio { namespace chain {
    ,_cached_trxs( std::move(trx_metas) )
    {}
 
-} } /// eosio::chain
+} } /// arisen::chain

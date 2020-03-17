@@ -1,13 +1,13 @@
 #define BOOST_TEST_MODULE trace_trace_file
 #include <boost/test/included/unit_test.hpp>
 #include <fc/io/cfile.hpp>
-#include <eosio/trace_api/test_common.hpp>
-#include <eosio/trace_api/store_provider.hpp>
+#include <arisen/trace_api/test_common.hpp>
+#include <arisen/trace_api/store_provider.hpp>
 #include <boost/filesystem.hpp>
 
-using namespace eosio;
-using namespace eosio::trace_api;
-using namespace eosio::trace_api::test_common;
+using namespace arisen;
+using namespace arisen::trace_api;
+using namespace arisen::trace_api::test_common;
 namespace bfs = boost::filesystem;
 using open_state = slice_directory::open_state;
 
@@ -26,21 +26,21 @@ namespace {
                {
                   {
                      0,
-                     "eosio.token"_n, "eosio.token"_n, "transfer"_n,
+                     "arisen.token"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
                   },
                   {
                      1,
-                     "alice"_n, "eosio.token"_n, "transfer"_n,
+                     "alice"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
                   },
                   {
                      2,
-                     "bob"_n, "eosio.token"_n, "transfer"_n,
+                     "bob"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 SYS"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
                   }
                }
             }

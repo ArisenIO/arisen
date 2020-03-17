@@ -1,19 +1,19 @@
-#include <eosio/chain/genesis_state.hpp>
-#include <eosio/wallet_plugin/wallet.hpp>
-#include <eosio/wallet_plugin/wallet_manager.hpp>
+#include <arisen/chain/genesis_state.hpp>
+#include <arisen/wallet_plugin/wallet.hpp>
+#include <arisen/wallet_plugin/wallet_manager.hpp>
 
 #include <boost/test/unit_test.hpp>
-#include <eosio/chain/authority.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/authority.hpp>
+#include <arisen/chain/exceptions.hpp>
 
-namespace eosio {
+namespace arisen {
 
 BOOST_AUTO_TEST_SUITE(wallet_tests)
 
 /// Test creating the wallet
 BOOST_AUTO_TEST_CASE(wallet_test)
 { try {
-   using namespace eosio::wallet;
+   using namespace arisen::wallet;
 
    wallet_data d;
    soft_wallet wallet(d);
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(wallet_test)
 /// Test wallet manager
 BOOST_AUTO_TEST_CASE(wallet_manager_test)
 { try {
-   using namespace eosio::wallet;
+   using namespace arisen::wallet;
 
    if (fc::exists("test.wallet")) fc::remove("test.wallet");
    if (fc::exists("test2.wallet")) fc::remove("test2.wallet");
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(wallet_manager_test)
 /// Test wallet manager
 BOOST_AUTO_TEST_CASE(wallet_manager_create_test) {
    try {
-      using namespace eosio::wallet;
+      using namespace arisen::wallet;
 
       if (fc::exists("test.wallet")) fc::remove("test.wallet");
 
@@ -265,4 +265,4 @@ BOOST_AUTO_TEST_CASE(wallet_manager_create_test) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
-} // namespace eos
+} // namespace rsn

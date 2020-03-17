@@ -1,6 +1,6 @@
-#include <eosio/chain/config.hpp>
-#include <eosio/state_history_plugin/state_history_log.hpp>
-#include <eosio/state_history_plugin/state_history_serialization.hpp>
+#include <arisen/chain/config.hpp>
+#include <arisen/state_history_plugin/state_history_log.hpp>
+#include <arisen/state_history_plugin/state_history_serialization.hpp>
 
 #include <boost/asio/bind_executor.hpp>
 #include <boost/asio/ip/host_name.hpp>
@@ -18,7 +18,7 @@ namespace ws = boost::beast::websocket;
 
 extern const char* const state_history_plugin_abi;
 
-namespace eosio {
+namespace arisen {
 using namespace chain;
 using boost::signals2::scoped_connection;
 
@@ -63,20 +63,20 @@ bool include_delta(const T& old, const T& curr) {
    return true;
 }
 
-bool include_delta(const eosio::chain::table_id_object& old, const eosio::chain::table_id_object& curr) {
+bool include_delta(const arisen::chain::table_id_object& old, const arisen::chain::table_id_object& curr) {
    return old.payer != curr.payer;
 }
 
-bool include_delta(const eosio::chain::resource_limits::resource_limits_object& old,
-                   const eosio::chain::resource_limits::resource_limits_object& curr) {
+bool include_delta(const arisen::chain::resource_limits::resource_limits_object& old,
+                   const arisen::chain::resource_limits::resource_limits_object& curr) {
    return                                   //
        old.net_weight != curr.net_weight || //
        old.cpu_weight != curr.cpu_weight || //
        old.ram_bytes != curr.ram_bytes;
 }
 
-bool include_delta(const eosio::chain::resource_limits::resource_limits_state_object& old,
-                   const eosio::chain::resource_limits::resource_limits_state_object& curr) {
+bool include_delta(const arisen::chain::resource_limits::resource_limits_state_object& old,
+                   const arisen::chain::resource_limits::resource_limits_state_object& curr) {
    return                                                                                       //
        old.average_block_net_usage.last_ordinal != curr.average_block_net_usage.last_ordinal || //
        old.average_block_net_usage.value_ex != curr.average_block_net_usage.value_ex ||         //
@@ -91,8 +91,8 @@ bool include_delta(const eosio::chain::resource_limits::resource_limits_state_ob
        old.virtual_cpu_limit != curr.virtual_cpu_limit;
 }
 
-bool include_delta(const eosio::chain::account_metadata_object& old,
-                   const eosio::chain::account_metadata_object& curr) {
+bool include_delta(const arisen::chain::account_metadata_object& old,
+                   const arisen::chain::account_metadata_object& curr) {
    return                                               //
        old.name != curr.name ||                         //
        old.is_privileged() != curr.is_privileged() ||   //
@@ -102,11 +102,11 @@ bool include_delta(const eosio::chain::account_metadata_object& old,
        old.code_hash != curr.code_hash;
 }
 
-bool include_delta(const eosio::chain::code_object& old, const eosio::chain::code_object& curr) { //
+bool include_delta(const arisen::chain::code_object& old, const arisen::chain::code_object& curr) { //
    return false;
 }
 
-bool include_delta(const eosio::chain::protocol_state_object& old, const eosio::chain::protocol_state_object& curr) {
+bool include_delta(const arisen::chain::protocol_state_object& old, const arisen::chain::protocol_state_object& curr) {
    return old.activated_protocol_features != curr.activated_protocol_features;
 }
 
@@ -361,7 +361,7 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
          if (!ec)
             return;
          elog("${w}: ${m}", ("w", what)("m", ec.message()));
-         EOS_ASSERT(false, plugin_exception, "unable to open listen socket");
+         RSN_ASSERT(false, plugin_exception, "unable to open listen socket");
       };
 
       acceptor->open(endpoint.protocol(), ec);
@@ -397,12 +397,12 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
       if (p->action_traces.size() != 1)
          return false;
       auto& act = p->action_traces[0].act;
-      if (act.account != eosio::chain::config::system_account_name || act.name != N(onblock) ||
+      if (act.account != arisen::chain::config::system_account_name || act.name != N(onblock) ||
           act.authorization.size() != 1)
          return false;
       auto& auth = act.authorization[0];
-      return auth.actor == eosio::chain::config::system_account_name &&
-             auth.permission == eosio::chain::config::active_name;
+      return auth.actor == arisen::chain::config::system_account_name &&
+             auth.permission == arisen::chain::config::active_name;
    }
 
    void on_applied_transaction(const transaction_trace_ptr& p, const signed_transaction& t) {
@@ -442,7 +442,7 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
          else
             id = r.trx.get<packed_transaction>().id();
          auto it = cached_traces.find(id);
-         EOS_ASSERT(it != cached_traces.end() && it->second.trace->receipt, plugin_exception,
+         RSN_ASSERT(it != cached_traces.end() && it->second.trace->receipt, plugin_exception,
                     "missing trace for transaction ${id}", ("id", id));
          traces.push_back(it->second);
       }
@@ -451,7 +451,7 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
 
       auto& db         = chain_plug->chain().db();
       auto  traces_bin = zlib_compress_bytes(fc::raw::pack(make_history_context_wrapper(db, trace_debug_mode, traces)));
-      EOS_ASSERT(traces_bin.size() == (uint32_t)traces_bin.size(), plugin_exception, "traces is too big");
+      RSN_ASSERT(traces_bin.size() == (uint32_t)traces_bin.size(), plugin_exception, "traces is too big");
 
       state_history_log_header header{.magic        = ship_magic(ship_current_version),
                                       .block_id     = block_state->block->id(),
@@ -484,7 +484,7 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
          if (obj)
             return *obj;
          auto it = removed_table_id.find(tid);
-         EOS_ASSERT(it != removed_table_id.end(), chain::plugin_exception, "can not found table id ${tid}",
+         RSN_ASSERT(it != removed_table_id.end(), chain::plugin_exception, "can not found table id ${tid}",
                     ("tid", tid));
          return *it->second;
       };
@@ -551,7 +551,7 @@ struct state_history_plugin_impl : std::enable_shared_from_this<state_history_pl
       process_table("resource_limits_config", db.get_index<resource_limits::resource_limits_config_index>(), pack_row);
 
       auto deltas_bin = zlib_compress_bytes(fc::raw::pack(deltas));
-      EOS_ASSERT(deltas_bin.size() == (uint32_t)deltas_bin.size(), plugin_exception, "deltas is too big");
+      RSN_ASSERT(deltas_bin.size() == (uint32_t)deltas_bin.size(), plugin_exception, "deltas is too big");
       state_history_log_header header{.magic        = ship_magic(ship_current_version),
                                       .block_id     = block_state->block->id(),
                                       .payload_size = sizeof(uint32_t) + deltas_bin.size()};
@@ -585,11 +585,11 @@ void state_history_plugin::set_program_options(options_description& cli, options
 
 void state_history_plugin::plugin_initialize(const variables_map& options) {
    try {
-      EOS_ASSERT(options.at("disable-replay-opts").as<bool>(), plugin_exception,
+      RSN_ASSERT(options.at("disable-replay-opts").as<bool>(), plugin_exception,
                  "state_history_plugin requires --disable-replay-opts");
 
       my->chain_plug = app().find_plugin<chain_plugin>();
-      EOS_ASSERT(my->chain_plug, chain::missing_chain_plugin_exception, "");
+      RSN_ASSERT(my->chain_plug, chain::missing_chain_plugin_exception, "");
       auto& chain = my->chain_plug->chain();
       my->applied_transaction_connection.emplace(
           chain.applied_transaction.connect([&](std::tuple<const transaction_trace_ptr&, const signed_transaction&> t) {
@@ -642,4 +642,4 @@ void state_history_plugin::plugin_shutdown() {
    my->stopping = true;
 }
 
-} // namespace eosio
+} // namespace arisen

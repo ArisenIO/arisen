@@ -1,11 +1,11 @@
-# See install-directory-prompt for logic that sets EOSIO_INSTALL_DIR
-export SRC_DIR=${EOSIO_INSTALL_DIR}/src
-export OPT_DIR=${EOSIO_INSTALL_DIR}/opt
-export VAR_DIR=${EOSIO_INSTALL_DIR}/var
-export ETC_DIR=${EOSIO_INSTALL_DIR}/etc
-export BIN_DIR=${EOSIO_INSTALL_DIR}/bin
-export LIB_DIR=${EOSIO_INSTALL_DIR}/lib
-export DATA_DIR=${EOSIO_INSTALL_DIR}/data
+# See install-directory-prompt for logic that sets ARISEN_INSTALL_DIR
+export SRC_DIR=${ARISEN_INSTALL_DIR}/src
+export OPT_DIR=${ARISEN_INSTALL_DIR}/opt
+export VAR_DIR=${ARISEN_INSTALL_DIR}/var
+export ETC_DIR=${ARISEN_INSTALL_DIR}/etc
+export BIN_DIR=${ARISEN_INSTALL_DIR}/bin
+export LIB_DIR=${ARISEN_INSTALL_DIR}/lib
+export DATA_DIR=${ARISEN_INSTALL_DIR}/data
 
 # CMAKE
 export CMAKE_VERSION_MAJOR=3
@@ -62,7 +62,7 @@ export NO_CPP17=${NO_CPP17:-false}
 export PIN_COMPILER=${PIN_COMPILER:-false}
 export BUILD_CLANG=${BUILD_CLANG:-false}
 
-export CORE_SYMBOL_NAME=${CORE_SYMBOL_NAME:-SYS}
+export CORE_SYMBOL_NAME=${CORE_SYMBOL_NAME:-RSN}
 
 export CPU_CORES=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || sysctl -n hw.ncpu)
 export CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE:-Release}

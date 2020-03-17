@@ -5,13 +5,13 @@ set -eo pipefail
 export MOJAVE_ANKA_TAG_BASE=${MOJAVE_ANKA_TAG_BASE:-'clean::cicd::git-ssh::nas::brew::buildkite-agent'}
 export MOJAVE_ANKA_TEMPLATE_NAME=${MOJAVE_ANKA_TEMPLATE_NAME:-'10.14.6_6C_14G_40G'}
 export PLATFORMS_JSON_ARRAY='[]'
-BUILDKITE_BUILD_AGENT_QUEUE='automation-eks-eos-builder-fleet'
-BUILDKITE_TEST_AGENT_QUEUE='automation-eks-eos-tester-fleet'
+BUILDKITE_BUILD_AGENT_QUEUE='automation-eks-rsn-builder-fleet'
+BUILDKITE_TEST_AGENT_QUEUE='automation-eks-rsn-tester-fleet'
 [[ -z "$ROUNDS" ]] && export ROUNDS='1'
 LINUX_CONCURRENCY='8'
 MAC_CONCURRENCY='2'
-LINUX_CONCURRENCY_GROUP='eos-scheduled-build'
-MAC_CONCURRENCY_GROUP='eos-scheduled-build-mac'
+LINUX_CONCURRENCY_GROUP='rsn-scheduled-build'
+MAC_CONCURRENCY_GROUP='rsn-scheduled-build-mac'
 
 # Determine if it's a forked PR and make sure to add git fetch so we don't have to git clone the forked repo's url
 if [[ $BUILDKITE_BRANCH =~ ^pull/[0-9]+/head: ]]; then
@@ -115,11 +115,11 @@ EOF
         cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
-      - "cd eos && ./.cicd/build.sh"
-      - "cd eos && tar -pczf build.tar.gz build && buildkite-agent artifact upload build.tar.gz"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
+      - "cd rsn && ./.cicd/build.sh"
+      - "cd rsn && tar -pczf build.tar.gz build && buildkite-agent artifact upload build.tar.gz"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: ${MOJAVE_ANKA_TEMPLATE_NAME}
@@ -134,7 +134,7 @@ EOF
             - 'registry_2'
           pre-execute-ping-sleep: "8.8.8.8"
           pre-commands: 
-            - "git clone git@github.com:EOSIO/mac-anka-fleet.git && cd mac-anka-fleet && . ./ensure-tag.bash -u 12 -r 25G -a '-n'"
+            - "git clone git@github.com:ARISEN/mac-anka-fleet.git && cd mac-anka-fleet && . ./ensure-tag.bash -u 12 -r 25G -a '-n'"
     env:
       REPO: ${BUILDKITE_PULL_REQUEST_REPO:-$BUILDKITE_REPO}
       REPO_COMMIT: $BUILDKITE_COMMIT
@@ -142,7 +142,7 @@ EOF
       TEMPLATE_TAG: $MOJAVE_ANKA_TAG_BASE
       IMAGE_TAG: $(echo "$PLATFORM_JSON" | jq -r .FILE_NAME)
       PLATFORM_TYPE: $PLATFORM_TYPE
-      TAG_COMMANDS: "git clone ${BUILDKITE_PULL_REQUEST_REPO:-$BUILDKITE_REPO} eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive && export IMAGE_TAG=$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME) && export PLATFORM_TYPE=$PLATFORM_TYPE && . ./.cicd/platforms/$PLATFORM_TYPE/$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME).sh && cd ~/eos && cd .. && rm -rf eos"
+      TAG_COMMANDS: "git clone ${BUILDKITE_PULL_REQUEST_REPO:-$BUILDKITE_REPO} rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive && export IMAGE_TAG=$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME) && export PLATFORM_TYPE=$PLATFORM_TYPE && . ./.cicd/platforms/$PLATFORM_TYPE/$(echo "$PLATFORM_JSON" | jq -r .FILE_NAME).sh && cd ~/rsn && cd .. && rm -rf rsn"
       PROJECT_TAG: $(echo "$PLATFORM_JSON" | jq -r .HASHED_IMAGE_TAG)
     timeout: ${TIMEOUT:-180}
     agents: "queue=mac-anka-large-node-fleet"
@@ -205,11 +205,11 @@ EOF
             cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Unit Tests"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
-      - "cd eos && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
-      - "cd eos && ./.cicd/test.sh scripts/parallel-test.sh"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
+      - "cd rsn && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
+      - "cd rsn && ./.cicd/test.sh scripts/parallel-test.sh"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: ${MOJAVE_ANKA_TEMPLATE_NAME}
@@ -267,11 +267,11 @@ EOF
             cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - WASM Spec Tests"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
-      - "cd eos && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
-      - "cd eos && ./.cicd/test.sh scripts/wasm-spec-test.sh"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
+      - "cd rsn && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
+      - "cd rsn && ./.cicd/test.sh scripts/wasm-spec-test.sh"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: ${MOJAVE_ANKA_TEMPLATE_NAME}
@@ -332,11 +332,11 @@ EOF
                 cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - $TEST_NAME"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
-      - "cd eos && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
-      - "cd eos && ./.cicd/test.sh scripts/serial-test.sh $TEST_NAME"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
+      - "cd rsn && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' && tar -xzf build.tar.gz"
+      - "cd rsn && ./.cicd/test.sh scripts/serial-test.sh $TEST_NAME"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: ${MOJAVE_ANKA_TEMPLATE_NAME}
@@ -398,11 +398,11 @@ EOF
                 cat <<EOF
   - label: "$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - $TEST_NAME"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
-      - "cd eos && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' ${BUILD_SOURCE} && tar -xzf build.tar.gz"
-      - "cd eos && ./.cicd/test.sh scripts/long-running-test.sh $TEST_NAME"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT && git submodule update --init --recursive"
+      - "cd rsn && buildkite-agent artifact download build.tar.gz . --step '$(echo "$PLATFORM_JSON" | jq -r .ICON) $(echo "$PLATFORM_JSON" | jq -r .PLATFORM_NAME_FULL) - Build' ${BUILD_SOURCE} && tar -xzf build.tar.gz"
+      - "cd rsn && ./.cicd/test.sh scripts/long-running-test.sh $TEST_NAME"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: ${MOJAVE_ANKA_TEMPLATE_NAME}
@@ -455,12 +455,12 @@ if ( [[ ! $PINNED == false ]] ); then
 
 EOF
 fi
-# trigger eosio-lrt post pr
+# trigger arisen-lrt post pr
 if [[ -z $BUILDKITE_TRIGGERED_FROM_BUILD_ID && $TRIGGER_JOB == "true" ]]; then
     if ( [[ ! $PINNED == false ]] ); then
         cat <<EOF
   - label: ":pipeline: Trigger Long Running Tests"
-    trigger: "eosio-lrt"
+    trigger: "arisen-lrt"
     async: true
     build:
       message: "Triggered by $BUILDKITE_PIPELINE_SLUG build $BUILDKITE_BUILD_NUMBER"
@@ -478,11 +478,11 @@ if [[ -z $BUILDKITE_TRIGGERED_FROM_BUILD_ID && $TRIGGER_JOB == "true" ]]; then
 EOF
     fi
 fi
-# trigger eosio-sync-from-genesis for every build
-if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
+# trigger arisen-sync-from-genesis for every build
+if [[ "$BUILDKITE_PIPELINE_SLUG" == 'arisen' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
     cat <<EOF
   - label: ":chains: Sync from Genesis Test"
-    trigger: "eosio-sync-from-genesis"
+    trigger: "arisen-sync-from-genesis"
     async: false
     if: build.env("BUILDKITE_TAG") == null
     build:
@@ -498,11 +498,11 @@ if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}$
 
 EOF
 fi
-# trigger eosio-resume-from-state for every build
-if [[ "$BUILDKITE_PIPELINE_SLUG" == 'eosio' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
+# trigger arisen-resume-from-state for every build
+if [[ "$BUILDKITE_PIPELINE_SLUG" == 'arisen' && -z "${SKIP_INSTALL}${SKIP_LINUX}${SKIP_DOCKER}${SKIP_SYNC_TESTS}" ]]; then
     cat <<EOF
   - label: ":outbox_tray: Resume from State Test"
-    trigger: "eosio-resume-from-state"
+    trigger: "arisen-resume-from-state"
     async: false
     if: build.env("BUILDKITE_TAG") == null
     build:
@@ -581,11 +581,11 @@ cat <<EOF
 
   - label: ":darwin: macOS 10.14 - Package Builder"
     command:
-      - "git clone \$BUILDKITE_REPO eos && cd eos && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT"
-      - "cd eos && buildkite-agent artifact download build.tar.gz . --step ':darwin: macOS 10.14 - Build' && tar -xzf build.tar.gz"
-      - "cd eos && ./.cicd/package.sh"
+      - "git clone \$BUILDKITE_REPO rsn && cd rsn && $GIT_FETCH git checkout -f \$BUILDKITE_COMMIT"
+      - "cd rsn && buildkite-agent artifact download build.tar.gz . --step ':darwin: macOS 10.14 - Build' && tar -xzf build.tar.gz"
+      - "cd rsn && ./.cicd/package.sh"
     plugins:
-      - EOSIO/anka#v0.5.7:
+      - ARISEN/anka#v0.5.7:
           no-volume: true
           inherit-environment-vars: true
           vm-name: 10.14.6_6C_14G_40G
@@ -622,8 +622,8 @@ cat <<EOF
 
   - label: ":beer: Brew Updater"
     command: |
-      buildkite-agent artifact download eosio.rb . --step ':darwin: macOS 10.14 - Package Builder'
-      buildkite-agent artifact upload eosio.rb
+      buildkite-agent artifact download arisen.rb . --step ':darwin: macOS 10.14 - Package Builder'
+      buildkite-agent artifact upload arisen.rb
     agents:
       queue: "automation-basic-builder-fleet"
     timeout: "${TIMEOUT:-5}"

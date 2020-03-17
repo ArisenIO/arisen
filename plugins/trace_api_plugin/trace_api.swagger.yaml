@@ -6,7 +6,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   contact:
-    url: https://eos.io
+    url: https://rsn.io
 servers:
   - url: '{protocol}://{host}:{port}/v1/'
     variables:
@@ -43,7 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "https://eosio.github.io/schemata/v2.0/oas/Block.yaml"
+                $ref: "https://arisen.github.io/schemata/v2.0/oas/Block.yaml"
         "400":
           description: Error - requested block number is invalid (not a number, larger than max int)
         "404":

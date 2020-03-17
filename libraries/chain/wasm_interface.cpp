@@ -1,18 +1,18 @@
-#include <eosio/chain/wasm_interface.hpp>
-#include <eosio/chain/apply_context.hpp>
-#include <eosio/chain/controller.hpp>
-#include <eosio/chain/transaction_context.hpp>
-#include <eosio/chain/producer_schedule.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/wasm_interface.hpp>
+#include <arisen/chain/apply_context.hpp>
+#include <arisen/chain/controller.hpp>
+#include <arisen/chain/transaction_context.hpp>
+#include <arisen/chain/producer_schedule.hpp>
+#include <arisen/chain/exceptions.hpp>
 #include <boost/core/ignore_unused.hpp>
-#include <eosio/chain/authorization_manager.hpp>
-#include <eosio/chain/resource_limits.hpp>
-#include <eosio/chain/wasm_interface_private.hpp>
-#include <eosio/chain/wasm_eosio_validation.hpp>
-#include <eosio/chain/wasm_eosio_injection.hpp>
-#include <eosio/chain/global_property_object.hpp>
-#include <eosio/chain/protocol_state_object.hpp>
-#include <eosio/chain/account_object.hpp>
+#include <arisen/chain/authorization_manager.hpp>
+#include <arisen/chain/resource_limits.hpp>
+#include <arisen/chain/wasm_interface_private.hpp>
+#include <arisen/chain/wasm_arisen_validation.hpp>
+#include <arisen/chain/wasm_arisen_injection.hpp>
+#include <arisen/chain/global_property_object.hpp>
+#include <arisen/chain/protocol_state_object.hpp>
+#include <arisen/chain/account_object.hpp>
 #include <fc/exception/exception.hpp>
 #include <fc/crypto/sha256.hpp>
 #include <fc/crypto/sha1.hpp>
@@ -25,15 +25,15 @@
 #include <fstream>
 #include <string.h>
 
-#if defined(EOSIO_EOS_VM_RUNTIME_ENABLED) || defined(EOSIO_EOS_VM_JIT_RUNTIME_ENABLED)
-#include <eosio/vm/allocator.hpp>
+#if defined(ARISEN_RSN_VM_RUNTIME_ENABLED) || defined(ARISEN_RSN_VM_JIT_RUNTIME_ENABLED)
+#include <arisen/vm/allocator.hpp>
 #endif
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
    using namespace webassembly::common;
 
-   wasm_interface::wasm_interface(vm_type vm, bool eosvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const eosvmoc::config& eosvmoc_config)
-     : my( new wasm_interface_impl(vm, eosvmoc_tierup, d, data_dir, eosvmoc_config) ) {}
+   wasm_interface::wasm_interface(vm_type vm, bool rsnvmoc_tierup, const chainbase::database& d, const boost::filesystem::path data_dir, const rsnvmoc::config& rsnvmoc_config)
+     : my( new wasm_interface_impl(vm, rsnvmoc_tierup, d, data_dir, rsnvmoc_config) ) {}
 
    wasm_interface::~wasm_interface() {}
 
@@ -43,9 +43,9 @@ namespace eosio { namespace chain {
          Serialization::MemoryInputStream stream((U8*)code.data(), code.size());
          WASM::serialize(stream, module);
       } catch(const Serialization::FatalSerializationException& e) {
-         EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+         RSN_ASSERT(false, wasm_serialization_error, e.message.c_str());
       } catch(const IR::ValidationException& e) {
-         EOS_ASSERT(false, wasm_serialization_error, e.message.c_str());
+         RSN_ASSERT(false, wasm_serialization_error, e.message.c_str());
       }
 
       wasm_validations::wasm_binary_validation validator(control, module);
@@ -74,22 +74,22 @@ namespace eosio { namespace chain {
    }
 
    void wasm_interface::apply( const digest_type& code_hash, const uint8_t& vm_type, const uint8_t& vm_version, apply_context& context ) {
-#ifdef EOSIO_EOS_VM_OC_RUNTIME_ENABLED
-      if(my->eosvmoc) {
-         const chain::eosvmoc::code_descriptor* cd = nullptr;
+#ifdef ARISEN_RSN_VM_OC_RUNTIME_ENABLED
+      if(my->rsnvmoc) {
+         const chain::rsnvmoc::code_descriptor* cd = nullptr;
          try {
-            cd = my->eosvmoc->cc.get_descriptor_for_code(code_hash, vm_version);
+            cd = my->rsnvmoc->cc.get_descriptor_for_code(code_hash, vm_version);
          }
          catch(...) {
-            //swallow errors here, if EOS VM OC has gone in to the weeds we shouldn't bail: continue to try and run baseline
-            //In the future, consider moving bits of EOS VM that can fire exceptions and such out of this call path
+            //swallow errors here, if RSN VM OC has gone in to the weeds we shouldn't bail: continue to try and run baseline
+            //In the future, consider moving bits of RSN VM that can fire exceptions and such out of this call path
             static bool once_is_enough;
             if(!once_is_enough)
-               elog("EOS VM OC has encountered an unexpected failure");
+               elog("RSN VM OC has encountered an unexpected failure");
             once_is_enough = true;
          }
          if(cd) {
-            my->eosvmoc->exec.execute(*cd, my->eosvmoc->mem, context);
+            my->rsnvmoc->exec.execute(*cd, my->rsnvmoc->mem, context);
             return;
          }
       }
@@ -114,7 +114,7 @@ class context_aware_api {
       :context(ctx)
       {
          if( context.is_context_free() )
-            EOS_ASSERT( context_free, unaccessible_api, "only context free api's can be used in this context" );
+            RSN_ASSERT( context_free, unaccessible_api, "only context free api's can be used in this context" );
       }
 
       void checktime() {
@@ -131,7 +131,7 @@ class context_free_api : public context_aware_api {
       context_free_api( apply_context& ctx )
       :context_aware_api(ctx, true) {
          /* the context_free_data is not available during normal application because it is prunable */
-         EOS_ASSERT( context.is_context_free(), unaccessible_api, "this API may only be called from context_free apply" );
+         RSN_ASSERT( context.is_context_free(), unaccessible_api, "this API may only be called from context_free apply" );
       }
 
       int get_context_free_data( uint32_t index, array_ptr<char> buffer, uint32_t buffer_size )const {
@@ -144,7 +144,7 @@ class privileged_api : public context_aware_api {
       privileged_api( apply_context& ctx )
       :context_aware_api(ctx)
       {
-         EOS_ASSERT( context.is_privileged(), unaccessible_api, "${code} does not have permission to call this API", ("code",context.get_receiver()) );
+         RSN_ASSERT( context.is_privileged(), unaccessible_api, "${code} does not have permission to call this API", ("code",context.get_receiver()) );
       }
 
       /**
@@ -165,7 +165,7 @@ class privileged_api : public context_aware_api {
        *  Feature name should be base32 encoded name.
        */
       void activate_feature( int64_t feature_name ) {
-         EOS_ASSERT( false, unsupported_feature, "Unsupported Hardfork Detected" );
+         RSN_ASSERT( false, unsupported_feature, "Unsupported Hardfork Detected" );
       }
 
       /**
@@ -187,9 +187,9 @@ class privileged_api : public context_aware_api {
        * @param cpu_weight - the weight for determining share of compute capacity
        */
       void set_resource_limits( account_name account, int64_t ram_bytes, int64_t net_weight, int64_t cpu_weight) {
-         EOS_ASSERT(ram_bytes >= -1, wasm_execution_error, "invalid value for ram resource limit expected [-1,INT64_MAX]");
-         EOS_ASSERT(net_weight >= -1, wasm_execution_error, "invalid value for net resource weight expected [-1,INT64_MAX]");
-         EOS_ASSERT(cpu_weight >= -1, wasm_execution_error, "invalid value for cpu resource weight expected [-1,INT64_MAX]");
+         RSN_ASSERT(ram_bytes >= -1, wasm_execution_error, "invalid value for ram resource limit expected [-1,INT64_MAX]");
+         RSN_ASSERT(net_weight >= -1, wasm_execution_error, "invalid value for net resource weight expected [-1,INT64_MAX]");
+         RSN_ASSERT(cpu_weight >= -1, wasm_execution_error, "invalid value for cpu resource weight expected [-1,INT64_MAX]");
          if( context.control.get_mutable_resource_limits_manager().set_account_limits(account, ram_bytes, net_weight, cpu_weight) ) {
             context.trx_context.validate_ram_usage.insert( account );
          }
@@ -200,8 +200,8 @@ class privileged_api : public context_aware_api {
       }
 
       int64_t set_proposed_producers_common( vector<producer_authority> && producers, bool validate_keys ) {
-         EOS_ASSERT(producers.size() <= config::max_producers, wasm_execution_error, "Producer schedule exceeds the maximum producer count for this chain");
-         EOS_ASSERT( producers.size() > 0
+         RSN_ASSERT(producers.size() <= config::max_producers, wasm_execution_error, "Producer schedule exceeds the maximum producer count for this chain");
+         RSN_ASSERT( producers.size() > 0
                      || !context.control.is_builtin_activated( builtin_protocol_feature_t::disallow_empty_producer_schedule ),
                      wasm_execution_error,
                      "Producer schedule cannot be empty"
@@ -212,17 +212,17 @@ class privileged_api : public context_aware_api {
          // check that producers are unique
          std::set<account_name> unique_producers;
          for (const auto& p: producers) {
-            EOS_ASSERT( context.is_account(p.producer_name), wasm_execution_error, "producer schedule includes a nonexisting account" );
+            RSN_ASSERT( context.is_account(p.producer_name), wasm_execution_error, "producer schedule includes a nonexisting account" );
 
             p.authority.visit([&p, num_supported_key_types, validate_keys](const auto& a) {
                uint32_t sum_weights = 0;
                std::set<public_key_type> unique_keys;
                for (const auto& kw: a.keys ) {
-                  EOS_ASSERT( kw.key.which() < num_supported_key_types, unactivated_key_type,
+                  RSN_ASSERT( kw.key.which() < num_supported_key_types, unactivated_key_type,
                               "Unactivated key type used in proposed producer schedule");
 
                   if( validate_keys ) {
-                     EOS_ASSERT( kw.key.valid(), wasm_execution_error, "producer schedule includes an invalid key" );
+                     RSN_ASSERT( kw.key.valid(), wasm_execution_error, "producer schedule includes an invalid key" );
                   }
 
                   if (std::numeric_limits<uint32_t>::max() - sum_weights <= kw.weight) {
@@ -234,15 +234,15 @@ class privileged_api : public context_aware_api {
                   unique_keys.insert(kw.key);
                }
 
-               EOS_ASSERT( a.keys.size() == unique_keys.size(), wasm_execution_error, "producer schedule includes a duplicated key for ${account}", ("account", p.producer_name));
-               EOS_ASSERT( a.threshold > 0, wasm_execution_error, "producer schedule includes an authority with a threshold of 0 for ${account}", ("account", p.producer_name));
-               EOS_ASSERT( sum_weights >= a.threshold, wasm_execution_error, "producer schedule includes an unsatisfiable authority for ${account}", ("account", p.producer_name));
+               RSN_ASSERT( a.keys.size() == unique_keys.size(), wasm_execution_error, "producer schedule includes a duplicated key for ${account}", ("account", p.producer_name));
+               RSN_ASSERT( a.threshold > 0, wasm_execution_error, "producer schedule includes an authority with a threshold of 0 for ${account}", ("account", p.producer_name));
+               RSN_ASSERT( sum_weights >= a.threshold, wasm_execution_error, "producer schedule includes an unsatisfiable authority for ${account}", ("account", p.producer_name));
             });
 
 
             unique_producers.insert(p.producer_name);
          }
-         EOS_ASSERT( producers.size() == unique_producers.size(), wasm_execution_error, "duplicate producer name in producer schedule" );
+         RSN_ASSERT( producers.size() == unique_producers.size(), wasm_execution_error, "duplicate producer name in producer schedule" );
 
          return context.control.set_proposed_producers( std::move(producers) );
       }
@@ -274,7 +274,7 @@ class privileged_api : public context_aware_api {
             fc::raw::unpack(ds, producers);
             return set_proposed_producers_common(std::move(producers), false);
          } else {
-            EOS_THROW(wasm_execution_error, "Producer schedule is in an unknown format!");
+            RSN_THROW(wasm_execution_error, "Producer schedule is in an unknown format!");
          }
       }
 
@@ -325,24 +325,24 @@ class softfloat_api : public context_aware_api {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
       // float binops
-      float _eosio_f32_add( float a, float b ) {
+      float _arisen_f32_add( float a, float b ) {
          float32_t ret = ::f32_add( to_softfloat32(a), to_softfloat32(b) );
          return *reinterpret_cast<float*>(&ret);
       }
-      float _eosio_f32_sub( float a, float b ) {
+      float _arisen_f32_sub( float a, float b ) {
          float32_t ret = ::f32_sub( to_softfloat32(a), to_softfloat32(b) );
          return *reinterpret_cast<float*>(&ret);
       }
-      float _eosio_f32_div( float a, float b ) {
+      float _arisen_f32_div( float a, float b ) {
          float32_t ret = ::f32_div( to_softfloat32(a), to_softfloat32(b) );
          return *reinterpret_cast<float*>(&ret);
       }
-      float _eosio_f32_mul( float a, float b ) {
+      float _arisen_f32_mul( float a, float b ) {
          float32_t ret = ::f32_mul( to_softfloat32(a), to_softfloat32(b) );
          return *reinterpret_cast<float*>(&ret);
       }
 #pragma GCC diagnostic pop
-      float _eosio_f32_min( float af, float bf ) {
+      float _arisen_f32_min( float af, float bf ) {
          float32_t a = to_softfloat32(af);
          float32_t b = to_softfloat32(bf);
          if (is_nan(a)) {
@@ -356,7 +356,7 @@ class softfloat_api : public context_aware_api {
          }
          return ::f32_lt(a,b) ? af : bf;
       }
-      float _eosio_f32_max( float af, float bf ) {
+      float _arisen_f32_max( float af, float bf ) {
          float32_t a = to_softfloat32(af);
          float32_t b = to_softfloat32(bf);
          if (is_nan(a)) {
@@ -370,7 +370,7 @@ class softfloat_api : public context_aware_api {
          }
          return ::f32_lt( a, b ) ? bf : af;
       }
-      float _eosio_f32_copysign( float af, float bf ) {
+      float _arisen_f32_copysign( float af, float bf ) {
          float32_t a = to_softfloat32(af);
          float32_t b = to_softfloat32(bf);
          uint32_t sign_of_b = b.v >> 31;
@@ -379,24 +379,24 @@ class softfloat_api : public context_aware_api {
          return from_softfloat32(a);
       }
       // float unops
-      float _eosio_f32_abs( float af ) {
+      float _arisen_f32_abs( float af ) {
          float32_t a = to_softfloat32(af);
          a.v &= ~(1 << 31);
          return from_softfloat32(a);
       }
-      float _eosio_f32_neg( float af ) {
+      float _arisen_f32_neg( float af ) {
          float32_t a = to_softfloat32(af);
          uint32_t sign = a.v >> 31;
          a.v &= ~(1 << 31);
          a.v |= (!sign << 31);
          return from_softfloat32(a);
       }
-      float _eosio_f32_sqrt( float a ) {
+      float _arisen_f32_sqrt( float a ) {
          float32_t ret = ::f32_sqrt( to_softfloat32(a) );
          return from_softfloat32(ret);
       }
       // ceil, floor, trunc and nearest are lifted from libc
-      float _eosio_f32_ceil( float af ) {
+      float _arisen_f32_ceil( float af ) {
          float32_t a = to_softfloat32(af);
          int e = (int)(a.v >> 23 & 0xFF) - 0X7F;
          uint32_t m;
@@ -418,7 +418,7 @@ class softfloat_api : public context_aware_api {
 
          return from_softfloat32(a);
       }
-      float _eosio_f32_floor( float af ) {
+      float _arisen_f32_floor( float af ) {
          float32_t a = to_softfloat32(af);
          int e = (int)(a.v >> 23 & 0xFF) - 0X7F;
          uint32_t m;
@@ -439,7 +439,7 @@ class softfloat_api : public context_aware_api {
          }
          return from_softfloat32(a);
       }
-      float _eosio_f32_trunc( float af ) {
+      float _arisen_f32_trunc( float af ) {
          float32_t a = to_softfloat32(af);
          int e = (int)(a.v >> 23 & 0xff) - 0x7f + 9;
          uint32_t m;
@@ -453,7 +453,7 @@ class softfloat_api : public context_aware_api {
          a.v &= ~m;
          return from_softfloat32(a);
       }
-      float _eosio_f32_nearest( float af ) {
+      float _arisen_f32_nearest( float af ) {
          float32_t a = to_softfloat32(af);
          int e = a.v>>23 & 0xff;
          int s = a.v>>31;
@@ -470,11 +470,11 @@ class softfloat_api : public context_aware_api {
       }
 
       // float relops
-      bool _eosio_f32_eq( float a, float b ) {  return ::f32_eq( to_softfloat32(a), to_softfloat32(b) ); }
-      bool _eosio_f32_ne( float a, float b ) { return !::f32_eq( to_softfloat32(a), to_softfloat32(b) ); }
-      bool _eosio_f32_lt( float a, float b ) { return ::f32_lt( to_softfloat32(a), to_softfloat32(b) ); }
-      bool _eosio_f32_le( float a, float b ) { return ::f32_le( to_softfloat32(a), to_softfloat32(b) ); }
-      bool _eosio_f32_gt( float af, float bf ) {
+      bool _arisen_f32_eq( float a, float b ) {  return ::f32_eq( to_softfloat32(a), to_softfloat32(b) ); }
+      bool _arisen_f32_ne( float a, float b ) { return !::f32_eq( to_softfloat32(a), to_softfloat32(b) ); }
+      bool _arisen_f32_lt( float a, float b ) { return ::f32_lt( to_softfloat32(a), to_softfloat32(b) ); }
+      bool _arisen_f32_le( float a, float b ) { return ::f32_le( to_softfloat32(a), to_softfloat32(b) ); }
+      bool _arisen_f32_gt( float af, float bf ) {
          float32_t a = to_softfloat32(af);
          float32_t b = to_softfloat32(bf);
          if (is_nan(a))
@@ -483,7 +483,7 @@ class softfloat_api : public context_aware_api {
             return false;
          return !::f32_le( a, b );
       }
-      bool _eosio_f32_ge( float af, float bf ) {
+      bool _arisen_f32_ge( float af, float bf ) {
          float32_t a = to_softfloat32(af);
          float32_t b = to_softfloat32(bf);
          if (is_nan(a))
@@ -494,23 +494,23 @@ class softfloat_api : public context_aware_api {
       }
 
       // double binops
-      double _eosio_f64_add( double a, double b ) {
+      double _arisen_f64_add( double a, double b ) {
          float64_t ret = ::f64_add( to_softfloat64(a), to_softfloat64(b) );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_sub( double a, double b ) {
+      double _arisen_f64_sub( double a, double b ) {
          float64_t ret = ::f64_sub( to_softfloat64(a), to_softfloat64(b) );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_div( double a, double b ) {
+      double _arisen_f64_div( double a, double b ) {
          float64_t ret = ::f64_div( to_softfloat64(a), to_softfloat64(b) );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_mul( double a, double b ) {
+      double _arisen_f64_mul( double a, double b ) {
          float64_t ret = ::f64_mul( to_softfloat64(a), to_softfloat64(b) );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_min( double af, double bf ) {
+      double _arisen_f64_min( double af, double bf ) {
          float64_t a = to_softfloat64(af);
          float64_t b = to_softfloat64(bf);
          if (is_nan(a))
@@ -521,7 +521,7 @@ class softfloat_api : public context_aware_api {
             return f64_sign_bit(a) ? af : bf;
          return ::f64_lt( a, b ) ? af : bf;
       }
-      double _eosio_f64_max( double af, double bf ) {
+      double _arisen_f64_max( double af, double bf ) {
          float64_t a = to_softfloat64(af);
          float64_t b = to_softfloat64(bf);
          if (is_nan(a))
@@ -532,7 +532,7 @@ class softfloat_api : public context_aware_api {
             return f64_sign_bit(a) ? bf : af;
          return ::f64_lt( a, b ) ? bf : af;
       }
-      double _eosio_f64_copysign( double af, double bf ) {
+      double _arisen_f64_copysign( double af, double bf ) {
          float64_t a = to_softfloat64(af);
          float64_t b = to_softfloat64(bf);
          uint64_t sign_of_b = b.v >> 63;
@@ -542,24 +542,24 @@ class softfloat_api : public context_aware_api {
       }
 
       // double unops
-      double _eosio_f64_abs( double af ) {
+      double _arisen_f64_abs( double af ) {
          float64_t a = to_softfloat64(af);
          a.v &= ~(uint64_t(1) << 63);
          return from_softfloat64(a);
       }
-      double _eosio_f64_neg( double af ) {
+      double _arisen_f64_neg( double af ) {
          float64_t a = to_softfloat64(af);
          uint64_t sign = a.v >> 63;
          a.v &= ~(uint64_t(1) << 63);
          a.v |= (uint64_t(!sign) << 63);
          return from_softfloat64(a);
       }
-      double _eosio_f64_sqrt( double a ) {
+      double _arisen_f64_sqrt( double a ) {
          float64_t ret = ::f64_sqrt( to_softfloat64(a) );
          return from_softfloat64(ret);
       }
       // ceil, floor, trunc and nearest are lifted from libc
-      double _eosio_f64_ceil( double af ) {
+      double _arisen_f64_ceil( double af ) {
          float64_t a = to_softfloat64( af );
          float64_t ret;
          int e = a.v >> 52 & 0x7ff;
@@ -582,7 +582,7 @@ class softfloat_api : public context_aware_api {
          ret = ::f64_add( a, y );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_floor( double af ) {
+      double _arisen_f64_floor( double af ) {
          float64_t a = to_softfloat64( af );
          float64_t ret;
          int e = a.v >> 52 & 0x7FF;
@@ -608,7 +608,7 @@ class softfloat_api : public context_aware_api {
          ret = ::f64_add( a, y );
          return from_softfloat64(ret);
       }
-      double _eosio_f64_trunc( double af ) {
+      double _arisen_f64_trunc( double af ) {
          float64_t a = to_softfloat64( af );
          int e = (int)(a.v >> 52 & 0x7ff) - 0x3ff + 12;
          uint64_t m;
@@ -623,7 +623,7 @@ class softfloat_api : public context_aware_api {
          return from_softfloat64(a);
       }
 
-      double _eosio_f64_nearest( double af ) {
+      double _arisen_f64_nearest( double af ) {
          float64_t a = to_softfloat64( af );
          int e = (a.v >> 52 & 0x7FF);
          int s = a.v >> 63;
@@ -640,11 +640,11 @@ class softfloat_api : public context_aware_api {
       }
 
       // double relops
-      bool _eosio_f64_eq( double a, double b ) { return ::f64_eq( to_softfloat64(a), to_softfloat64(b) ); }
-      bool _eosio_f64_ne( double a, double b ) { return !::f64_eq( to_softfloat64(a), to_softfloat64(b) ); }
-      bool _eosio_f64_lt( double a, double b ) { return ::f64_lt( to_softfloat64(a), to_softfloat64(b) ); }
-      bool _eosio_f64_le( double a, double b ) { return ::f64_le( to_softfloat64(a), to_softfloat64(b) ); }
-      bool _eosio_f64_gt( double af, double bf ) {
+      bool _arisen_f64_eq( double a, double b ) { return ::f64_eq( to_softfloat64(a), to_softfloat64(b) ); }
+      bool _arisen_f64_ne( double a, double b ) { return !::f64_eq( to_softfloat64(a), to_softfloat64(b) ); }
+      bool _arisen_f64_lt( double a, double b ) { return ::f64_lt( to_softfloat64(a), to_softfloat64(b) ); }
+      bool _arisen_f64_le( double a, double b ) { return ::f64_le( to_softfloat64(a), to_softfloat64(b) ); }
+      bool _arisen_f64_gt( double af, double bf ) {
          float64_t a = to_softfloat64(af);
          float64_t b = to_softfloat64(bf);
          if (is_nan(a))
@@ -653,7 +653,7 @@ class softfloat_api : public context_aware_api {
             return false;
          return !::f64_le( a, b );
       }
-      bool _eosio_f64_ge( double af, double bf ) {
+      bool _arisen_f64_ge( double af, double bf ) {
          float64_t a = to_softfloat64(af);
          float64_t b = to_softfloat64(bf);
          if (is_nan(a))
@@ -664,100 +664,100 @@ class softfloat_api : public context_aware_api {
       }
 
       // float and double conversions
-      double _eosio_f32_promote( float a ) {
+      double _arisen_f32_promote( float a ) {
          return from_softfloat64(f32_to_f64( to_softfloat32(a)) );
       }
-      float _eosio_f64_demote( double a ) {
+      float _arisen_f64_demote( double a ) {
          return from_softfloat32(f64_to_f32( to_softfloat64(a)) );
       }
-      int32_t _eosio_f32_trunc_i32s( float af ) {
+      int32_t _arisen_f32_trunc_i32s( float af ) {
          float32_t a = to_softfloat32(af);
-         if (_eosio_f32_ge(af, 2147483648.0f) || _eosio_f32_lt(af, -2147483648.0f))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_s/i32 overflow" );
+         if (_arisen_f32_ge(af, 2147483648.0f) || _arisen_f32_lt(af, -2147483648.0f))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_s/i32 overflow" );
 
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_s/i32 unrepresentable");
-         return f32_to_i32( to_softfloat32(_eosio_f32_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_s/i32 unrepresentable");
+         return f32_to_i32( to_softfloat32(_arisen_f32_trunc( af )), 0, false );
       }
-      int32_t _eosio_f64_trunc_i32s( double af ) {
+      int32_t _arisen_f64_trunc_i32s( double af ) {
          float64_t a = to_softfloat64(af);
-         if (_eosio_f64_ge(af, 2147483648.0) || _eosio_f64_lt(af, -2147483648.0))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_s/i32 overflow");
+         if (_arisen_f64_ge(af, 2147483648.0) || _arisen_f64_lt(af, -2147483648.0))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_s/i32 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_s/i32 unrepresentable");
-         return f64_to_i32( to_softfloat64(_eosio_f64_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_s/i32 unrepresentable");
+         return f64_to_i32( to_softfloat64(_arisen_f64_trunc( af )), 0, false );
       }
-      uint32_t _eosio_f32_trunc_i32u( float af ) {
+      uint32_t _arisen_f32_trunc_i32u( float af ) {
          float32_t a = to_softfloat32(af);
-         if (_eosio_f32_ge(af, 4294967296.0f) || _eosio_f32_le(af, -1.0f))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_u/i32 overflow");
+         if (_arisen_f32_ge(af, 4294967296.0f) || _arisen_f32_le(af, -1.0f))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_u/i32 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_u/i32 unrepresentable");
-         return f32_to_ui32( to_softfloat32(_eosio_f32_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_u/i32 unrepresentable");
+         return f32_to_ui32( to_softfloat32(_arisen_f32_trunc( af )), 0, false );
       }
-      uint32_t _eosio_f64_trunc_i32u( double af ) {
+      uint32_t _arisen_f64_trunc_i32u( double af ) {
          float64_t a = to_softfloat64(af);
-         if (_eosio_f64_ge(af, 4294967296.0) || _eosio_f64_le(af, -1.0))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_u/i32 overflow");
+         if (_arisen_f64_ge(af, 4294967296.0) || _arisen_f64_le(af, -1.0))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_u/i32 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_u/i32 unrepresentable");
-         return f64_to_ui32( to_softfloat64(_eosio_f64_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_u/i32 unrepresentable");
+         return f64_to_ui32( to_softfloat64(_arisen_f64_trunc( af )), 0, false );
       }
-      int64_t _eosio_f32_trunc_i64s( float af ) {
+      int64_t _arisen_f32_trunc_i64s( float af ) {
          float32_t a = to_softfloat32(af);
-         if (_eosio_f32_ge(af, 9223372036854775808.0f) || _eosio_f32_lt(af, -9223372036854775808.0f))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_s/i64 overflow");
+         if (_arisen_f32_ge(af, 9223372036854775808.0f) || _arisen_f32_lt(af, -9223372036854775808.0f))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_s/i64 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_s/i64 unrepresentable");
-         return f32_to_i64( to_softfloat32(_eosio_f32_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_s/i64 unrepresentable");
+         return f32_to_i64( to_softfloat32(_arisen_f32_trunc( af )), 0, false );
       }
-      int64_t _eosio_f64_trunc_i64s( double af ) {
+      int64_t _arisen_f64_trunc_i64s( double af ) {
          float64_t a = to_softfloat64(af);
-         if (_eosio_f64_ge(af, 9223372036854775808.0) || _eosio_f64_lt(af, -9223372036854775808.0))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_s/i64 overflow");
+         if (_arisen_f64_ge(af, 9223372036854775808.0) || _arisen_f64_lt(af, -9223372036854775808.0))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_s/i64 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_s/i64 unrepresentable");
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_s/i64 unrepresentable");
 
-         return f64_to_i64( to_softfloat64(_eosio_f64_trunc( af )), 0, false );
+         return f64_to_i64( to_softfloat64(_arisen_f64_trunc( af )), 0, false );
       }
-      uint64_t _eosio_f32_trunc_i64u( float af ) {
+      uint64_t _arisen_f32_trunc_i64u( float af ) {
          float32_t a = to_softfloat32(af);
-         if (_eosio_f32_ge(af, 18446744073709551616.0f) || _eosio_f32_le(af, -1.0f))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_u/i64 overflow");
+         if (_arisen_f32_ge(af, 18446744073709551616.0f) || _arisen_f32_le(af, -1.0f))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_u/i64 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f32.convert_u/i64 unrepresentable");
-         return f32_to_ui64( to_softfloat32(_eosio_f32_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f32.convert_u/i64 unrepresentable");
+         return f32_to_ui64( to_softfloat32(_arisen_f32_trunc( af )), 0, false );
       }
-      uint64_t _eosio_f64_trunc_i64u( double af ) {
+      uint64_t _arisen_f64_trunc_i64u( double af ) {
          float64_t a = to_softfloat64(af);
-         if (_eosio_f64_ge(af, 18446744073709551616.0) || _eosio_f64_le(af, -1.0))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_u/i64 overflow");
+         if (_arisen_f64_ge(af, 18446744073709551616.0) || _arisen_f64_le(af, -1.0))
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_u/i64 overflow");
          if (is_nan(a))
-            FC_THROW_EXCEPTION( eosio::chain::wasm_execution_error, "Error, f64.convert_u/i64 unrepresentable");
-         return f64_to_ui64( to_softfloat64(_eosio_f64_trunc( af )), 0, false );
+            FC_THROW_EXCEPTION( arisen::chain::wasm_execution_error, "Error, f64.convert_u/i64 unrepresentable");
+         return f64_to_ui64( to_softfloat64(_arisen_f64_trunc( af )), 0, false );
       }
-      float _eosio_i32_to_f32( int32_t a )  {
+      float _arisen_i32_to_f32( int32_t a )  {
          return from_softfloat32(i32_to_f32( a ));
       }
-      float _eosio_i64_to_f32( int64_t a ) {
+      float _arisen_i64_to_f32( int64_t a ) {
          return from_softfloat32(i64_to_f32( a ));
       }
-      float _eosio_ui32_to_f32( uint32_t a ) {
+      float _arisen_ui32_to_f32( uint32_t a ) {
          return from_softfloat32(ui32_to_f32( a ));
       }
-      float _eosio_ui64_to_f32( uint64_t a ) {
+      float _arisen_ui64_to_f32( uint64_t a ) {
          return from_softfloat32(ui64_to_f32( a ));
       }
-      double _eosio_i32_to_f64( int32_t a ) {
+      double _arisen_i32_to_f64( int32_t a ) {
          return from_softfloat64(i32_to_f64( a ));
       }
-      double _eosio_i64_to_f64( int64_t a ) {
+      double _arisen_i64_to_f64( int64_t a ) {
          return from_softfloat64(i64_to_f64( a ));
       }
-      double _eosio_ui32_to_f64( uint32_t a ) {
+      double _arisen_ui32_to_f64( uint32_t a ) {
          return from_softfloat64(ui32_to_f64( a ));
       }
-      double _eosio_ui64_to_f64( uint64_t a ) {
+      double _arisen_ui64_to_f64( uint64_t a ) {
          return from_softfloat64(ui64_to_f64( a ));
       }
 
@@ -812,17 +812,17 @@ class crypto_api : public context_aware_api {
          fc::raw::unpack(ds, s);
          fc::raw::unpack(pubds, p);
 
-         EOS_ASSERT(s.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_signature_type,
+         RSN_ASSERT(s.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_signature_type,
            "Unactivated signature type used during assert_recover_key");
-         EOS_ASSERT(p.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
+         RSN_ASSERT(p.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_key_type,
            "Unactivated key type used when creating assert_recover_key");
 
          if(context.control.is_producing_block())
-            EOS_ASSERT(s.variable_size() <= context.control.configured_subjective_signature_length_limit(),
+            RSN_ASSERT(s.variable_size() <= context.control.configured_subjective_signature_length_limit(),
                        sig_variable_size_limit_exception, "signature variable length component size greater than subjective maximum");
 
          auto check = fc::crypto::public_key( s, digest, false );
-         EOS_ASSERT( check == p, crypto_api_exception, "Error expected key different than recovered key" );
+         RSN_ASSERT( check == p, crypto_api_exception, "Error expected key different than recovered key" );
       }
 
       int recover_key( const fc::sha256& digest,
@@ -832,11 +832,11 @@ class crypto_api : public context_aware_api {
          datastream<const char*> ds( sig, siglen );
          fc::raw::unpack(ds, s);
 
-         EOS_ASSERT(s.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_signature_type,
+         RSN_ASSERT(s.which() < context.db.get<protocol_state_object>().num_supported_key_types, unactivated_signature_type,
                     "Unactivated signature type used during recover_key");
 
          if(context.control.is_producing_block())
-            EOS_ASSERT(s.variable_size() <= context.control.configured_subjective_signature_length_limit(),
+            RSN_ASSERT(s.variable_size() <= context.control.configured_subjective_signature_length_limit(),
                        sig_variable_size_limit_exception, "signature variable length component size greater than subjective maximum");
 
 
@@ -844,7 +844,7 @@ class crypto_api : public context_aware_api {
 
          // the key types newer than the first 2 may be varible in length
          if (s.which() >= config::genesis_num_supported_key_types ) {
-            EOS_ASSERT(publen >= 33, wasm_execution_error,
+            RSN_ASSERT(publen >= 33, wasm_execution_error,
                        "destination buffer must at least be able to hold an ECC public key");
             auto packed_pubkey = fc::raw::pack(recovered);
             auto copy_size = std::min<size_t>(publen, packed_pubkey.size());
@@ -863,7 +863,7 @@ class crypto_api : public context_aware_api {
 
       template<class Encoder> auto encode(char* data, uint32_t datalen) {
          Encoder e;
-         const size_t bs = eosio::chain::config::hashing_checktime_block_size;
+         const size_t bs = arisen::chain::config::hashing_checktime_block_size;
          while ( datalen > bs ) {
             e.write( data, bs );
             data += bs;
@@ -876,22 +876,22 @@ class crypto_api : public context_aware_api {
 
       void assert_sha256(array_ptr<char> data, uint32_t datalen, const fc::sha256& hash_val) {
          auto result = encode<fc::sha256::encoder>( data, datalen );
-         EOS_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
+         RSN_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
       }
 
       void assert_sha1(array_ptr<char> data, uint32_t datalen, const fc::sha1& hash_val) {
          auto result = encode<fc::sha1::encoder>( data, datalen );
-         EOS_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
+         RSN_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
       }
 
       void assert_sha512(array_ptr<char> data, uint32_t datalen, const fc::sha512& hash_val) {
          auto result = encode<fc::sha512::encoder>( data, datalen );
-         EOS_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
+         RSN_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
       }
 
       void assert_ripemd160(array_ptr<char> data, uint32_t datalen, const fc::ripemd160& hash_val) {
          auto result = encode<fc::ripemd160::encoder>( data, datalen );
-         EOS_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
+         RSN_ASSERT( result == hash_val, crypto_api_exception, "hash mismatch" );
       }
 
       void sha1(array_ptr<char> data, uint32_t datalen, fc::sha1& hash_val) {
@@ -950,7 +950,7 @@ class permission_api : public context_aware_api {
                                            uint64_t delay_us
                                          )
       {
-         EOS_ASSERT( delay_us <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max()),
+         RSN_ASSERT( delay_us <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max()),
                      action_validate_exception, "provided delay is too large" );
 
          flat_set<public_key_type> provided_keys;
@@ -983,7 +983,7 @@ class permission_api : public context_aware_api {
 
       int64_t get_account_creation_time( account_name account ) {
          auto* acct = context.db.find<account_object, by_name>(account);
-         EOS_ASSERT( acct != nullptr, action_validate_exception,
+         RSN_ASSERT( acct != nullptr, action_validate_exception,
                      "account '${account}' does not exist", ("account", account) );
          return time_point(acct->creation_date).time_since_epoch().count();
       }
@@ -1064,38 +1064,38 @@ public:
    :context_aware_api(ctx,true){}
 
    void abort() {
-      EOS_ASSERT( false, abort_called, "abort() called");
+      RSN_ASSERT( false, abort_called, "abort() called");
    }
 
-   // Kept as intrinsic rather than implementing on WASM side (using eosio_assert_message and strlen) because strlen is faster on native side.
-   void eosio_assert( bool condition, null_terminated_ptr msg ) {
+   // Kept as intrinsic rather than implementing on WASM side (using arisen_assert_message and strlen) because strlen is faster on native side.
+   void arisen_assert( bool condition, null_terminated_ptr msg ) {
       if( BOOST_UNLIKELY( !condition ) ) {
          const size_t sz = strnlen( msg, max_assert_message );
          std::string message( msg, sz );
-         EOS_THROW( eosio_assert_message_exception, "assertion failure with message: ${s}", ("s",message) );
+         RSN_THROW( arisen_assert_message_exception, "assertion failure with message: ${s}", ("s",message) );
       }
    }
 
-   void eosio_assert_message( bool condition, array_ptr<const char> msg, uint32_t msg_len ) {
+   void arisen_assert_message( bool condition, array_ptr<const char> msg, uint32_t msg_len ) {
       if( BOOST_UNLIKELY( !condition ) ) {
          const size_t sz = msg_len > max_assert_message ? max_assert_message : msg_len;
          std::string message( msg, sz );
-         EOS_THROW( eosio_assert_message_exception, "assertion failure with message: ${s}", ("s",message) );
+         RSN_THROW( arisen_assert_message_exception, "assertion failure with message: ${s}", ("s",message) );
       }
    }
 
-   void eosio_assert_code( bool condition, uint64_t error_code ) {
+   void arisen_assert_code( bool condition, uint64_t error_code ) {
       if( BOOST_UNLIKELY( !condition ) ) {
          if( error_code >= static_cast<uint64_t>(system_error_code::generic_system_error) ) {
             restricted_error_code_exception e( FC_LOG_MESSAGE(
                                                    error,
-                                                   "eosio_assert_code called with reserved error code: ${error_code}",
+                                                   "arisen_assert_code called with reserved error code: ${error_code}",
                                                    ("error_code", error_code)
             ) );
             e.error_code = static_cast<uint64_t>(system_error_code::contract_restricted_error_code);
             throw e;
          } else {
-            eosio_assert_code_exception e( FC_LOG_MESSAGE(
+            arisen_assert_code_exception e( FC_LOG_MESSAGE(
                                              error,
                                              "assertion failure with error code: ${error_code}",
                                              ("error_code", error_code)
@@ -1106,7 +1106,7 @@ public:
       }
    }
 
-   void eosio_exit(int32_t code) {
+   void arisen_exit(int32_t code) {
       context.control.get_wasm_interface().exit();
    }
 
@@ -1306,14 +1306,14 @@ class console_api : public context_aware_api {
 
 #define DB_API_METHOD_WRAPPERS_ARRAY_SECONDARY(IDX, ARR_SIZE, ARR_ELEMENT_TYPE)\
       int db_##IDX##_store( uint64_t scope, uint64_t table, uint64_t payer, uint64_t id, array_ptr<const ARR_ELEMENT_TYPE> data, uint32_t data_len) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
          return context.IDX.store(scope, table, account_name(payer), id, data.value);\
       }\
       void db_##IDX##_update( int iterator, uint64_t payer, array_ptr<const ARR_ELEMENT_TYPE> data, uint32_t data_len ) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
@@ -1323,28 +1323,28 @@ class console_api : public context_aware_api {
          return context.IDX.remove(iterator);\
       }\
       int db_##IDX##_find_secondary( uint64_t code, uint64_t scope, uint64_t table, array_ptr<const ARR_ELEMENT_TYPE> data, uint32_t data_len, uint64_t& primary ) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
          return context.IDX.find_secondary(code, scope, table, data, primary);\
       }\
       int db_##IDX##_find_primary( uint64_t code, uint64_t scope, uint64_t table, array_ptr<ARR_ELEMENT_TYPE> data, uint32_t data_len, uint64_t primary ) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
          return context.IDX.find_primary(code, scope, table, data.value, primary);\
       }\
       int db_##IDX##_lowerbound( uint64_t code, uint64_t scope, uint64_t table, array_ptr<ARR_ELEMENT_TYPE> data, uint32_t data_len, uint64_t& primary ) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
          return context.IDX.lowerbound_secondary(code, scope, table, data.value, primary);\
       }\
       int db_##IDX##_upperbound( uint64_t code, uint64_t scope, uint64_t table, array_ptr<ARR_ELEMENT_TYPE> data, uint32_t data_len, uint64_t& primary ) {\
-         EOS_ASSERT( data_len == ARR_SIZE,\
+         RSN_ASSERT( data_len == ARR_SIZE,\
                     db_api_exception,\
                     "invalid size of secondary key array for " #IDX ": given ${given} bytes but expected ${expected} bytes",\
                     ("given",data_len)("expected",ARR_SIZE) );\
@@ -1362,29 +1362,29 @@ class console_api : public context_aware_api {
 
 #define DB_API_METHOD_WRAPPERS_FLOAT_SECONDARY(IDX, TYPE)\
       int db_##IDX##_store( uint64_t scope, uint64_t table, uint64_t payer, uint64_t id, const TYPE& secondary ) {\
-         EOS_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
+         RSN_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
          return context.IDX.store( scope, table, account_name(payer), id, secondary );\
       }\
       void db_##IDX##_update( int iterator, uint64_t payer, const TYPE& secondary ) {\
-         EOS_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
+         RSN_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
          return context.IDX.update( iterator, account_name(payer), secondary );\
       }\
       void db_##IDX##_remove( int iterator ) {\
          return context.IDX.remove( iterator );\
       }\
       int db_##IDX##_find_secondary( uint64_t code, uint64_t scope, uint64_t table, const TYPE& secondary, uint64_t& primary ) {\
-         EOS_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
+         RSN_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
          return context.IDX.find_secondary(code, scope, table, secondary, primary);\
       }\
       int db_##IDX##_find_primary( uint64_t code, uint64_t scope, uint64_t table, TYPE& secondary, uint64_t primary ) {\
          return context.IDX.find_primary(code, scope, table, secondary, primary);\
       }\
       int db_##IDX##_lowerbound( uint64_t code, uint64_t scope, uint64_t table,  TYPE& secondary, uint64_t& primary ) {\
-         EOS_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
+         RSN_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
          return context.IDX.lowerbound_secondary(code, scope, table, secondary, primary);\
       }\
       int db_##IDX##_upperbound( uint64_t code, uint64_t scope, uint64_t table,  TYPE& secondary, uint64_t& primary ) {\
-         EOS_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
+         RSN_ASSERT( !softfloat_api::is_nan( secondary ), transaction_exception, "NaN is not an allowed value for a secondary key" );\
          return context.IDX.upperbound_secondary(code, scope, table, secondary, primary);\
       }\
       int db_##IDX##_end( uint64_t code, uint64_t scope, uint64_t table ) {\
@@ -1445,7 +1445,7 @@ class memory_api : public context_aware_api {
       :context_aware_api(ctx,true){}
 
       char* memcpy( array_ptr<char> dest, array_ptr<const char> src, uint32_t length) {
-         EOS_ASSERT((size_t)(std::abs((ptrdiff_t)dest.value - (ptrdiff_t)src.value)) >= length,
+         RSN_ASSERT((size_t)(std::abs((ptrdiff_t)dest.value - (ptrdiff_t)src.value)) >= length,
                overlapping_memory_error, "memcpy can only accept non-aliasing pointers");
          return (char *)::memcpy(dest, src, length);
       }
@@ -1474,7 +1474,7 @@ class transaction_api : public context_aware_api {
 
       void send_inline( array_ptr<char> data, uint32_t data_len ) {
          //TODO: Why is this limit even needed? And why is it not consistently checked on actions in input or deferred transactions
-         EOS_ASSERT( data_len < context.control.get_global_properties().configuration.max_inline_action_size, inline_action_too_big,
+         RSN_ASSERT( data_len < context.control.get_global_properties().configuration.max_inline_action_size, inline_action_too_big,
                     "inline action too big" );
 
          action act;
@@ -1484,7 +1484,7 @@ class transaction_api : public context_aware_api {
 
       void send_context_free_inline( array_ptr<char> data, uint32_t data_len ) {
          //TODO: Why is this limit even needed? And why is it not consistently checked on actions in input or deferred transactions
-         EOS_ASSERT( data_len < context.control.get_global_properties().configuration.max_inline_action_size, inline_action_too_big,
+         RSN_ASSERT( data_len < context.control.get_global_properties().configuration.max_inline_action_size, inline_action_too_big,
                    "inline action too big" );
 
          action act;
@@ -1583,7 +1583,7 @@ class compiler_builtins : public context_aware_api {
          rhs <<= 64;
          rhs |=  lb;
 
-         EOS_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
+         RSN_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
 
          lhs /= rhs;
 
@@ -1600,7 +1600,7 @@ class compiler_builtins : public context_aware_api {
          rhs <<= 64;
          rhs |=  lb;
 
-         EOS_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
+         RSN_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
 
          lhs /= rhs;
          ret = lhs;
@@ -1630,7 +1630,7 @@ class compiler_builtins : public context_aware_api {
          rhs <<= 64;
          rhs |=  lb;
 
-         EOS_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
+         RSN_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
 
          lhs %= rhs;
          ret = lhs;
@@ -1646,7 +1646,7 @@ class compiler_builtins : public context_aware_api {
          rhs <<= 64;
          rhs |=  lb;
 
-         EOS_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
+         RSN_ASSERT(rhs != 0, arithmetic_exception, "divide by zero");
 
          lhs %= rhs;
          ret = lhs;
@@ -1797,7 +1797,7 @@ class compiler_builtins : public context_aware_api {
 
 
 /*
- * This api will be removed with fix for `eos #2561`
+ * This api will be removed with fix for `rsn #2561`
  */
 class call_depth_api : public context_aware_api {
    public:
@@ -1954,10 +1954,10 @@ REGISTER_INTRINSICS(system_api,
 
 REGISTER_INTRINSICS(context_free_system_api,
    (abort,                void()              )
-   (eosio_assert,         void(int, int)      )
-   (eosio_assert_message, void(int, int, int) )
-   (eosio_assert_code,    void(int, int64_t)  )
-   (eosio_exit,           void(int)           )
+   (arisen_assert,         void(int, int)      )
+   (arisen_assert_message, void(int, int, int) )
+   (arisen_assert_code,    void(int, int64_t)  )
+   (arisen_exit,           void(int)           )
 );
 
 REGISTER_INTRINSICS(action_api,
@@ -2016,80 +2016,80 @@ REGISTER_INTRINSICS(memory_api,
 );
 
 REGISTER_INJECTED_INTRINSICS(softfloat_api,
-      (_eosio_f32_add,       float(float, float)    )
-      (_eosio_f32_sub,       float(float, float)    )
-      (_eosio_f32_mul,       float(float, float)    )
-      (_eosio_f32_div,       float(float, float)    )
-      (_eosio_f32_min,       float(float, float)    )
-      (_eosio_f32_max,       float(float, float)    )
-      (_eosio_f32_copysign,  float(float, float)    )
-      (_eosio_f32_abs,       float(float)           )
-      (_eosio_f32_neg,       float(float)           )
-      (_eosio_f32_sqrt,      float(float)           )
-      (_eosio_f32_ceil,      float(float)           )
-      (_eosio_f32_floor,     float(float)           )
-      (_eosio_f32_trunc,     float(float)           )
-      (_eosio_f32_nearest,   float(float)           )
-      (_eosio_f32_eq,        int(float, float)      )
-      (_eosio_f32_ne,        int(float, float)      )
-      (_eosio_f32_lt,        int(float, float)      )
-      (_eosio_f32_le,        int(float, float)      )
-      (_eosio_f32_gt,        int(float, float)      )
-      (_eosio_f32_ge,        int(float, float)      )
-      (_eosio_f64_add,       double(double, double) )
-      (_eosio_f64_sub,       double(double, double) )
-      (_eosio_f64_mul,       double(double, double) )
-      (_eosio_f64_div,       double(double, double) )
-      (_eosio_f64_min,       double(double, double) )
-      (_eosio_f64_max,       double(double, double) )
-      (_eosio_f64_copysign,  double(double, double) )
-      (_eosio_f64_abs,       double(double)         )
-      (_eosio_f64_neg,       double(double)         )
-      (_eosio_f64_sqrt,      double(double)         )
-      (_eosio_f64_ceil,      double(double)         )
-      (_eosio_f64_floor,     double(double)         )
-      (_eosio_f64_trunc,     double(double)         )
-      (_eosio_f64_nearest,   double(double)         )
-      (_eosio_f64_eq,        int(double, double)    )
-      (_eosio_f64_ne,        int(double, double)    )
-      (_eosio_f64_lt,        int(double, double)    )
-      (_eosio_f64_le,        int(double, double)    )
-      (_eosio_f64_gt,        int(double, double)    )
-      (_eosio_f64_ge,        int(double, double)    )
-      (_eosio_f32_promote,    double(float)         )
-      (_eosio_f64_demote,     float(double)         )
-      (_eosio_f32_trunc_i32s, int(float)            )
-      (_eosio_f64_trunc_i32s, int(double)           )
-      (_eosio_f32_trunc_i32u, int(float)            )
-      (_eosio_f64_trunc_i32u, int(double)           )
-      (_eosio_f32_trunc_i64s, int64_t(float)        )
-      (_eosio_f64_trunc_i64s, int64_t(double)       )
-      (_eosio_f32_trunc_i64u, int64_t(float)        )
-      (_eosio_f64_trunc_i64u, int64_t(double)       )
-      (_eosio_i32_to_f32,     float(int32_t)        )
-      (_eosio_i64_to_f32,     float(int64_t)        )
-      (_eosio_ui32_to_f32,    float(int32_t)        )
-      (_eosio_ui64_to_f32,    float(int64_t)        )
-      (_eosio_i32_to_f64,     double(int32_t)       )
-      (_eosio_i64_to_f64,     double(int64_t)       )
-      (_eosio_ui32_to_f64,    double(int32_t)       )
-      (_eosio_ui64_to_f64,    double(int64_t)       )
+      (_arisen_f32_add,       float(float, float)    )
+      (_arisen_f32_sub,       float(float, float)    )
+      (_arisen_f32_mul,       float(float, float)    )
+      (_arisen_f32_div,       float(float, float)    )
+      (_arisen_f32_min,       float(float, float)    )
+      (_arisen_f32_max,       float(float, float)    )
+      (_arisen_f32_copysign,  float(float, float)    )
+      (_arisen_f32_abs,       float(float)           )
+      (_arisen_f32_neg,       float(float)           )
+      (_arisen_f32_sqrt,      float(float)           )
+      (_arisen_f32_ceil,      float(float)           )
+      (_arisen_f32_floor,     float(float)           )
+      (_arisen_f32_trunc,     float(float)           )
+      (_arisen_f32_nearest,   float(float)           )
+      (_arisen_f32_eq,        int(float, float)      )
+      (_arisen_f32_ne,        int(float, float)      )
+      (_arisen_f32_lt,        int(float, float)      )
+      (_arisen_f32_le,        int(float, float)      )
+      (_arisen_f32_gt,        int(float, float)      )
+      (_arisen_f32_ge,        int(float, float)      )
+      (_arisen_f64_add,       double(double, double) )
+      (_arisen_f64_sub,       double(double, double) )
+      (_arisen_f64_mul,       double(double, double) )
+      (_arisen_f64_div,       double(double, double) )
+      (_arisen_f64_min,       double(double, double) )
+      (_arisen_f64_max,       double(double, double) )
+      (_arisen_f64_copysign,  double(double, double) )
+      (_arisen_f64_abs,       double(double)         )
+      (_arisen_f64_neg,       double(double)         )
+      (_arisen_f64_sqrt,      double(double)         )
+      (_arisen_f64_ceil,      double(double)         )
+      (_arisen_f64_floor,     double(double)         )
+      (_arisen_f64_trunc,     double(double)         )
+      (_arisen_f64_nearest,   double(double)         )
+      (_arisen_f64_eq,        int(double, double)    )
+      (_arisen_f64_ne,        int(double, double)    )
+      (_arisen_f64_lt,        int(double, double)    )
+      (_arisen_f64_le,        int(double, double)    )
+      (_arisen_f64_gt,        int(double, double)    )
+      (_arisen_f64_ge,        int(double, double)    )
+      (_arisen_f32_promote,    double(float)         )
+      (_arisen_f64_demote,     float(double)         )
+      (_arisen_f32_trunc_i32s, int(float)            )
+      (_arisen_f64_trunc_i32s, int(double)           )
+      (_arisen_f32_trunc_i32u, int(float)            )
+      (_arisen_f64_trunc_i32u, int(double)           )
+      (_arisen_f32_trunc_i64s, int64_t(float)        )
+      (_arisen_f64_trunc_i64s, int64_t(double)       )
+      (_arisen_f32_trunc_i64u, int64_t(float)        )
+      (_arisen_f64_trunc_i64u, int64_t(double)       )
+      (_arisen_i32_to_f32,     float(int32_t)        )
+      (_arisen_i64_to_f32,     float(int64_t)        )
+      (_arisen_ui32_to_f32,    float(int32_t)        )
+      (_arisen_ui64_to_f32,    float(int64_t)        )
+      (_arisen_i32_to_f64,     double(int32_t)       )
+      (_arisen_i64_to_f64,     double(int64_t)       )
+      (_arisen_ui32_to_f64,    double(int32_t)       )
+      (_arisen_ui64_to_f64,    double(int64_t)       )
 );
 
 std::istream& operator>>(std::istream& in, wasm_interface::vm_type& runtime) {
    std::string s;
    in >> s;
    if (s == "wabt")
-      runtime = eosio::chain::wasm_interface::vm_type::wabt;
-   else if (s == "eos-vm")
-      runtime = eosio::chain::wasm_interface::vm_type::eos_vm;
-   else if (s == "eos-vm-jit")
-      runtime = eosio::chain::wasm_interface::vm_type::eos_vm_jit;
-   else if (s == "eos-vm-oc")
-      runtime = eosio::chain::wasm_interface::vm_type::eos_vm_oc;
+      runtime = arisen::chain::wasm_interface::vm_type::wabt;
+   else if (s == "rsn-vm")
+      runtime = arisen::chain::wasm_interface::vm_type::rsn_vm;
+   else if (s == "rsn-vm-jit")
+      runtime = arisen::chain::wasm_interface::vm_type::rsn_vm_jit;
+   else if (s == "rsn-vm-oc")
+      runtime = arisen::chain::wasm_interface::vm_type::rsn_vm_oc;
    else
       in.setstate(std::ios_base::failbit);
    return in;
 }
 
-} } /// eosio::chain
+} } /// arisen::chain

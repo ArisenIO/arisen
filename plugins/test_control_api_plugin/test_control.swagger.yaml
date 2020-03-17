@@ -6,9 +6,9 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   contact:
-    url: https://eos.io
+    url: https://rsn.io
 tags:
-  - name: eosio
+  - name: arisen
 servers:
   - url: '{protocol}://{host}:{port}/v1/'
     variables:
@@ -44,7 +44,7 @@ paths:
                   type: object
                   properties:
                     producer:
-                      $ref: 'https://eosio.github.io/schemata/v2.0/oas/Name.yaml'
+                      $ref: 'https://arisen.github.io/schemata/v2.0/oas/Name.yaml'
                     where_in_sequence:
                       type: integer
                     based_on_lib:

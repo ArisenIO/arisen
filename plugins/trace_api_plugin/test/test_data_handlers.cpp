@@ -1,13 +1,13 @@
 #define BOOST_TEST_MODULE trace_data_handlers
 #include <boost/test/included/unit_test.hpp>
 
-#include <eosio/trace_api/abi_data_handler.hpp>
+#include <arisen/trace_api/abi_data_handler.hpp>
 
-#include <eosio/trace_api/test_common.hpp>
+#include <arisen/trace_api/test_common.hpp>
 
-using namespace eosio;
-using namespace eosio::trace_api;
-using namespace eosio::trace_api::test_common;
+using namespace arisen;
+using namespace arisen::trace_api;
+using namespace arisen::trace_api::test_common;
 
 BOOST_AUTO_TEST_SUITE(abi_data_handler_tests)
    BOOST_AUTO_TEST_CASE(empty_data)
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_SUITE(abi_data_handler_tests)
          },
          {}, {}, {}
       );
-      abi.version = "eosio::abi/1.";
+      abi.version = "arisen::abi/1.";
       
       abi_data_handler handler;
       handler.add_abi("alice"_n, abi);
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_SUITE(abi_data_handler_tests)
          },
          {}, {}, {}
       );
-      abi.version = "eosio::abi/1.";
+      abi.version = "arisen::abi/1.";
 
       abi_data_handler handler;
       handler.add_abi("alice"_n, abi);
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(abi_data_handler_tests)
          },
          {}, {}, {}
       );
-      abi.version = "eosio::abi/1.";
+      abi.version = "arisen::abi/1.";
 
       bool log_called = false;
       abi_data_handler handler([&log_called](const exception_with_context& ){log_called = true;});

@@ -1,9 +1,9 @@
 #include "proxy.hpp"
-#include <eosio/transaction.hpp>
+#include <arisen/transaction.hpp>
 
-using namespace eosio;
+using namespace arisen;
 
-proxy::proxy( eosio::name self, eosio::name first_receiver, eosio::datastream<const char*> ds )
+proxy::proxy( arisen::name self, arisen::name first_receiver, arisen::datastream<const char*> ds )
 :contract( self, first_receiver, ds )
 ,_config( get_self(), get_self().value )
 {}
@@ -32,14 +32,14 @@ void proxy::on_transfer( name from, name to, asset quantity, const std::string& 
       _config.set( cfg, self );
 
       transaction out;
-      eosio::token::transfer_action a( "eosio.token"_n, {self, "active"_n} );
+      arisen::token::transfer_action a( "arisen.token"_n, {self, "active"_n} );
       out.actions.emplace_back( a.to_action( self, cfg.owner, quantity, memo ) );
       out.delay_sec = cfg.delay;
       out.send( id, self );
    }
 }
 
-void proxy::on_error( uint128_t sender_id, eosio::ignore<std::vector<char>> ) {
+void proxy::on_error( uint128_t sender_id, arisen::ignore<std::vector<char>> ) {
    print( "on_error called on ", get_self(), " contract with sender_id = ", sender_id, "\n" );
    check( _config.exists(), "Attempting use of unconfigured proxy" );
 

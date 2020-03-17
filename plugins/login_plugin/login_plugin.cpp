@@ -1,14 +1,14 @@
-#include <eosio/chain/authorization_manager.hpp>
-#include <eosio/chain/exceptions.hpp>
-#include <eosio/login_plugin/login_plugin.hpp>
+#include <arisen/chain/authorization_manager.hpp>
+#include <arisen/chain/exceptions.hpp>
+#include <arisen/login_plugin/login_plugin.hpp>
 
 #include <fc/io/json.hpp>
 
-namespace eosio {
+namespace arisen {
 
 static appbase::abstract_plugin& _login_plugin = app().register_plugin<login_plugin>();
 
-using namespace eosio;
+using namespace arisen;
 
 struct login_request {
    chain::private_key_type server_ephemeral_priv_key{};
@@ -88,10 +88,10 @@ void login_plugin::plugin_shutdown() {}
 login_plugin::start_login_request_results
 login_plugin::start_login_request(const login_plugin::start_login_request_params& params) {
    my->expire_requests();
-   EOS_ASSERT(params.expiration_time > fc::time_point::now(), fc::timeout_exception,
+   RSN_ASSERT(params.expiration_time > fc::time_point::now(), fc::timeout_exception,
               "Requested expiration time ${expiration_time} is in the past",
               ("expiration_time", params.expiration_time));
-   EOS_ASSERT(my->requests.size() < my->max_login_requests, fc::timeout_exception, "Too many pending login requests");
+   RSN_ASSERT(my->requests.size() < my->max_login_requests, fc::timeout_exception, "Too many pending login requests");
    login_request request;
    request.server_ephemeral_priv_key = chain::private_key_type::generate_r1();
    request.server_ephemeral_pub_key = request.server_ephemeral_priv_key.get_public_key();
@@ -157,4 +157,4 @@ login_plugin::do_not_use_get_secret(const login_plugin::do_not_use_get_secret_pa
    return {params.priv_key.generate_shared_secret(params.pub_key)};
 }
 
-} // namespace eosio
+} // namespace arisen

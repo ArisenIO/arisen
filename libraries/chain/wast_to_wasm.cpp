@@ -1,4 +1,4 @@
-#include <eosio/chain/wast_to_wasm.hpp>
+#include <arisen/chain/wast_to_wasm.hpp>
 #include <Inline/BasicTypes.h>
 #include <IR/Module.h>
 #include <IR/Validate.h>
@@ -8,9 +8,9 @@
 #include <sstream>
 #include <iomanip>
 #include <fc/exception/exception.hpp>
-#include <eosio/chain/exceptions.hpp>
+#include <arisen/chain/exceptions.hpp>
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
    std::vector<uint8_t> wast_to_wasm( const std::string& wast ) 
    { 
@@ -30,7 +30,7 @@ namespace eosio { namespace chain {
             ss << error.locus.sourceLine << std::endl;
             ss << std::setw(error.locus.column(8)) << "^" << std::endl;
          }
-         EOS_ASSERT( false, wasm_exception, "error parsing wast: ${msg}", ("msg",ss.str()) );
+         RSN_ASSERT( false, wasm_exception, "error parsing wast: ${msg}", ("msg",ss.str()) );
       }
 
       for(auto sectionIt = module.userSections.begin();sectionIt != module.userSections.end();++sectionIt)
@@ -49,11 +49,11 @@ namespace eosio { namespace chain {
       {
          ss << "Error serializing WebAssembly binary file:" << std::endl;
          ss << exception.message << std::endl;
-         EOS_ASSERT( false, wasm_exception, "error converting to wasm: ${msg}", ("msg",ss.get()) );
+         RSN_ASSERT( false, wasm_exception, "error converting to wasm: ${msg}", ("msg",ss.get()) );
       } catch(const IR::ValidationException& e) {
          ss << "Error validating WebAssembly binary file:" << std::endl;
          ss << e.message << std::endl;
-         EOS_ASSERT( false, wasm_exception, "error converting to wasm: ${msg}", ("msg",ss.get()) );
+         RSN_ASSERT( false, wasm_exception, "error converting to wasm: ${msg}", ("msg",ss.get()) );
       }
 
    } FC_CAPTURE_AND_RETHROW( (wast) ) }  /// wast_to_wasm
@@ -74,4 +74,4 @@ namespace eosio { namespace chain {
    } FC_CAPTURE_AND_RETHROW() } /// wasm_to_wast
 
 
-} } // eosio::chain
+} } // arisen::chain

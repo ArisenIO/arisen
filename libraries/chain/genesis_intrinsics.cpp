@@ -1,6 +1,6 @@
-#include <eosio/chain/genesis_intrinsics.hpp>
+#include <arisen/chain/genesis_intrinsics.hpp>
 
-namespace eosio { namespace chain {
+namespace arisen { namespace chain {
 
 const std::vector<const char*> genesis_intrinsics = {
    "__ashrti3",
@@ -133,10 +133,10 @@ const std::vector<const char*> genesis_intrinsics = {
    "current_time",
    "publication_time",
    "abort",
-   "eosio_assert",
-   "eosio_assert_message",
-   "eosio_assert_code",
-   "eosio_exit",
+   "arisen_assert",
+   "arisen_assert_message",
+   "arisen_assert_code",
+   "arisen_exit",
    "read_action_data",
    "action_data_size",
    "current_receiver",
@@ -173,4 +173,4 @@ const std::vector<const char*> genesis_intrinsics = {
    "memset"
 };
 
-} } // namespace eosio::chain
+} } // namespace arisen::chain

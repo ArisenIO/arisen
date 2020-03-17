@@ -1,8 +1,8 @@
 #include <vector>
 
-#include <eosiolib/crypto.h>
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/print.h>
+#include <arisenlib/crypto.h>
+#include <arisenlib/arisen.hpp>
+#include <arisenlib/print.h>
 
 #include "test_api.hpp"
 
@@ -11,7 +11,7 @@ void test_checktime::checktime_pass() {
    for ( int i = 0; i < 10000; i++ )
       p += i;
 
-   eosio::print(p);
+   arisen::print(p);
 }
 
 
@@ -24,7 +24,7 @@ void test_checktime::checktime_failure() {
       for ( unsigned long long j = 0; j < bound; j++ )
          p += i+j+bound;
 
-   eosio::print(p);
+   arisen::print(p);
 }
 
 constexpr size_t size = 20000000;
