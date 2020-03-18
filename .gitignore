@@ -58,7 +58,7 @@ programs/awalletd/awalletd
 programs/aos/config.hpp
 programs/aos/aos
 
-scripts/tn_init.sh
+
 
 tests/plugin_test
 unittests/unit_test

@@ -3,7 +3,7 @@ set -eo pipefail
 VERSION=2.1
 ##########################################################################
 # This is the ARISEN automated install script for Linux and Mac OS.
-# This file was downloaded from https://github.com/arisenio/arisen
+# This file was downloaded from https://github.com/ARISENIO/arisen
 #
 # Copyright (c) 2017, Respective Authors all rights reserved.
 #
@@ -29,7 +29,7 @@ VERSION=2.1
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# https://github.com/arisenio/arisen/blob/master/LICENSE.txt
+# https://github.com/ARISENIO/arisen/blob/master/LICENSE.txt
 ##########################################################################
 
 # Ensure we're in the repo root and not inside of scripts
