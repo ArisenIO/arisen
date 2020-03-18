@@ -118,10 +118,13 @@ function previous-install-prompt() {
 }
 
 function resources() {
-    echo "${COLOR_CYAN}ARISEN website:${COLOR_NC} https://arisen.io"
-    echo "${COLOR_CYAN}ARISEN Telegram channel:${COLOR_NC} https://t.me/RSNProject"
-    echo "${COLOR_CYAN}ARISEN resources:${COLOR_NC} https://arisen.io/resources/"
-    echo "${COLOR_CYAN}ARISEN Stack Exchange:${COLOR_NC} https://arisen.stackexchange.com"
+    echo "${COLOR_CYAN}ARISENIO website:${COLOR_NC} https://arisen.network/"
+    echo "${COLOR_CYAN}ARISENIO Telegram channel:${COLOR_NC} https://t.me/arisenio"
+    echo "${COLOR_CYAN}ARISENIO Help:${COLOR_NC} https://arisenio.stackexchange.com"
+    echo "${COLOR_CYAN}Arisen Documentation:${COLOR_NC} https://dwebuniversity.com"
+    echo "${COLOR_CYAN}Arisen Developer Tools:${COLOR_NC} https://tools.arisen.network"
+    echo "${COLOR_CYAN}Arisen Explorer:${COLOR_NC} https://explorer.arisen.network"
+    echo "${COLOR_CYAN}Arisen Signup:${COLOR_NC} https://signup.arisen.network"
 }
 
 function print_supported_linux_distros_and_exit() {
