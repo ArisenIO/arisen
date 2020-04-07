@@ -22,7 +22,7 @@ systemAccounts = [
     'arisen.names',
     'arisen.ram',
     'arisen.rfee',
-    'arisen.saving',
+    'arisen.save',
     'arisen.stake',
     'arisen.token',
     'arisen.vpay',

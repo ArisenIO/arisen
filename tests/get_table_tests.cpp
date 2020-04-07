@@ -66,7 +66,7 @@ BOOST_FIXTURE_TEST_CASE( get_scope_test, TESTER ) try {
    produce_blocks(2);
 
    create_accounts({ N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake),
-      N(arisen.bpay), N(arisen.vpay), N(arisen.saving), N(arisen.names) });
+      N(arisen.bpay), N(arisen.vpay), N(arisen.save), N(arisen.names) });
 
    std::vector<account_name> accs{N(inita), N(initb), N(initc), N(initd)};
    create_accounts(accs);
@@ -138,7 +138,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
    produce_blocks(2);
 
    create_accounts({ N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake),
-      N(arisen.bpay), N(arisen.vpay), N(arisen.saving), N(arisen.names) });
+      N(arisen.bpay), N(arisen.vpay), N(arisen.save), N(arisen.names) });
 
    std::vector<account_name> accs{N(inita), N(initb)};
    create_accounts(accs);
@@ -317,7 +317,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_by_seckey_test, TESTER ) try {
    produce_blocks(2);
 
    create_accounts({ N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake),
-      N(arisen.bpay), N(arisen.vpay), N(arisen.saving), N(arisen.names) });
+      N(arisen.bpay), N(arisen.vpay), N(arisen.save), N(arisen.names) });
 
    std::vector<account_name> accs{N(inita), N(initb), N(initc), N(initd)};
    create_accounts(accs);

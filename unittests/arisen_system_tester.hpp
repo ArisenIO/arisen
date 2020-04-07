@@ -36,7 +36,7 @@ public:
       produce_blocks( 2 );
 
       create_accounts({ N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake),
-               N(arisen.bpay), N(arisen.vpay), N(arisen.saving), N(arisen.names) });
+               N(arisen.bpay), N(arisen.vpay), N(arisen.save), N(arisen.names) });
 
       produce_blocks( 100 );
 

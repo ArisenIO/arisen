@@ -189,7 +189,7 @@ BOOST_FIXTURE_TEST_CASE( bootseq_test, bootseq_tester ) {
     try {
 
         // Create arisen.msig and arisen.token
-        create_accounts({N(arisen.msig), N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake), N(arisen.vpay), N(arisen.bpay), N(arisen.saving) });
+        create_accounts({N(arisen.msig), N(arisen.token), N(arisen.ram), N(arisen.rfee), N(arisen.stake), N(arisen.vpay), N(arisen.bpay), N(arisen.save) });
         // Set code for the following accounts:
         //  - arisen (code: arisen.bios) (already set by tester constructor)
         //  - arisen.msig (code: arisen.msig)

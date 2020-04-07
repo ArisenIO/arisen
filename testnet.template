@@ -109,7 +109,7 @@ ecmd create account arisen arisen.msig $pubsyskey $pubsyskey
 ecmd create account arisen arisen.names $pubsyskey $pubsyskey
 ecmd create account arisen arisen.ram $pubsyskey $pubsyskey
 ecmd create account arisen arisen.rfee $pubsyskey $pubsyskey
-ecmd create account arisen arisen.saving $pubsyskey $pubsyskey
+ecmd create account arisen arisen.save $pubsyskey $pubsyskey
 ecmd create account arisen arisen.stake $pubsyskey $pubsyskey
 ecmd create account arisen arisen.token $pubsyskey $pubsyskey
 ecmd create account arisen arisen.vpay $pubsyskey $pubsyskey
