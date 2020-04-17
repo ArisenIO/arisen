@@ -13,11 +13,11 @@ Retrieve the balance of an account for a given currency
 There are no options for this subcommand
 
 ## Example
-Get balance of arisen from arisen.token contract for RSN symbol. 
+Get balance of arisen from arisen.token contract for RIX symbol. 
 
 ```sh
-arisecli get currency balance arisen.token arisen RSN
+arisecli get currency balance arisen.token arisen RIX
 ```
 ```console
-999999920.0000 RSN
+999999920.0000 RIX
 ```

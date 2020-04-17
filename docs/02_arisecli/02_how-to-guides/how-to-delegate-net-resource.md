@@ -17,18 +17,18 @@ Delegate resource for an account or application
 
 ## Steps
 
-Delegate 0.01 RSN network bandwidth from `bob` to `alice`
+Delegate 0.01 RIX network bandwidth from `bob` to `alice`
 
 ```sh
-arisecli system delegatebw bob alice "0 RSN" "0.01 RSN"
+arisecli system delegatebw bob alice "0 RIX" "0.01 RIX"
 ```
 
 You should see something below:
 
 ```console
 executed transaction: 5487afafd67bf459a20fcc2dbc5d0c2f0d1f10e33123eaaa07088046fd18e3ae  192 bytes  503 us
-#         arisen <= arisen::delegatebw            {"from":"bob","receiver":"alice","stake_net_quantity":"0.0100 RSN","stake_cpu_quanti...
-#   arisen.token <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RSN","memo":"stake bandwidth"}
-#  bob <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RSN","memo":"stake bandwidth"}
-#   arisen.stake <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RSN","memo":"stake bandwidth"}
+#         arisen <= arisen::delegatebw            {"from":"bob","receiver":"alice","stake_net_quantity":"0.0100 RIX","stake_cpu_quanti...
+#   arisen.token <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RIX","memo":"stake bandwidth"}
+#  bob <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RIX","memo":"stake bandwidth"}
+#   arisen.stake <= arisen.token::transfer        {"from":"bob","to":"arisen.stake","quantity":"0.0010 RIX","memo":"stake bandwidth"}
 ```

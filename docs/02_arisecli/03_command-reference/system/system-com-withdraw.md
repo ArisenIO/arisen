@@ -19,5 +19,5 @@
 
 
 ```sh
-arisecli system com withdraw accountname1 "1 RSN"
+arisecli system com withdraw accountname1 "1 RIX"
 ```

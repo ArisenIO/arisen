@@ -79,12 +79,12 @@ BOOST_FIXTURE_TEST_CASE( get_scope_test, TESTER ) try {
    // create currency
    auto act = mutable_variant_object()
          ("issuer",       "arisen")
-         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RSN"));
+         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RIX"));
    push_action(N(arisen.token), N(create), N(arisen.token), act );
 
    // issue
    for (account_name a: accs) {
-      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("999.0000 RSN") );
+      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("999.0000 RIX") );
    }
    produce_blocks(1);
 
@@ -151,12 +151,12 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
    // create currency
    auto act = mutable_variant_object()
          ("issuer",       "arisen")
-         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RSN"));
+         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RIX"));
    push_action(N(arisen.token), N(create), N(arisen.token), act );
 
    // issue
    for (account_name a: accs) {
-      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("10000.0000 RSN") );
+      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("10000.0000 RIX") );
    }
    produce_blocks(1);
 
@@ -208,7 +208,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
       BOOST_REQUIRE_EQUAL("9999.0000 AAA", result.rows[0]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("8888.0000 BBB", result.rows[1]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("7777.0000 CCC", result.rows[2]["balance"].as_string());
-      BOOST_REQUIRE_EQUAL("10000.0000 RSN", result.rows[3]["balance"].as_string());
+      BOOST_REQUIRE_EQUAL("10000.0000 RIX", result.rows[3]["balance"].as_string());
    }
 
    // get table: reverse ordered
@@ -220,7 +220,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
       BOOST_REQUIRE_EQUAL("9999.0000 AAA", result.rows[3]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("8888.0000 BBB", result.rows[2]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("7777.0000 CCC", result.rows[1]["balance"].as_string());
-      BOOST_REQUIRE_EQUAL("10000.0000 RSN", result.rows[0]["balance"].as_string());
+      BOOST_REQUIRE_EQUAL("10000.0000 RIX", result.rows[0]["balance"].as_string());
    }
 
    // get table: reverse ordered, with ram payer
@@ -233,7 +233,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
       BOOST_REQUIRE_EQUAL("9999.0000 AAA", result.rows[3]["data"]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("8888.0000 BBB", result.rows[2]["data"]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("7777.0000 CCC", result.rows[1]["data"]["balance"].as_string());
-      BOOST_REQUIRE_EQUAL("10000.0000 RSN", result.rows[0]["data"]["balance"].as_string());
+      BOOST_REQUIRE_EQUAL("10000.0000 RIX", result.rows[0]["data"]["balance"].as_string());
       BOOST_REQUIRE_EQUAL("arisen", result.rows[0]["payer"].as_string());
       BOOST_REQUIRE_EQUAL("arisen", result.rows[1]["payer"].as_string());
       BOOST_REQUIRE_EQUAL("arisen", result.rows[2]["payer"].as_string());
@@ -284,7 +284,7 @@ BOOST_FIXTURE_TEST_CASE( get_table_test, TESTER ) try {
    BOOST_REQUIRE_EQUAL(1u, result.rows.size());
    BOOST_REQUIRE_EQUAL(true, result.more);
    if (result.rows.size() >= 1) {
-      BOOST_REQUIRE_EQUAL("10000.0000 RSN", result.rows[0]["balance"].as_string());
+      BOOST_REQUIRE_EQUAL("10000.0000 RIX", result.rows[0]["balance"].as_string());
    }
 
    // get table: normal case, with bound & limit
@@ -330,12 +330,12 @@ BOOST_FIXTURE_TEST_CASE( get_table_by_seckey_test, TESTER ) try {
    // create currency
    auto act = mutable_variant_object()
          ("issuer",       "arisen")
-         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RSN"));
+         ("maximum_supply", arisen::chain::asset::from_string("1000000000.0000 RIX"));
    push_action(N(arisen.token), N(create), N(arisen.token), act );
 
    // issue
    for (account_name a: accs) {
-      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("10000.0000 RSN") );
+      issue_tokens( *this, config::system_account_name, a, arisen::chain::asset::from_string("10000.0000 RIX") );
    }
    produce_blocks(1);
 
@@ -356,10 +356,10 @@ BOOST_FIXTURE_TEST_CASE( get_table_by_seckey_test, TESTER ) try {
                           );
    };
 
-   bidname(N(inita), N(com), arisen::chain::asset::from_string("10.0000 RSN"));
-   bidname(N(initb), N(org), arisen::chain::asset::from_string("11.0000 RSN"));
-   bidname(N(initc), N(io), arisen::chain::asset::from_string("12.0000 RSN"));
-   bidname(N(initd), N(html), arisen::chain::asset::from_string("14.0000 RSN"));
+   bidname(N(inita), N(com), arisen::chain::asset::from_string("10.0000 RIX"));
+   bidname(N(initb), N(org), arisen::chain::asset::from_string("11.0000 RIX"));
+   bidname(N(initc), N(io), arisen::chain::asset::from_string("12.0000 RIX"));
+   bidname(N(initd), N(html), arisen::chain::asset::from_string("14.0000 RIX"));
    produce_blocks(1);
 
    // get table: normal case

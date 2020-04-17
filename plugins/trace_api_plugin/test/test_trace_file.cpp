@@ -28,19 +28,19 @@ namespace {
                      0,
                      "arisen.token"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RIX"_t, "Memo!" )
                   },
                   {
                      1,
                      "alice"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RIX"_t, "Memo!" )
                   },
                   {
                      2,
                      "bob"_n, "arisen.token"_n, "transfer"_n,
                      {{ "alice"_n, "active"_n }},
-                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RSN"_t, "Memo!" )
+                     make_transfer_data( "alice"_n, "bob"_n, "0.0001 RIX"_t, "Memo!" )
                   }
                }
             }

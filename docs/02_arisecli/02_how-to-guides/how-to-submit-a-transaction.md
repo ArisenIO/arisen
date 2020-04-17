@@ -64,7 +64,7 @@ Push a transaction
       "data": {
         "from": "han",
         "to": "arisen",
-        "quantity": "0.0001 RSN",
+        "quantity": "0.0001 RIX",
         "memo": "m"
       }
     }

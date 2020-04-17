@@ -29,7 +29,7 @@ arisecli get table arisen.token arisen accounts
 ```json
 {
   "rows": [{
-      "balance": "999999920.0000 RSN"
+      "balance": "999999920.0000 RIX"
     }
   ],
   "more": false

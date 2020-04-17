@@ -21,5 +21,5 @@ excerpt: "Deposit into owner's COM fund by transfering from owner's liquid token
 
 
 ```sh
-arisecli system com deposit accountname1 "1 RSN"
+arisecli system com deposit accountname1 "1 RIX"
 ```

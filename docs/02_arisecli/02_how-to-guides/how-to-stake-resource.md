@@ -15,14 +15,14 @@ Stake resource for your account
 
 ## Steps
 
-Stake 0.01 RSN network bandwidth for `alice`
+Stake 0.01 RIX network bandwidth for `alice`
 
 ```sh
-arisecli system delegatebw alice alice "0 RSN" "0.01 RSN"
+arisecli system delegatebw alice alice "0 RIX" "0.01 RIX"
 ```
 
-Stake 0.01 RSN CPU bandwidth for `alice`:
+Stake 0.01 RIX CPU bandwidth for `alice`:
 
 ```sh
-arisecli system delegatebw alice alice "0.01 RSN" "0 RSN"
+arisecli system delegatebw alice alice "0.01 RIX" "0 RIX"
 ```

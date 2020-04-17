@@ -16,8 +16,8 @@ Setup an account that require multiple signatures for signning a transaction
 
 ## Steps
 
-Buys RAM in value of 0.1 RSN tokens for account `alice`:
+Buys RAM in value of 0.1 RIX tokens for account `alice`:
 
 ```sh
-arisecli system buyram alice alice "0.1 RSN" -p alice@active
+arisecli system buyram alice alice "0.1 RIX" -p alice@active
 ```

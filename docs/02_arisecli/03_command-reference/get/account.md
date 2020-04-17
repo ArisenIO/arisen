@@ -100,7 +100,7 @@ arisecli get account arisen --json
     "is_proxy": 0,
     "deferred_trx_id": 0,
     "last_unstake_time": "1970-01-01T00:00:00",
-    "unstaking": "0.0000 RSN"
+    "unstaking": "0.0000 RIX"
   }
 }
 ```

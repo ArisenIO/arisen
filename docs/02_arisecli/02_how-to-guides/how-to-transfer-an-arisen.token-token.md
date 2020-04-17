@@ -14,8 +14,8 @@ Transfer token created by arisen.token contract
 
 ## Steps
 
-Assume you would like to transfer `0.0001 RSN` token to an account called `bob` from an account called `alice`, execute the following:
+Assume you would like to transfer `0.0001 RIX` token to an account called `bob` from an account called `alice`, execute the following:
 
 ```sh
-arisecli transfer alice bob "0.0001 RSN" "Hodl!" -p alice@active
+arisecli transfer alice bob "0.0001 RIX" "Hodl!" -p alice@active
 ```

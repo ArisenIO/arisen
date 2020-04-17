@@ -737,7 +737,7 @@ class Node(object):
 
     @staticmethod
     def currencyStrToInt(balanceStr):
-        """Converts currency string of form "12.3456 RSN" to int 123456"""
+        """Converts currency string of form "12.3456 RIX" to int 123456"""
         assert(isinstance(balanceStr, str))
         balanceStr=balanceStr.split()[0]
         #balance=int(decimal.Decimal(balanceStr[1:])*10000)
@@ -747,7 +747,7 @@ class Node(object):
 
     @staticmethod
     def currencyIntToStr(balance, symbol):
-        """Converts currency int of form 123456 to string "12.3456 RSN" where RSN is symbol string"""
+        """Converts currency int of form 123456 to string "12.3456 RIX" where RIX is symbol string"""
         assert(isinstance(balance, int))
         assert(isinstance(symbol, str))
         balanceStr="%.04f %s" % (balance/10000.0, symbol)
@@ -755,7 +755,7 @@ class Node(object):
         return balanceStr
 
     def validateFunds(self, initialBalances, transferAmount, source, accounts):
-        """Validate each account has the expected RSN balance. Validate cumulative balance matches expectedTotal."""
+        """Validate each account has the expected RIX balance. Validate cumulative balance matches expectedTotal."""
         assert(source)
         assert(isinstance(source, Account))
         assert(accounts)
@@ -866,7 +866,7 @@ class Node(object):
         return servants
 
     def getAccountrsnBalanceStr(self, scope):
-        """Returns RSN currency0000 account balance from arisecli get table command. Returned balance is string following syntax "98.0311 RSN". """
+        """Returns RIX currency0000 account balance from arisecli get table command. Returned balance is string following syntax "98.0311 RIX". """
         assert isinstance(scope, str)
         amount=self.getTableAccountBalance("arisen.token", scope)
         if Utils.Debug: Utils.Print("getNodeAccountrsnBalance %s %s" % (scope, amount))
@@ -874,7 +874,7 @@ class Node(object):
         return amount
 
     def getAccountrsnBalance(self, scope):
-        """Returns RSN currency0000 account balance from arisecli get table command. Returned balance is an integer e.g. 980311. """
+        """Returns RIX currency0000 account balance from arisecli get table command. Returned balance is an integer e.g. 980311. """
         balanceStr=self.getAccountrsnBalanceStr(scope)
         balance=Node.currencyStrToInt(balanceStr)
         return balance

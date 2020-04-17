@@ -2,9 +2,9 @@
 Transfer tokens from account to account
 
 ## Positional Parameters
-- `sender` _TEXT_ - The account sending RSN
-- `recipient` _TEXT_ - The account receiving RSN
-- `amount` _UINT_ - The amount of RSN to send
+- `sender` _TEXT_ - The account sending RIX
+- `recipient` _TEXT_ - The account receiving RIX
+- `amount` _UINT_ - The amount of RIX to send
 - `memo` _TEXT_ - The memo for the transfer
 
 ## Options
@@ -25,7 +25,7 @@ Transfer tokens from account to account
 - `--delay-sec` _UINT_ - set the delay_sec seconds, defaults to 0s
 
 ## Example
-Transfer 1000 RSN from **inita** to **tester**
+Transfer 1000 RIX from **inita** to **tester**
 
 ```sh
 arisecli transfer inita tester 1000

@@ -21,7 +21,7 @@ fi
 
 bioscurrencysymbol=$BIOS_CURRENCY_SYMBOL
 if [ -z "$bioscurrencysymbol" ]; then
-    bioscurrencysymbol="RSN"
+    bioscurrencysymbol="RIX"
 fi
 
 wddir=arisen-ignition-wd
