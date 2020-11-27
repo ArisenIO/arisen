@@ -1,7 +1,7 @@
 # ARISEN 
 This is the core software for the ARISEN blockchain. ARISEN enables businesses to rapidly build and deploy high-performance and high-security blockchain-based applications.
 
-NOTE: You can use the [Lunar Installer](https://github.com/peepsx/lunar-installer) to install ARISEN in one click. Otherwise, there are shell scripts included in this repo that will allow for you to install ARISEN just as easily.
+NOTE: You can use the [Lunar Installer](https://github.com/peepsx/lunar) to install ARISEN in one click. Otherwise, there are shell scripts included in this repo that will allow for you to install ARISEN just as easily.
 
 ## Features
 - Free Rate Limited Transaction
@@ -101,10 +101,10 @@ ARISEN's official documentation, can be found at [https://docs.arisen.network](h
 
 ## Resources
 - [Website](https://arisen.network)
-- [Peeps Labs Blog](https://medium.com/peepsology
+- [Peeps Labs Blog](https://peepsology.medium.com/)
 - [Arisen Blog](https://steemit.com/@arisenio
-- [Community Telegram Group](https://t.me/arisenofficial)
-- [Developer Telegram Group](https://t.me/arisendevs)
+- [Community Telegram Group](https://t.me/AriseArmy)
+- [Developer Telegram Group](https://t.me/arisenio)
 - [Whitepaper](https://github.com/arisenio/technical-whitepaper)
 - [dWeb Website](https://dwebx.org)
 - [dBrowser Website](http://dbrowser.com)
