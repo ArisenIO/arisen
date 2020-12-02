@@ -1,1 +1,0 @@
-/usr/bin/clang   -w  -rdynamic CMakeFiles/curltest.dir/curltest.c.o  -o curltest lib/libcmcurl.a -ldl -lssl -lcrypto ../cmzlib/libcmzlib.a 
