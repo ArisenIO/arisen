@@ -20,9 +20,11 @@
 [submodule "libraries/wabt"]
 	path = libraries/wabt
 	url = https://github.com/ArisenIO/wabt.git
+	branch = 1.0.0v1
 [submodule "libraries/yubihsm"]
 	path = libraries/yubihsm
 	url = https://github.com/ArisenIO/yubihsm-shell.git
+	branch = 1.0.0v1
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/ArisenIO/fc.git
