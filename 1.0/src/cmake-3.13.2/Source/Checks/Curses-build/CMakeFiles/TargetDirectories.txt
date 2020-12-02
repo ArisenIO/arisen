@@ -1,0 +1,2 @@
+/root/arisenx/arisen/1.0/src/cmake-3.13.2/Source/Checks/Curses-build/CMakeFiles/rebuild_cache.dir
+/root/arisenx/arisen/1.0/src/cmake-3.13.2/Source/Checks/Curses-build/CMakeFiles/edit_cache.dir
