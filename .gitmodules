@@ -12,6 +12,7 @@
 [submodule "libraries/rsn-vm"]
 	path = libraries/rsn-vm
 	url = https://github.com/ArisenIO/rsn-vm.git
+	branch = master
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
 	url = https://github.com/ArisenIO/berkeley-softfloat-3.git
