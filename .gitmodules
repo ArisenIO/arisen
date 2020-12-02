@@ -4,15 +4,18 @@
 [submodule "libraries/appbase"]
 	path = libraries/appbase
 	url = https://github.com/ArisenIO/appbase.git
+	branch = 1.0.0v1
 [submodule "libraries/chainbase"]
 	path = libraries/chainbase
 	url = https://github.com/ArisenIO/chainbase.git
+	branch = 1.0.0v1
 [submodule "libraries/rsn-vm"]
 	path = libraries/rsn-vm
 	url = https://github.com/ArisenIO/rsn-vm.git
 [submodule "libraries/softfloat"]
 	path = libraries/softfloat
 	url = https://github.com/ArisenIO/berkeley-softfloat-3.git
+	branch = 1.0.0v1
 [submodule "libraries/wabt"]
 	path = libraries/wabt
 	url = https://github.com/ArisenIO/wabt.git
@@ -22,3 +25,4 @@
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/ArisenIO/fc.git
+	branch = 1.0.0v2
