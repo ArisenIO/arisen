@@ -16,7 +16,7 @@ mkdir -p ${RSN_PREFIX}/licenses/arisen
 cp -R ${BUILD_DIR}/bin/* ${RSN_PREFIX}/bin  || exit 1
 
 # install licenses
-cp -R ${BUILD_DIR}/licenses/arisen/* ${RSN_PREFIX}/licenses || exit 1
+#cp -R ${BUILD_DIR}/licenses/arisen/* ${RSN_PREFIX}/licenses || exit 1
 
 # install libraries
 #cp -R ${BUILD_DIR}/lib/* ${RSN_PREFIX}/lib
