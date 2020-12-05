@@ -27,3 +27,6 @@
 	path = libraries/fc
 	url = https://github.com/ArisenIO/fc.git
 	branch = 1.0.0v2
+[submodule "appbase"]
+	path = appbase
+	url = https://github.com/ArisenIO/appbase.git
