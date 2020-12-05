@@ -66,15 +66,15 @@ sudo apt install ./arisen-1.0-v1-amd64_1-2_all.deb
 
 ##### Ubuntu 16.04 Package Install
 ```
-wget https://github.com/arisenio/arisen/releases/download/v1.0.0/arisen_1.0.0-ubuntu-16.04_amd64.deb
-sudo apt install ./arisen_1.0.0-ubuntu-16.04_amd64.deb
+wget https://github.com/ArisenIO/arisen/releases/download/1.0/arisen_1.0-2_ubuntu16.4.deb
+sudo apt install ./arisen_1.0-2_ubuntu16.4.deb
 ```
 
 #### RPM-based (CentOS, Amazon Linux, etc.):
 ##### RPM Package Install
 ```
-wget https://github.com/arisenio/arisen/releases/download/v1.0.0/arisen-1.0.0.el7.x86_64.rpm
-sudo yum install ./arisen-1.0.0.el7.x86_64.rpm
+wget https://github.com/ArisenIO/arisen/releases/download/1.0/arisen-1-3.noarch.rpm
+sudo yum install ./arisen-1-3.noarch.rpm
 ```
 
 ##### RPM Package Uninstall
