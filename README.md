@@ -64,24 +64,6 @@ wget https://github.com/ArisenIO/arisen/releases/download/1.0/arisen-1.0-v1-amd6
 sudo apt install ./arisen-1.0-v1-amd64_1-2_all.deb
 ```
 
-##### Ubuntu 16.04 Package Install
-```
-wget https://github.com/ArisenIO/arisen/releases/download/1.0/arisen_1.0-2_ubuntu16.4.deb
-sudo apt install ./arisen_1.0-2_ubuntu16.4.deb
-```
-
-#### RPM-based (CentOS, Amazon Linux, etc.):
-##### RPM Package Install
-```
-wget https://github.com/ArisenIO/arisen/releases/download/1.0/arisen-1-3.noarch.rpm
-sudo yum install ./arisen-1-3.noarch.rpm
-```
-
-##### RPM Package Uninstall
-```
-sudo yum remove arisen
-```
-
 ### Uninstall Script
 To uninstall the ARISEN built/installed binaries and dependencies, run:
 ```
